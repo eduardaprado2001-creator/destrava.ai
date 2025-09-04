@@ -6,13 +6,13 @@ import { Check, ChevronRight, Loader2, Timer, Sparkles, Zap, Target, Trophy, Sta
 
 // === SFX ===
 const SFX = {
-  ping: "Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  boom: "Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  scan: "Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  alarm: "Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  levelUp: "Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  success: "Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  failure: "Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  ping: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  boom: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  scan: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  alarm: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  levelUp: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  success: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  failure: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
 }
 
 // Tipos de pergunta
