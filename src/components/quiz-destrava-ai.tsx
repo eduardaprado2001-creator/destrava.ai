@@ -193,7 +193,7 @@ export default function QuizDestravaAi() {
         hudAvatar: "Pescoço erguendo.",
         progress: 24,
         xpReward: 6,
-        question: "Quanto o scroll te destrói hoje? (0 = nada, 10 = quase todo dia me arregaça)",
+        question: "Quanto o scroll (ato de rolar a tela) te destrói hoje? (0 = nada, 10 = quase todo dia me arregaça)",
       },
       // P4 – Reflexo
       {
