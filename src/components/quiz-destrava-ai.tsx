@@ -126,26 +126,27 @@ export default function QuizDestravaAi() {
     if (reward) giveXp(reward, reason)
     // Som de avanço de fase (leve e positivo)
     play(SFX.advance)
-    setStep((s) => Math.min(s + 1, 13))
+    setStep((s) => Math.min(s + 1, 14))
     play(SFX.levelUp)
   }
 
   const progress = useMemo(() => {
-    // 13 telas → 0..100
+    // 14 telas → 0..100
     const map: Record<number, number> = {
       1: 8,
       2: 16,
-      3: 24,
-      4: 32,
-      5: 40,
-      6: 48,
-      7: 56,
-      8: 64,
-      9: 72,
-      10: 80,
-      11: 88,
-      12: 96,
-      13: 100,
+      3: 20,
+      4: 28,
+      5: 36,
+      6: 44,
+      7: 52,
+      8: 60,
+      9: 68,
+      10: 76,
+      11: 84,
+      12: 92,
+      13: 96,
+      14: 100,
     }
     return map[step] || 0
   }, [step])
@@ -185,23 +186,40 @@ export default function QuizDestravaAi() {
         ],
         insight: "Cada década sem ação é um caixão pro teu potencial.",
       },
-      // P3 – Scroll + Adiamento (combo)
+      // P3 – Frequência de procrastinação
       {
         id: 3,
+        kind: "radio",
+        title: "Com que frequência você deixa tarefas importantes pra depois, mesmo sabendo que isso só acumula e te afunda ainda mais?",
+        hudAvatar: "Olhar introspectivo.",
+        progress: 20,
+        xpReward: 3,
+        question: "",
+        choices: [
+          { label: "Sempre, é um ciclo que não consigo parar", value: "sempre" },
+          { label: "Frequentemente, vivo adiando tudo", value: "frequentemente" },
+          { label: "Às vezes, mas me atrapalha muito", value: "asvezes" },
+          { label: "Raramente, mas ainda assim me trava", value: "raramente" },
+        ],
+        insight: "Reconhecer o padrão é o primeiro passo para quebrá-lo.",
+      },
+      // P4 – Scroll + Adiamento (combo)
+      {
+        id: 4,
         kind: "slider",
         title: "Prisão Digital",
         hudAvatar: "Pescoço erguendo.",
-        progress: 24,
+        progress: 28,
         xpReward: 6,
         question: "Quanto o scroll (ato de rolar a tela) te destrói hoje? (0 = nada, 10 = quase todo dia me arregaça)",
       },
-      // P4 – Reflexo
+      // P5 – Reflexo
       {
-        id: 4,
+        id: 5,
         kind: "radio",
         title: "Reflexo do fracasso",
         hudAvatar: "Reflexo distorcido ao fundo.",
-        progress: 32,
+        progress: 36,
         xpReward: 4,
         question: "No espelho, você tá matando sua melhor versão?",
         choices: [
@@ -211,13 +229,13 @@ export default function QuizDestravaAi() {
         ],
         insight: "O espelho não mente: ou age, ou apodrece.",
       },
-      // P5 – Prejuízo (multi)
+      // P6 – Prejuízo (multi)
       {
-        id: 5,
+        id: 6,
         kind: "checkbox",
         title: "Prejuízo já causado",
         hudAvatar: "Fendas de luz no peito.",
-        progress: 40,
+        progress: 44,
         xpReward: 10, // até +10 (limite 2)
         question: "O que a procrastinação já destruiu? (máx 2)",
         choices: [
@@ -230,13 +248,13 @@ export default function QuizDestravaAi() {
         maxSelections: 2,
         insight: "Cada área fodida é um grito do teu eu que desistiu.",
       },
-      // P6 – Prioridade & Área
+      // P7 – Prioridade & Área
       {
-        id: 6,
+        id: 7,
         kind: "radio",
         title: "Foco total agora",
         hudAvatar: "Postura firme.",
-        progress: 48,
+        progress: 52,
         xpReward: 4,
         question: "Se o foco total viesse HOJE, qual prioridade #1?",
         choices: [
@@ -249,13 +267,13 @@ export default function QuizDestravaAi() {
         ],
         insight: "A prioridade que escolhe define a vida que constrói.",
       },
-      // P7 – 12 meses
+      // P8 – 12 meses
       {
-        id: 7,
+        id: 8,
         kind: "radio",
         title: "Sua vida em 12 meses",
         hudAvatar: "Luz no olhar.",
-        progress: 56,
+        progress: 60,
         xpReward: 6,
         question: "Daqui a 12 meses, como você quer se enxergar?",
         choices: [
@@ -265,23 +283,23 @@ export default function QuizDestravaAi() {
         ],
         insight: "A vida que quer não chega — é construída.",
       },
-      // P8 – Loading + social + coleta
+      // P9 – Loading + social + coleta
       {
-        id: 8,
+        id: 9,
         kind: "loading",
         title: "Processamento Neural",
         hudAvatar: "Olhos fechados, download de consciência.",
-        progress: 64,
+        progress: 68,
         xpReward: 5,
         insight: "Quem assume o compromisso, colhe o resultado.",
       },
-      // P9 – Futuro sem ação + pergunta extra
+      // P10 – Futuro sem ação + pergunta extra
       {
-        id: 9,
+        id: 10,
         kind: "radio",
         title: "O futuro sem ação",
         hudAvatar: "Rosto meio luz/meio sombra.",
-        progress: 72,
+        progress: 76,
         xpReward: 5,
         question: "Quantas vezes você começou com energia e largou no meio?",
         choices: [
@@ -292,32 +310,32 @@ export default function QuizDestravaAi() {
         ],
         insight: "Cada desistência é uma mini‑morte.",
       },
-      // P10 – Virada + CTA diagnóstico
+      // P11 – Virada + CTA diagnóstico
       {
-        id: 10,
+        id: 11,
         kind: "radio",
         title: "Virada mental: a última chamada",
         hudAvatar: "Armadura psíquica ativando (nível 5).",
-        progress: 80,
+        progress: 84,
         xpReward: 5,
         question:
           "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
         choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
         insight: "Clareza sem ação é autoengano.",
       },
-      // P11 – Diagnóstico dinâmico
+      // P12 – Diagnóstico dinâmico
       {
-        id: 11,
+        id: 12,
         kind: "diagnosis",
         title: "Diagnóstico Final: a verdade nua",
         hudAvatar: "Armadura 7/10.",
-        progress: 88,
+        progress: 92,
         xpReward: 10,
         insight: "A dor de agora é a conta do que adiou.",
       },
-      // P12 – Compromisso
+      // P13 – Compromisso
       {
-        id: 12,
+        id: 13,
         kind: "commitment",
         title: "Compromisso de tempo diário",
         hudAvatar: "9/10, olhos em brasa.",
@@ -332,9 +350,9 @@ export default function QuizDestravaAi() {
         ],
         insight: "O futuro pune quem hesita.",
       },
-      // P13 – Oferta final única
+      // P14 – Oferta final única
       {
-        id: 13,
+        id: 14,
         kind: "offer",
         title: "Oferta Final",
         hudAvatar: "10/10, armadura completa.",
@@ -1133,86 +1151,96 @@ export default function QuizDestravaAi() {
           )}
 
           {/* Step 3 - Scroll (Slider) */}
-          {step === 3 && <PageSlider stepData={steps[2]} />}
-
-          {/* Step 4 - Reflexo */}
-          {step === 4 && (
+          {step === 3 && (
             <PageRadio
-              stepData={steps[3]}
+              stepData={steps[2]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, delayFreq: value }))
+              }}
+            />
+          )}
+
+          {/* Step 4 - Scroll (Slider) */}
+          {step === 4 && <PageSlider stepData={steps[3]} />}
+
+          {/* Step 5 - Reflexo */}
+          {step === 5 && (
+            <PageRadio
+              stepData={steps[4]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, mirrorPain: value }))
               }}
             />
           )}
 
-          {/* Step 5 - Prejuízos (Checkbox) */}
-          {step === 5 && (
+          {/* Step 6 - Prejuízos (Checkbox) */}
+          {step === 6 && (
             <PageCheckbox
-              stepData={steps[4]}
+              stepData={steps[5]}
               onSelect={(values) => {
                 setAnswers(prev => ({ ...prev, damages: values }))
               }}
             />
           )}
 
-          {/* Step 6 - Prioridade */}
-          {step === 6 && (
+          {/* Step 7 - Prioridade */}
+          {step === 7 && (
             <PageRadio
-              stepData={steps[5]}
+              stepData={steps[6]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, priority: value }))
               }}
             />
           )}
 
-          {/* Step 7 - Visão 12 meses */}
-          {step === 7 && (
+          {/* Step 8 - Visão 12 meses */}
+          {step === 8 && (
             <PageRadio
-              stepData={steps[6]}
+              stepData={steps[7]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, vision12: value }))
               }}
             />
           )}
 
-          {/* Step 8 - Loading */}
-          {step === 8 && <PageLoading stepData={steps[7]} />}
+          {/* Step 9 - Loading */}
+          {step === 9 && <PageLoading stepData={steps[8]} />}
 
-          {/* Step 9 - Padrão de desistência */}
-          {step === 9 && (
+          {/* Step 10 - Padrão de desistência */}
+          {step === 10 && (
             <PageRadio
-              stepData={steps[8]}
+              stepData={steps[9]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, quitPattern: value }))
               }}
             />
           )}
 
-          {/* Step 10 - Última chamada */}
-          {step === 10 && (
+          {/* Step 11 - Última chamada */}
+          {step === 11 && (
             <PageRadio
-              stepData={steps[9]}
+              stepData={steps[10]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, lastCall: value }))
               }}
             />
           )}
 
-          {/* Step 11 - Diagnóstico */}
-          {step === 11 && <PageDiagnosis stepData={steps[10]} />}
+          {/* Step 12 - Diagnóstico */}
+          {step === 12 && <PageDiagnosis stepData={steps[11]} />}
 
-          {/* Step 12 - Compromisso */}
-          {step === 12 && (
+          {/* Step 13 - Compromisso */}
+          {step === 13 && (
             <PageRadio
-              stepData={steps[11]}
+              stepData={steps[12]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, commitment: value }))
               }}
             />
           )}
 
-          {/* Step 13 - Oferta Final */}
-          {step === 13 && <PageOffer stepData={steps[12]} />}
+          {/* Step 14 - Oferta Final */}
+          {step === 14 && <PageOffer stepData={steps[13]} />}
         </motion.div>
       </AnimatePresence>
 
