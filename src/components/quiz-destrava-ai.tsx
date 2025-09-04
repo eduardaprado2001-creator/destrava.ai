@@ -32,13 +32,23 @@ const COLORS = {
 
 // === SFX (corretos caminhos para arquivos MP3) ===
 const SFX = {
-  ping: "/Ping sound effect.mp3", // som de clique
-  boom: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3", // som de falha
-  scan: "/Loading Sound Effect (Royalty free Sound)#shorts.mp3", // som de carregamento
-  alarm: "/Efeito sonoro Atenção.mp3", // som de alerta
-  levelUp: "/Efeito sonoro (Vitória).mp3", // som de avanço de fase
-  success: "/Efeito sonoro (Vitória).mp3", // som de sucesso
-  failure: "/Efeito sonoro Atenção.mp3", // som de falha
+  // Som para clique ou seleção (som suave e leve)
+  click: "/Ping sound effect.mp3",
+  
+  // Som para erro ou falha (som grave ou alerta)
+  error: "/Efeito sonoro Atenção.mp3",
+  
+  // Som de avanço de fase (som leve e positivo)
+  advance: "/Ping sound effect.mp3", // Usando ping mais suave para avanço
+  
+  // Som de carregamento ou processamento
+  processing: "/Loading Sound Effect (Royalty free Sound)#shorts.mp3",
+  
+  // Som de vitória (som triunfante e intenso)
+  victory: "/Efeito sonoro (Vitória).mp3",
+  
+  // Som adicional para ações importantes
+  impact: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
 }
 
 // Tipos de pergunta
@@ -99,7 +109,7 @@ export default function QuizDestravaAi() {
     if (!src) return
     try {
       const a = new Audio(src)
-      a.volume = 0.25
+      a.volume = 0.3 // Aumentando um pouco o volume para melhor experiência
       a.play().catch(() => {})
     } catch {}
   }
@@ -114,6 +124,8 @@ export default function QuizDestravaAi() {
 
   const next = (reward = 0, reason = "") => {
     if (reward) giveXp(reward, reason)
+    // Som de avanço de fase (leve e positivo)
+    play(SFX.advance)
     setStep((s) => Math.min(s + 1, 13))
     play(SFX.levelUp)
   }
@@ -412,7 +424,8 @@ export default function QuizDestravaAi() {
           <motion.button
             key={c.value}
             onClick={() => {
-              play(SFX.ping)
+              // Som de clique/seleção (suave e leve)
+              play(SFX.click)
               onSelect(c.value)
               setTimeout(() => next(stepData.xpReward, `step_${stepData.id}`), 300)
             }}
@@ -449,13 +462,16 @@ export default function QuizDestravaAi() {
     const toggleSelection = (value: string) => {
       setSelected(prev => {
         if (prev.includes(value)) {
-          play(SFX.ping)
+          // Som de clique para desmarcar
+          play(SFX.click)
           return prev.filter(v => v !== value)
         } else if (prev.length < (stepData.maxSelections || 999)) {
-          play(SFX.success)
+          // Som de clique para marcar
+          play(SFX.click)
           return [...prev, value]
         } else {
-          play(SFX.failure)
+          // Som de erro quando excede limite
+          play(SFX.error)
           return prev
         }
       })
@@ -463,9 +479,13 @@ export default function QuizDestravaAi() {
 
     const handleContinue = () => {
       if (selected.length > 0) {
-        play(SFX.boom)
+        // Som de clique para continuar
+        play(SFX.click)
         onSelect(selected)
         setTimeout(() => next(stepData.xpReward, `step_${stepData.id}`), 300)
+      } else {
+        // Som de erro se nada foi selecionado
+        play(SFX.error)
       }
     }
 
@@ -559,11 +579,13 @@ export default function QuizDestravaAi() {
   const PageSlider: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
     const handleSliderChange = (value: number) => {
       setSliderValue(value)
-      play(SFX.ping)
+      // Som suave de clique ao mover slider
+      play(SFX.click)
     }
 
     const handleContinue = () => {
-      play(SFX.success)
+      // Som de clique para continuar
+      play(SFX.click)
       setAnswers(prev => ({ ...prev, scrollLevel: sliderValue }))
       next(stepData.xpReward, `step_${stepData.id}`)
     }
@@ -656,7 +678,8 @@ export default function QuizDestravaAi() {
   // === Componente Loading ===
   const PageLoading: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
     useEffect(() => {
-      play(SFX.scan)
+      // Som de processamento/carregamento
+      play(SFX.processing)
       const interval = setInterval(() => {
         setLoadingProgress(prev => {
           if (prev >= 100) {
@@ -671,11 +694,13 @@ export default function QuizDestravaAi() {
 
     const handleContinue = () => {
       if (email && agree1 && agree2) {
-        play(SFX.success)
+        // Som de clique para continuar
+        play(SFX.click)
         setAnswers(prev => ({ ...prev, email, phone }))
         next(stepData.xpReward, `step_${stepData.id}`)
       } else {
-        play(SFX.failure)
+        // Som de erro para campos obrigatórios não preenchidos
+        play(SFX.error)
       }
     }
 
@@ -827,7 +852,8 @@ export default function QuizDestravaAi() {
     ]
 
     useEffect(() => {
-      play(SFX.alarm)
+      // Som de impacto para revelar diagnóstico
+      play(SFX.impact)
     }, [])
 
     return (
@@ -901,7 +927,8 @@ export default function QuizDestravaAi() {
 
           <motion.button
             onClick={() => {
-              play(SFX.boom)
+              // Som de clique para continuar
+              play(SFX.click)
               next(stepData.xpReward, `step_${stepData.id}`)
             }}
             className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] p-4 font-bold text-white transition-all duration-300 shadow-[0_15px_40px_rgba(242,92,84,.4)] hover:shadow-[0_20px_50px_rgba(242,92,84,.6)]"
@@ -932,11 +959,13 @@ export default function QuizDestravaAi() {
   // === Componente Oferta Final ===
   const PageOffer: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
     useEffect(() => {
-      play(SFX.success)
+      // Som de vitória ao chegar na oferta final
+      play(SFX.victory)
     }, [])
 
     const handlePurchase = () => {
-      play(SFX.boom)
+      // Som de impacto para ação de compra
+      play(SFX.impact)
       giveXp(50, "purchase_intent")
       // Aqui você adicionaria a integração com o sistema de pagamento
       alert("Redirecionando para pagamento...")
