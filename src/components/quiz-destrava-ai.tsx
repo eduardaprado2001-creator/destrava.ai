@@ -677,6 +677,12 @@ export default function QuizDestravaAi() {
 
   // === Componente Loading ===
   const PageLoading: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    const [loadingProgress, setLoadingProgress] = useState(0)
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [agree1, setAgree1] = useState(false)
+    const [agree2, setAgree2] = useState(false)
+
     useEffect(() => {
       // Som de processamento/carregamento
       play(SFX.processing)
