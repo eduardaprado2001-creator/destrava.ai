@@ -2,38 +2,17 @@
 
 import { useMemo, useRef, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Check, ChevronRight, Loader2, Timer, Sparkles, Zap } from "lucide-react"
+import { Check, ChevronRight, Loader2, Timer, Sparkles, Zap, Target, Trophy, Star, Award, Shield, AlertTriangle, Clock, Heart, DollarSign, Users, Briefcase, TrendingUp } from "lucide-react"
 
-/**
- * QuizDestravaAi – fluxo gamificado em 13 telas
- * - Mantém as MESMAS cores e vibe do componente LandingDestravaAi
- * - HUD com progresso/XP/Avatar
- * - Animações consistentes (framer-motion)
- * - Coleta e-mail/telefone no loading (P8)
- * - Diagnóstico dinâmico (P11)
- * - Oferta final única (P13) com depoimentos (curtos) e CTA
- */
-
-// === Paleta (idêntica / derivada do seu código) ===
-const COLORS = {
-  bgGradFrom: "#2b1a4e",
-  bgGradVia: "#3c2569",
-  bgGradTo: "#4B2E83",
-  coral: "#F25C54", // acento róseo do seu header/logo
-  dirty: "#FCEEE3",
-  lilac: "#C39BD3",
-  red: "#FF3B3B", // headline impacto
-  orange: "#FF6A00", // CTA laranja radioativo
-  neon: "#39FF88", // neon green sutil
-}
-
-// === SFX (Usando os links diretos para os MP3 no GitHub) ===
+// === SFX ===
 const SFX = {
-  ping: "/Ping sound effect.mp3",
+  ping: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
   boom: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  scan: "/Loading Sound Effect (Royalty free Sound)#shorts.mp3",
-  alarm: "/Efeito sonoro Atenção.mp3",
-  victory: "/Efeito sonoro (Vitória).mp3"
+  scan: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  alarm: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  levelUp: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  success: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  failure: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
 }
 
 // Tipos de pergunta
@@ -42,8 +21,8 @@ type Choice = { label: string; value: string; insight?: string }
 type StepBase = {
   id: number
   title?: string
-  hudAvatar: string // descrição de estado do avatar
-  progress: number // 0..100
+  hudAvatar: string
+  progress: number
   xpReward: number
   insight?: string
 }
@@ -76,6 +55,10 @@ export default function QuizDestravaAi() {
   const [step, setStep] = useState<number>(1)
   const [xp, setXp] = useState<number>(0)
   const [answers, setAnswers] = useState<Answers>({})
+  const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([])
+  const [loadingProgress, setLoadingProgress] = useState(0)
+  const [showDiagnosis, setShowDiagnosis] = useState(false)
+
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
@@ -102,32 +85,21 @@ export default function QuizDestravaAi() {
   const next = (reward = 0, reason = "") => {
     if (reward) giveXp(reward, reason)
     setStep((s) => Math.min(s + 1, 13))
+    play(SFX.levelUp)
   }
 
   const progress = useMemo(() => {
-    // 13 telas → 0..100
     const map: Record<number, number> = {
-      1: 8,
-      2: 16,
-      3: 24,
-      4: 32,
-      5: 40,
-      6: 48,
-      7: 56,
-      8: 64,
-      9: 72,
-      10: 80,
-      11: 88,
-      12: 96,
-      13: 100,
+      1: 8, 2: 16, 3: 24, 4: 32, 5: 40, 6: 48, 7: 56,
+      8: 64, 9: 72, 10: 80, 11: 88, 12: 96, 13: 100,
     }
-    return map[step]
+    return map[step] || 0
   }, [step])
 
   // === Definição das Páginas (13) ===
   const steps: StepQuestion[] = useMemo(
     () => [
-      // P1 – Estalo brutal (CTA start)
+      // P1 – Estalo brutal
       {
         id: 1,
         kind: "radio",
@@ -136,9 +108,7 @@ export default function QuizDestravaAi() {
         progress: 8,
         xpReward: 1,
         question: "Daqui a 1 ano sua vida vai estar IGUAL — travada, sem dinheiro e sem orgulho. Bora encarar a verdade?",
-        choices: [
-          { label: "COMEÇAR O DIAGNÓSTICO", value: "start" },
-        ],
+        choices: [{ label: "COMEÇAR O DIAGNÓSTICO", value: "start" }],
         insight: "Quem foge da verdade, casa com a mentira.",
       },
       // P2 – Idade
@@ -159,11 +129,11 @@ export default function QuizDestravaAi() {
         ],
         insight: "Cada década sem ação é um caixão pro teu potencial.",
       },
-      // P3 – Scroll + Adiamento (combo)
+      // P3 – Scroll
       {
         id: 3,
         kind: "radio",
-        title: "Prisão Digital + Adiamento",
+        title: "Prisão Digital",
         hudAvatar: "Pescoço erguendo.",
         progress: 24,
         xpReward: 6,
@@ -212,39 +182,162 @@ export default function QuizDestravaAi() {
         maxSelections: 2,
         insight: "Cada área fodida é um grito do teu eu que desistiu.",
       },
+      // P6 – Foco total agora
+      {
+        id: 6,
+        kind: "radio",
+        title: "Foco total agora",
+        hudAvatar: "Postura firme.",
+        progress: 48,
+        xpReward: 4,
+        question: "Se o foco total viesse HOJE, qual prioridade #1?",
+        choices: [
+          { label: "Carreira", value: "carreira" },
+          { label: "Dinheiro", value: "dinheiro" },
+          { label: "Saúde", value: "saude" },
+          { label: "Projetos pessoais", value: "projetos" },
+          { label: "Relacionamentos", value: "relacionamentos" },
+          { label: "Tudo de uma vez", value: "tudo" },
+        ],
+        insight: "A prioridade que escolhe define a vida que constrói.",
+      },
+      // P7 – Sua vida em 12 meses
+      {
+        id: 7,
+        kind: "radio",
+        title: "Sua vida em 12 meses",
+        hudAvatar: "Luz no olhar.",
+        progress: 56,
+        xpReward: 6,
+        question: "Daqui a 12 meses, como você quer se enxergar?",
+        choices: [
+          { label: "Resultados reais, projetos do papel.", value: "resultados" },
+          { label: "Disciplina, confiança e orgulho.", value: "disciplina" },
+          { label: "Rotina produtiva no controle.", value: "rotina" },
+        ],
+        insight: "A vida que quer não chega — é construída.",
+      },
+      // P8 – Loading/Processamento
+      {
+        id: 8,
+        kind: "loading",
+        title: "Processamento Neural",
+        hudAvatar: "Olhos fechados, download de consciência.",
+        progress: 64,
+        xpReward: 5,
+        question: "Seu diagnóstico está chegando...",
+        insight: "Quem assume o compromisso, colhe o resultado.",
+      },
+      // P9 – O futuro sem ação
+      {
+        id: 9,
+        kind: "radio",
+        title: "O futuro sem ação",
+        hudAvatar: "Rosto meio luz/meio sombra.",
+        progress: 72,
+        xpReward: 5,
+        question: "Quantas vezes você começou com energia e largou no meio?",
+        choices: [
+          { label: "Muitas (padrão)", value: "muitas" },
+          { label: "Algumas (dói)", value: "algumas" },
+          { label: "Raramente", value: "raro" },
+          { label: "Nunca (😈)", value: "nunca" },
+        ],
+        insight: "Cada desistência é uma mini‑morte.",
+      },
+      // P10 – Virada mental
+      {
+        id: 10,
+        kind: "radio",
+        title: "Virada mental: a última chamada",
+        hudAvatar: "Armadura psíquica ativando (nível 5).",
+        progress: 80,
+        xpReward: 5,
+        question: "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
+        choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
+        insight: "Clareza sem ação é autoengano.",
+      },
+      // P11 – Diagnóstico
+      {
+        id: 11,
+        kind: "diagnosis",
+        title: "Diagnóstico Final: a verdade nua",
+        hudAvatar: "Armadura 7/10.",
+        progress: 88,
+        xpReward: 10,
+        insight: "A dor de agora é a conta do que adiou.",
+      },
+      // P12 – Compromisso
+      {
+        id: 12,
+        kind: "commitment",
+        title: "Compromisso de tempo diário",
+        hudAvatar: "9/10, olhos em brasa.",
+        progress: 96,
+        xpReward: 9,
+        question: "Quanto tempo por dia você vai investir para sair do ciclo?",
+        choices: [
+          { label: "5 min/dia — Começar agora", value: "5" },
+          { label: "10 min/dia — Pronto pra mudar", value: "10" },
+          { label: "15 min/dia — Compromisso de verdade", value: "15" },
+          { label: "20+ min/dia — Vou dar tudo", value: "20+" },
+        ],
+        insight: "O futuro pune quem hesita.",
+      },
+      // P13 – Oferta final
+      {
+        id: 13,
+        kind: "offer",
+        title: "Oferta Final",
+        hudAvatar: "10/10, armadura completa.",
+        progress: 100,
+        xpReward: 5,
+        insight: "Ou você ri da procrastinação hoje, ou ela ri de você amanhã.",
+      },
     ],
     []
   )
 
   // === Render Helpers ===
   const Container: React.FC<{ children: any }> = ({ children }) => (
-    <div
-      className="relative mx-auto max-w-3xl w-full"
-      style={{
-        color: COLORS.dirty,
-      }}
-    >
-      <div className="rounded-3xl p-6 md:p-8 bg-gradient-to-br from-[#2b1a4e]/70 via-[#3c2569]/70 to-[#4B2E83]/70 ring-1 ring-white/10 shadow-[0_20px_60px_rgba(0,0,0,.35)]">
+    <div className="relative mx-auto max-w-3xl w-full">
+      <div className="rounded-3xl p-6 md:p-8 bg-gradient-to-br from-[#2b1a4e]/70 via-[#3c2569]/70 to-[#4B2E83]/70 ring-1 ring-white/10 shadow-[0_20px_60px_rgba(0,0,0,.35)] backdrop-blur-sm">
         {children}
       </div>
     </div>
   )
 
-  const Hud = () => (
-    <div className="mb-6 flex items-center justify-between text-xs">
-      <div className="flex items-center gap-3">
-        <span className="px-2 py-1 rounded-full bg-white/10">XP {xp}/140</span>
-        <span className="px-2 py-1 rounded-full bg-white/10">Avatar: {steps.find((s) => s.id === step)?.hudAvatar}</span>
+  const Hud = () => {
+    const currentStep = steps.find((s) => s.id === step)
+    return (
+      <div className="mb-6 flex items-center justify-between text-xs">
+        <div className="flex items-center gap-3">
+          <motion.span 
+            className="px-3 py-1 rounded-full bg-white/10 font-medium"
+            key={xp}
+            initial={{ scale: 1.2 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Zap className="inline size-3 mr-1 text-yellow-400" />
+            XP {xp}/140
+          </motion.span>
+          <span className="px-3 py-1 rounded-full bg-white/10 text-[10px] max-w-[200px] truncate">
+            Avatar: {currentStep?.hudAvatar}
+          </span>
+        </div>
+        <div className="flex-1 mx-4 h-2 rounded-full bg-white/10 overflow-hidden">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-[#F25C54] to-[#FF3B3B]"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
+        </div>
+        <span className="opacity-80 font-medium">{Math.round(progress)}%</span>
       </div>
-      <div className="flex-1 mx-4 h-2 rounded-full bg-white/10 overflow-hidden">
-        <div
-          className="h-full rounded-full"
-          style={{ width: `${progress}%`, background: `linear-gradient(90deg, ${COLORS.coral}, ${COLORS.red})` }}
-        />
-      </div>
-      <span className="opacity-80">{progress}%</span>
-    </div>
-  )
+    )
+  }
 
   // === Componente para radio ===
   const PageRadio: React.FC<{ stepData: StepQuestion; onSelect: (value: string) => void }> = ({ stepData, onSelect }) => {
@@ -252,28 +345,63 @@ export default function QuizDestravaAi() {
       <Container>
         <Hud />
         {stepData.title && (
-          <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">{stepData.title}</h3>
+          <motion.h3 
+            className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {stepData.title}
+          </motion.h3>
         )}
-        {stepData.question && <p className="text-sm text-[#C39BD3] mb-6">{stepData.question}</p>}
+        {stepData.question && (
+          <motion.p 
+            className="text-sm text-[#C39BD3] mb-6 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            {stepData.question}
+          </motion.p>
+        )}
 
-        <div className="grid gap-3">
-          {stepData.choices?.map((c) => (
-            <button
+        <motion.div 
+          className="grid gap-3"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {stepData.choices?.map((c, index) => (
+            <motion.button
               key={c.value}
               onClick={() => {
                 play(SFX.ping)
                 onSelect(c.value)
-                next(stepData.xpReward, `step_${stepData.id}`)
+                setTimeout(() => next(stepData.xpReward, `step_${stepData.id}`), 300)
               }}
-              className="group flex items-center justify-between w-full rounded-2xl bg-gradient-to-br from-[#5e348f] to-[#3d225e] p-4 ring-1 ring-white/10 hover:scale-[1.02] transition shadow-[0_20px_60px_rgba(0,0,0,.35)]"
+              className="group flex items-center justify-between w-full rounded-2xl bg-gradient-to-br from-[#5e348f] to-[#3d225e] p-4 ring-1 ring-white/10 hover:scale-[1.02] transition-all duration-300 shadow-[0_20px_60px_rgba(0,0,0,.35)] hover:shadow-[0_25px_70px_rgba(0,0,0,.4)]"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <span className="text-left text-[15px]">{c.label}</span>
-              <ChevronRight className="size-5 opacity-70 group-hover:translate-x-1 transition" />
-            </button>
+              <span className="text-left text-[15px] font-medium">{c.label}</span>
+              <ChevronRight className="size-5 opacity-70 group-hover:translate-x-1 transition-transform" />
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
-        {stepData.insight && <p className="mt-6 text-xs opacity-80 italic">{stepData.insight}</p>}
+        {stepData.insight && (
+          <motion.p 
+            className="mt-6 text-xs opacity-80 italic text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            {stepData.insight}
+          </motion.p>
+        )}
       </Container>
     )
   }
@@ -285,11 +413,15 @@ export default function QuizDestravaAi() {
     const toggleSelection = (value: string) => {
       setSelected(prev => {
         if (prev.includes(value)) {
+          play(SFX.ping)
           return prev.filter(v => v !== value)
         } else if (prev.length < (stepData.maxSelections || 999)) {
+          play(SFX.success)
           return [...prev, value]
+        } else {
+          play(SFX.failure)
+          return prev
         }
-        return prev
       })
     }
 
@@ -297,7 +429,7 @@ export default function QuizDestravaAi() {
       if (selected.length > 0) {
         play(SFX.boom)
         onSelect(selected)
-        next(stepData.xpReward, `step_${stepData.id}`)
+        setTimeout(() => next(stepData.xpReward, `step_${stepData.id}`), 300)
       }
     }
 
@@ -305,38 +437,498 @@ export default function QuizDestravaAi() {
       <Container>
         <Hud />
         {stepData.title && (
-          <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">{stepData.title}</h3>
+          <motion.h3 
+            className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {stepData.title}
+          </motion.h3>
         )}
-        {stepData.question && <p className="text-sm text-[#C39BD3] mb-6">{stepData.question}</p>}
+        {stepData.question && (
+          <motion.p 
+            className="text-sm text-[#C39BD3] mb-6 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            {stepData.question}
+          </motion.p>
+        )}
 
-        <div className="grid gap-3 mb-6">
-          {stepData.choices?.map((c) => (
-            <button
+        <motion.div 
+          className="grid gap-3 mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {stepData.choices?.map((c, index) => (
+            <motion.button
               key={c.value}
-              onClick={() => {
-                play(SFX.ping)
-                toggleSelection(c.value)
-              }}
-              className={`group flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 hover:scale-[1.02] transition shadow-[0_20px_60px_rgba(0,0,0,.35)] ${
+              onClick={() => toggleSelection(c.value)}
+              className={`group flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 hover:scale-[1.02] transition-all duration-300 shadow-[0_20px_60px_rgba(0,0,0,.35)] ${
                 selected.includes(c.value)
-                  ? 'bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e]'
+                  ? 'bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e] ring-green-400/30'
                   : 'bg-gradient-to-br from-[#5e348f] to-[#3d225e]'
               }`}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <span className="text-left text-[15px]">{c.label}</span>
-              {selected.includes(c.value) && <Check className="size-5 text-green-400" />}
-            </button>
+              <span className="text-left text-[15px] font-medium">{c.label}</span>
+              {selected.includes(c.value) && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Check className="size-5 text-green-400" />
+                </motion.div>
+              )}
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
-        <button
+        <motion.button
           onClick={handleContinue}
           disabled={selected.length === 0}
-          className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#FF6A00] disabled:bg-gray-600 disabled:cursor-not-allowed p-4 font-bold text-white transition-colors"
+          className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] disabled:bg-gray-600 disabled:cursor-not-allowed p-4 font-bold text-white transition-all duration-300 shadow-[0_15px_40px_rgba(242,92,84,.4)] hover:shadow-[0_20px_50px_rgba(242,92,84,.6)]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           Continuar ({selected.length} selecionado{selected.length !== 1 ? 's' : ''})
-        </button>
-        {stepData.insight && <p className="mt-6 text-xs opacity-80 italic text-center">{stepData.insight}</p>}
+        </motion.button>
+        
+        {stepData.insight && (
+          <motion.p 
+            className="mt-6 text-xs opacity-80 italic text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {stepData.insight}
+          </motion.p>
+        )}
+      </Container>
+    )
+  }
+
+  // === Componente Loading ===
+  const PageLoading: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [agree1, setAgree1] = useState(false)
+    const [agree2, setAgree2] = useState(false)
+
+    useEffect(() => {
+      play(SFX.scan)
+      const interval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval)
+            return 100
+          }
+          return prev + 2
+        })
+      }, 100)
+      return () => clearInterval(interval)
+    }, [])
+
+    const handleContinue = () => {
+      if (email && agree1 && agree2) {
+        play(SFX.success)
+        setAnswers(prev => ({ ...prev, email, phone }))
+        next(stepData.xpReward, `step_${stepData.id}`)
+      } else {
+        play(SFX.failure)
+      }
+    }
+
+    return (
+      <Container>
+        <Hud />
+        <div className="text-center mb-6">
+          <motion.div
+            className="inline-flex items-center gap-2 text-sm opacity-90 mb-4"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Loader2 className="size-4 animate-spin text-[#F25C54]" />
+            <span>Processamento Neural: analisando suas respostas…</span>
+          </motion.div>
+          
+          <motion.h3 
+            className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            {stepData.title}
+          </motion.h3>
+          
+          <motion.div 
+            className="w-full bg-white/10 rounded-full h-2 mb-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <motion.div
+              className="bg-gradient-to-r from-[#F25C54] to-[#FF3B3B] h-2 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${loadingProgress}%` }}
+              transition={{ duration: 0.1 }}
+            />
+          </motion.div>
+          
+          <motion.p 
+            className="text-sm text-[#C39BD3] mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            Na última semana, <b>1.024 pessoas</b> começaram exatamente como você… e já sentiram mudança.
+          </motion.p>
+        </div>
+
+        <motion.div 
+          className="space-y-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <label className="flex items-center gap-3 text-sm cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="accent-[#F25C54] scale-110" 
+              checked={agree1}
+              onChange={(e) => setAgree1(e.target.checked)}
+            />
+            <span>Concordo em aplicar <b>5–15 min/dia</b> do plano.</span>
+          </label>
+          
+          <label className="flex items-center gap-3 text-sm cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="accent-[#F25C54] scale-110" 
+              checked={agree2}
+              onChange={(e) => setAgree2(e.target.checked)}
+            />
+            <span>Quero receber apenas o <b>essencial</b>.</span>
+          </label>
+          
+          <div className="grid md:grid-cols-2 gap-3 mt-4">
+            <input
+              type="email"
+              placeholder="Seu e-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="rounded-xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#F25C54] transition-all"
+            />
+            <input
+              type="tel"
+              placeholder="Seu WhatsApp"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="rounded-xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#F25C54] transition-all"
+            />
+          </div>
+        </motion.div>
+
+        <motion.div 
+          className="mt-6 flex justify-end"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
+          <button
+            onClick={handleContinue}
+            disabled={!email || !agree1 || !agree2}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold bg-[#F25C54] hover:bg-[#ff6f68] disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300 shadow-[0_15px_40px_rgba(242,92,84,.4)] hover:shadow-[0_20px_50px_rgba(242,92,84,.6)]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Continuar <ChevronRight className="size-4" />
+          </button>
+        </motion.div>
+
+        {stepData.insight && (
+          <motion.p 
+            className="mt-4 text-xs opacity-80 italic text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            {stepData.insight}
+          </motion.p>
+        )}
+      </Container>
+    )
+  }
+
+  // === Componente Diagnóstico ===
+  const PageDiagnosis: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    const scrollLevel = answers.scrollLevel || 5
+    const damages = answers.damages || ['carreira']
+    
+    let level = "MÉDIO"
+    let levelColor = "text-yellow-400"
+    let description = "Você tenta, mas se sabota mais do que avança."
+    
+    if (scrollLevel >= 8) {
+      level = "EXTREMO"
+      levelColor = "text-red-400"
+      description = "Você está na beira do abismo. Ou muda, ou afunda."
+    } else if (scrollLevel >= 5) {
+      level = "ALTO"
+      levelColor = "text-orange-400"
+      description = "Piloto automático comendo tua energia e confiança."
+    }
+
+    const bullets = [
+      `Área mais afetada: ${damages[0]}${damages[1] ? ` e ${damages[1]}` : ''}.`,
+      `Gatilho de fuga: ${scrollLevel > 6 ? 'celular' : 'adiamento/ansiedade'}.`,
+      `Quebra de foco: pico no período atual.`
+    ]
+
+    useEffect(() => {
+      play(SFX.alarm)
+    }, [])
+
+    return (
+      <Container>
+        <Hud />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="text-center mb-6">
+            <motion.div
+              className="inline-flex items-center gap-2 mb-4"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <AlertTriangle className="size-5 text-red-400" />
+              <span className="text-sm font-medium">Diagnóstico Completo</span>
+            </motion.div>
+            
+            <motion.h3 
+              className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              {stepData.title}
+            </motion.h3>
+          </div>
+
+          <motion.div 
+            className="rounded-2xl bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] p-6 ring-1 ring-white/10 mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div className="text-center mb-4">
+              <div className="text-sm opacity-90 mb-2">Seu nível de procrastinação:</div>
+              <motion.div 
+                className={`text-4xl font-black ${levelColor} mb-2`}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                {level}
+              </motion.div>
+              <p className="text-[#C39BD3] text-sm leading-relaxed">{description}</p>
+            </div>
+            
+            <motion.ul 
+              className="space-y-2 text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+            >
+              {bullets.map((bullet, index) => (
+                <motion.li 
+                  key={index}
+                  className="flex items-center gap-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.9 + index * 0.1 }}
+                >
+                  <div className="size-2 rounded-full bg-[#F25C54]" />
+                  {bullet}
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.div>
+
+          <motion.button
+            onClick={() => {
+              play(SFX.boom)
+              next(stepData.xpReward, `step_${stepData.id}`)
+            }}
+            className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] p-4 font-bold text-white transition-all duration-300 shadow-[0_15px_40px_rgba(242,92,84,.4)] hover:shadow-[0_20px_50px_rgba(242,92,84,.6)]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.2 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Continuar para o Plano Personalizado
+          </motion.button>
+
+          {stepData.insight && (
+            <motion.p 
+              className="mt-4 text-xs opacity-80 italic text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.4 }}
+            >
+              {stepData.insight}
+            </motion.p>
+          )}
+        </motion.div>
+      </Container>
+    )
+  }
+
+  // === Componente Oferta Final ===
+  const PageOffer: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    useEffect(() => {
+      play(SFX.success)
+    }, [])
+
+    const handlePurchase = () => {
+      play(SFX.boom)
+      giveXp(50, "purchase_intent")
+      // Aqui você adicionaria a integração com o sistema de pagamento
+      alert("Redirecionando para pagamento...")
+    }
+
+    return (
+      <Container>
+        <Hud />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="text-center mb-6">
+            <motion.div
+              className="inline-flex items-center gap-2 mb-4"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Trophy className="size-5 text-yellow-400" />
+              <span className="text-sm font-medium">Oferta Exclusiva</span>
+            </motion.div>
+            
+            <motion.h3 
+              className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              {stepData.title}
+            </motion.h3>
+          </div>
+
+          <motion.div 
+            className="rounded-2xl bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] p-6 ring-1 ring-white/10 mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <div className="text-center mb-4">
+              <Sparkles className="size-8 text-yellow-400 mx-auto mb-3" />
+              <p className="text-sm leading-relaxed">
+                ✨ Em <b>5 dias</b> você sente tração. Em <b>14 dias</b>, rotina disciplinada — mesmo se já fracassou antes.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Depoimentos rápidos */}
+          <motion.div 
+            className="grid gap-4 mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            {[
+              { text: "Perdia cliente. Em 2 semanas fechei mais que em 3 meses.", author: "João — vendedor" },
+              { text: "Travava no celular. Hoje termino o TCC e cumpro rotina.", author: "Larissa — estudante" },
+              { text: "Não era preguiça; era falta de clareza. Faturei mais.", author: "Camila — empreendedora" }
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                className="rounded-xl bg-[#4B2E83]/50 p-4 ring-1 ring-white/10"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.7 + index * 0.1 }}
+              >
+                <p className="text-sm mb-2">"{testimonial.text}"</p>
+                <div className="text-xs opacity-80">{testimonial.author}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Urgência */}
+          <motion.div 
+            className="rounded-xl bg-gradient-to-r from-[#6a3a38] to-[#3a1f1e] p-4 ring-1 ring-white/10 mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 1.0 }}
+          >
+            <div className="flex items-center gap-2 text-sm">
+              <Clock className="size-4 text-red-400" />
+              <span>A cada hora, dezenas entram. <b>Bônus Técnica X</b> limitado. Se voltar amanhã, pode não ter.</span>
+            </div>
+          </motion.div>
+
+          {/* Preço e CTA */}
+          <motion.div 
+            className="rounded-2xl bg-black/20 p-6 ring-1 ring-white/10"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm opacity-90 mb-1">Plano personalizado vitalício</div>
+                <div className="text-3xl font-black text-[#FFCC48] mb-1">R$ 37</div>
+                <div className="text-xs opacity-80">Acesso imediato + Bônus Técnica X (limitado)</div>
+              </div>
+              <motion.button
+                onClick={handlePurchase}
+                className="px-6 py-4 bg-[#39FF88] hover:bg-[#2dd673] text-black font-black rounded-xl transition-all duration-300 shadow-[0_15px_40px_rgba(57,255,136,.4)] hover:shadow-[0_20px_50px_rgba(57,255,136,.6)]"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                QUERO ESMAGAR A PROCRASTINAÇÃO
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {stepData.insight && (
+            <motion.p 
+              className="mt-4 text-xs opacity-80 italic text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.4 }}
+            >
+              {stepData.insight}
+            </motion.p>
+          )}
+        </motion.div>
       </Container>
     )
   }
@@ -350,14 +942,15 @@ export default function QuizDestravaAi() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.4 }}
         >
-          {/* Fundo decorativo consistente com a landing */}
+          {/* Fundo decorativo */}
           <div className="absolute inset-0 -z-10 pointer-events-none">
             <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-red-600/30 blur-[120px]" />
             <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-purple-900/40 blur-[120px]" />
           </div>
 
+          {/* Step 1 - Estalo Brutal */}
           {step === 1 && (
             <PageRadio
               stepData={steps[0]}
@@ -367,6 +960,7 @@ export default function QuizDestravaAi() {
             />
           )}
 
+          {/* Step 2 - Idade */}
           {step === 2 && (
             <PageRadio
               stepData={steps[1]}
@@ -376,15 +970,18 @@ export default function QuizDestravaAi() {
             />
           )}
 
+          {/* Step 3 - Scroll */}
           {step === 3 && (
             <PageRadio
               stepData={steps[2]}
               onSelect={(value) => {
-                setAnswers(prev => ({ ...prev, scrollLevel: parseInt(value.split('-')[1]) || 5 }))
+                const level = parseInt(value.split('-')[1]) || 5
+                setAnswers(prev => ({ ...prev, scrollLevel: level }))
               }}
             />
           )}
 
+          {/* Step 4 - Reflexo */}
           {step === 4 && (
             <PageRadio
               stepData={steps[3]}
@@ -394,6 +991,7 @@ export default function QuizDestravaAi() {
             />
           )}
 
+          {/* Step 5 - Prejuízos (Checkbox) */}
           {step === 5 && (
             <PageCheckbox
               stepData={steps[4]}
@@ -403,21 +1001,64 @@ export default function QuizDestravaAi() {
             />
           )}
 
-          {step > 5 && (
-            <Container>
-              <Hud />
-              <div className="text-center py-12">
-                <h3 className="text-2xl font-bold text-white mb-4">Quiz em Desenvolvimento</h3>
-                <p className="text-[#C39BD3] mb-6">Mais etapas serão adicionadas em breve!</p>
-                <button
-                  onClick={() => setStep(1)}
-                  className="px-6 py-3 bg-[#F25C54] hover:bg-[#FF6A00] rounded-xl font-bold transition-colors"
-                >
-                  Recomeçar Quiz
-                </button>
-              </div>
-            </Container>
+          {/* Step 6 - Prioridade */}
+          {step === 6 && (
+            <PageRadio
+              stepData={steps[5]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, priority: value }))
+              }}
+            />
           )}
+
+          {/* Step 7 - Visão 12 meses */}
+          {step === 7 && (
+            <PageRadio
+              stepData={steps[6]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, vision12: value }))
+              }}
+            />
+          )}
+
+          {/* Step 8 - Loading */}
+          {step === 8 && <PageLoading stepData={steps[7]} />}
+
+          {/* Step 9 - Padrão de desistência */}
+          {step === 9 && (
+            <PageRadio
+              stepData={steps[8]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, quitPattern: value }))
+              }}
+            />
+          )}
+
+          {/* Step 10 - Última chamada */}
+          {step === 10 && (
+            <PageRadio
+              stepData={steps[9]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, lastCall: value }))
+              }}
+            />
+          )}
+
+          {/* Step 11 - Diagnóstico */}
+          {step === 11 && <PageDiagnosis stepData={steps[10]} />}
+
+          {/* Step 12 - Compromisso */}
+          {step === 12 && (
+            <PageRadio
+              stepData={steps[11]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, commitment: value }))
+              }}
+            />
+          )}
+
+          {/* Step 13 - Oferta Final */}
+          {step === 13 && <PageOffer stepData={steps[12]} />}
         </motion.div>
       </AnimatePresence>
     </section>
