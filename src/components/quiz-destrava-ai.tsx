@@ -247,7 +247,7 @@ export default function QuizDestravaAi() {
   )
 
   // === Componentes de página ===
-  const PageRadio: React.FC<{ stepData: StepQuestion } & { onSelect: (v: string) => void }> = ({ stepData, onSelect }) => (
+  const PageCheckboxQuestion: React.FC<{ stepData: StepQuestion; onChange: (vals: string[]) => void }> = ({ stepData, onChange }) => {
     <Container>
       <Hud />
       {stepData.title && (
@@ -402,7 +402,7 @@ export default function QuizDestravaAi() {
           )}
 
           {step === 5 && (
-            <PageCheckbox
+            <PageCheckboxQuestion
               stepData={steps[4]}
               onSelect={(values) => {
                 setAnswers(prev => ({ ...prev, damages: values }))
