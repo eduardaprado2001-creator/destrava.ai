@@ -579,8 +579,6 @@ export default function QuizDestravaAi() {
   const PageSlider: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
     const handleSliderChange = (value: number) => {
       setSliderValue(value)
-      // Som suave de clique ao mover slider
-      play(SFX.click)
     }
 
     const handleContinue = () => {
