@@ -13,6 +13,350 @@ interface Step {
   maxSelections?: number;
 }
 
+interface StepProps {
+  step: Step;
+  setAnswers: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+  giveXp: (amount: number) => void;
+  nextStep: () => void;
+}
+
+// Componente separado para steps de radio
+const RadioStep: React.FC<StepProps> = ({ step, setAnswers, giveXp, nextStep }) => {
+  return (
+    <div className="space-y-4">
+      <p className="text-lg text-[#C39BD3] leading-relaxed">{step.question}</p>
+      <div className="space-y-3">
+        {step.choices?.map((choice, index) => (
+          <motion.button
+            key={index}
+            className="w-full p-4 text-left rounded-2xl bg-gradient-to-r from-[#5e348f] to-[#3d225e] text-[#FCEEE3] font-medium hover:from-[#6a3a38] hover:to-[#3a1f1e] transition-all duration-300 border border-white/10"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              setAnswers(prev => ({ ...prev, [`step_${step.id}`]: choice.value }));
+              giveXp(step.reward);
+              setTimeout(nextStep, 500);
+            }}
+          >
+            {choice.label}
+          </motion.button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Componente separado para steps de checkbox
+const CheckboxStep: React.FC<StepProps> = ({ step, setAnswers, giveXp, nextStep }) => {
+  const [selected, setSelected] = useState<string[]>([]);
+
+  return (
+    <div className="space-y-4">
+      <p className="text-lg text-[#C39BD3] leading-relaxed">{step.question}</p>
+      <div className="space-y-3">
+        {step.choices?.map((choice, index) => (
+          <motion.button
+            key={index}
+            className={`w-full p-4 text-left rounded-2xl font-medium transition-all duration-300 border border-white/10 ${
+              selected.includes(choice.value)
+                ? 'bg-gradient-to-r from-[#6a3a38] to-[#3a1f1e] text-white'
+                : 'bg-gradient-to-r from-[#5e348f] to-[#3d225e] text-[#FCEEE3] hover:from-[#6a3a38] hover:to-[#3a1f1e]'
+            }`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              if (selected.includes(choice.value)) {
+                setSelected(prev => prev.filter(v => v !== choice.value));
+              } else if (selected.length < (step.maxSelections || 1)) {
+                setSelected(prev => [...prev, choice.value]);
+              }
+            }}
+          >
+            {choice.label}
+          </motion.button>
+        ))}
+      </div>
+      
+      {selected.length > 0 && (
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full p-4 rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] text-white font-bold transition-all duration-300"
+          onClick={() => {
+            setAnswers(prev => ({ ...prev, [`step_${step.id}`]: selected }));
+            giveXp(step.reward);
+            setTimeout(nextStep, 500);
+          }}
+        >
+          Continuar
+        </motion.button>
+      )}
+    </div>
+  );
+};
+
+// Componente separado para step de loading
+const LoadingStep: React.FC<StepProps> = ({ step, setAnswers, giveXp, nextStep }) => {
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [agree1, setAgree1] = useState(false);
+  const [agree2, setAgree2] = useState(false);
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <div className="w-12 h-12 border-3 border-[#F25C54] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-lg text-[#C39BD3] mb-4">Processamento Neural: analisando suas respostas...</p>
+        <p className="text-sm text-white/80">Na última semana, <strong>1.024 pessoas</strong> começaram exatamente como você… e já sentiram mudança.</p>
+      </div>
+
+      <div className="space-y-4">
+        <label className="flex items-center gap-3 text-sm text-[#FCEEE3]">
+          <input
+            type="checkbox"
+            checked={agree1}
+            onChange={(e) => setAgree1(e.target.checked)}
+            className="w-4 h-4 rounded border-white/20 bg-white/10"
+          />
+          <span>Concordo em aplicar <strong>5–15 min/dia</strong> do plano.</span>
+        </label>
+
+        <label className="flex items-center gap-3 text-sm text-[#FCEEE3]">
+          <input
+            type="checkbox"
+            checked={agree2}
+            onChange={(e) => setAgree2(e.target.checked)}
+            className="w-4 h-4 rounded border-white/20 bg-white/10"
+          />
+          <span>Quero receber apenas o <strong>essencial</strong>.</span>
+        </label>
+
+        <input
+          type="email"
+          placeholder="Seu e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-3 rounded-xl bg-white/10 border border-white/20 text-[#FCEEE3] placeholder-white/50"
+          required
+        />
+
+        <input
+          type="tel"
+          placeholder="Seu WhatsApp"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="w-full p-3 rounded-xl bg-white/10 border border-white/20 text-[#FCEEE3] placeholder-white/50"
+        />
+
+        <motion.button
+          className="w-full p-4 rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] text-white font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!email || !agree1 || !agree2}
+          onClick={() => {
+            setAnswers(prev => ({ ...prev, email, phone }));
+            giveXp(step.reward);
+            setTimeout(nextStep, 1000);
+          }}
+          whileHover={{ scale: !email || !agree1 || !agree2 ? 1 : 1.02 }}
+          whileTap={{ scale: !email || !agree1 || !agree2 ? 1 : 0.98 }}
+        >
+          Continuar
+        </motion.button>
+      </div>
+    </div>
+  );
+};
+
+// Componente separado para step de diagnóstico
+const DiagnosisStep: React.FC<StepProps & { answers: Record<string, any> }> = ({ step, answers, giveXp, nextStep }) => {
+  const scrollLevel = parseInt(answers.step_3?.split('-')[1]) || 5;
+  const delayFreq = answers.step_3 || '';
+  
+  let level = "MÉDIO";
+  if (scrollLevel >= 8 || delayFreq.includes('9-10')) level = "EXTREMO";
+  else if (scrollLevel >= 5) level = "ALTO";
+
+  const damages = answers.step_5 || ['carreira'];
+  const bullets = [
+    `Área mais afetada: ${damages[0]}${damages[1] ? ` e ${damages[1]}` : ''}.`,
+    `Gatilho de fuga: ${scrollLevel > 6 ? 'celular' : 'adiamento/ansiedade'}.`,
+    `Quebra de foco: pico no período atual.`
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Diagnóstico Principal */}
+      <div className="rounded-2xl bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] p-6 border border-white/10">
+        <div className="text-sm opacity-90 mb-2">Seu nível de procrastinação:</div>
+        <div className={`text-4xl font-black mb-3 ${
+          level === "EXTREMO" ? "text-red-500" :
+          level === "ALTO" ? "text-orange-500" :
+          "text-yellow-500"
+        }`}>
+          {level}
+        </div>
+        <p className="text-[#C39BD3] mb-4">
+          {level === "EXTREMO" ? "Você está na beira do abismo. Ou muda, ou afunda." :
+            level === "ALTO" ? "Piloto automático comendo tua energia e confiança." :
+            "Você tenta, mas se sabota mais do que avança."}
+        </p>
+        <ul className="space-y-2 text-sm">
+          {bullets.map((bullet, index) => (
+            <li key={index} className="flex items-start gap-2">
+              <span className="text-[#F25C54] mt-1">•</span>
+              <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Ciclo de Adiamento */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="rounded-2xl bg-gradient-to-br from-gray-700 to-gray-800 p-6 border border-white/10"
+      >
+        <div className="text-center">
+          <div className="text-2xl mb-3">💀</div>
+          <p className="text-white/90 italic leading-relaxed">
+            "Você está preso num ciclo de adiamento que já tá roubando sua energia, destruindo sua autoconfiança e atrasando seus maiores sonhos. E se você continuar assim, sua vida não vai só ficar parada… ela vai andar pra trás."
+          </p>
+        </div>
+      </motion.div>
+
+      <div className="border-t border-white/20 my-6"></div>
+
+      {/* Consequências Negativas */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="rounded-2xl bg-gradient-to-br from-red-900/50 to-red-800/50 p-6 border border-red-500/30"
+      >
+        <h3 className="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
+          <span>❌</span>
+          Se nada mudar, daqui a meses você vai:
+        </h3>
+        <ul className="space-y-3 text-white/90">
+          <li className="flex items-start gap-3">
+            <span className="text-red-400 mt-1">•</span>
+            <span>Perder oportunidades que nunca mais voltam.</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-red-400 mt-1">•</span>
+            <span>Ver sua carreira e seu dinheiro travados.</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-red-400 mt-1">•</span>
+            <span>Se sentir cada vez mais frustrado, pesado e arrependido.</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-red-400 mt-1">•</span>
+            <span>Olhar pro espelho e odiar a pessoa que deixou tudo escapar.</span>
+          </li>
+        </ul>
+      </motion.div>
+
+      <div className="border-t border-white/20 my-6"></div>
+
+      {/* Mensagem de Esperança */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+        className="rounded-2xl bg-gradient-to-br from-emerald-900/50 to-emerald-800/50 p-6 border border-emerald-500/30"
+      >
+        <h3 className="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
+          <span>✨</span>
+          Mas há esperança:
+        </h3>
+        <div className="space-y-4 text-white/90">
+          <p className="flex items-start gap-3">
+            <span className="text-emerald-400 mt-1">⚡</span>
+            <span className="italic">
+              "Se você agir HOJE, pode reverter esse ciclo em poucas semanas e conquistar foco, disciplina e orgulho real — mesmo que já tenha tentado antes sem sucesso."
+            </span>
+          </p>
+          <p className="flex items-start gap-3">
+            <span className="text-emerald-400 mt-1">👉</span>
+            <span>
+              Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e transformar sua vida.
+            </span>
+          </p>
+        </div>
+      </motion.div>
+
+      <motion.button
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2 }}
+        className="w-full p-4 rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] text-white font-bold transition-all duration-300 mt-6"
+        onClick={() => {
+          giveXp(step.reward);
+          setTimeout(nextStep, 500);
+        }}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        Continuar
+      </motion.button>
+    </div>
+  );
+};
+
+// Componente separado para step de oferta
+const OfferStep: React.FC<StepProps> = ({ step, giveXp }) => {
+  return (
+    <div className="space-y-6">
+      <div className="rounded-2xl bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] p-6 border border-white/10">
+        <p className="text-sm text-white/90">
+          ✨ Em <strong>5 dias</strong> você sente tração. Em <strong>14 dias</strong>, rotina disciplinada — mesmo se já fracassou antes.
+        </p>
+      </div>
+
+      <div className="grid gap-4">
+        <div className="p-4 rounded-xl bg-[#4B2E83] border border-white/10">
+          <p className="text-sm text-white/90">"Perdia cliente. Em 2 semanas fechei mais que em 3 meses."</p>
+          <div className="text-xs text-white/60 mt-2">João — vendedor</div>
+        </div>
+        <div className="p-4 rounded-xl bg-[#1d3a2b] border border-white/10">
+          <p className="text-sm text-white/90">"Travava no celular. Hoje termino o TCC e cumpro rotina."</p>
+          <div className="text-xs text-white/60 mt-2">Larissa — estudante</div>
+        </div>
+        <div className="p-4 rounded-xl bg-[#3b173b] border border-white/10">
+          <p className="text-sm text-white/90">"Não era preguiça; era falta de clareza. Faturei mais."</p>
+          <div className="text-xs text-white/60 mt-2">Camila — empreendedora</div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e] p-4 border border-white/10">
+        <p className="text-sm text-white/90">
+          A cada hora, dezenas entram. <strong>Bônus Técnica X</strong> limitado. Se voltar amanhã, pode não ter.
+        </p>
+      </div>
+
+      <div className="flex items-center justify-between p-6 rounded-2xl bg-black/20 border border-white/10">
+        <div>
+          <div className="text-sm text-white/90">Plano personalizado vitalício</div>
+          <div className="text-3xl font-black text-[#FFCC48]">R$ 37</div>
+          <div className="text-xs text-white/60">Acesso imediato + Bônus Técnica X (limitado)</div>
+        </div>
+        <motion.button
+          className="px-6 py-3 rounded-xl bg-[#39FF88] hover:bg-[#2dd477] text-black font-bold transition-all duration-300"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            giveXp(50);
+            alert("Redirecionando para pagamento...");
+          }}
+        >
+          QUERO ESMAGAR A PROCRASTINAÇÃO
+        </motion.button>
+      </div>
+    </div>
+  );
+};
+
 const QuizDestravaAi: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [xp, setXp] = useState(0);
@@ -205,352 +549,22 @@ const QuizDestravaAi: React.FC = () => {
     }
   };
 
-  const renderRadioStep = (step: Step) => {
-    return (
-      <div className="space-y-4">
-        <p className="text-lg text-[#C39BD3] leading-relaxed">{step.question}</p>
-        <div className="space-y-3">
-          {step.choices?.map((choice, index) => (
-            <motion.button
-              key={index}
-              className="w-full p-4 text-left rounded-2xl bg-gradient-to-r from-[#5e348f] to-[#3d225e] text-[#FCEEE3] font-medium hover:from-[#6a3a38] hover:to-[#3a1f1e] transition-all duration-300 border border-white/10"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                setAnswers(prev => ({ ...prev, [`step_${step.id}`]: choice.value }));
-                giveXp(step.reward);
-                setTimeout(nextStep, 500);
-              }}
-            >
-              {choice.label}
-            </motion.button>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const renderCheckboxStep = (step: Step) => {
-    const [selected, setSelected] = useState<string[]>([]);
-
-    return (
-      <div className="space-y-4">
-        <p className="text-lg text-[#C39BD3] leading-relaxed">{step.question}</p>
-        <div className="space-y-3">
-          {step.choices?.map((choice, index) => (
-            <motion.button
-              key={index}
-              className={`w-full p-4 text-left rounded-2xl font-medium transition-all duration-300 border border-white/10 ${
-                selected.includes(choice.value)
-                  ? 'bg-gradient-to-r from-[#6a3a38] to-[#3a1f1e] text-white'
-                  : 'bg-gradient-to-r from-[#5e348f] to-[#3d225e] text-[#FCEEE3] hover:from-[#6a3a38] hover:to-[#3a1f1e]'
-              }`}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                if (selected.includes(choice.value)) {
-                  setSelected(prev => prev.filter(v => v !== choice.value));
-                } else if (selected.length < (step.maxSelections || 1)) {
-                  setSelected(prev => [...prev, choice.value]);
-                }
-              }}
-            >
-              {choice.label}
-            </motion.button>
-          ))}
-        </div>
-        
-        {selected.length > 0 && (
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full p-4 rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] text-white font-bold transition-all duration-300"
-            onClick={() => {
-              setAnswers(prev => ({ ...prev, [`step_${step.id}`]: selected }));
-              giveXp(step.reward);
-              setTimeout(nextStep, 500);
-            }}
-          >
-            Continuar
-          </motion.button>
-        )}
-      </div>
-    );
-  };
-
-  const renderLoadingStep = (step: Step) => {
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [agree1, setAgree1] = useState(false);
-    const [agree2, setAgree2] = useState(false);
-
-    return (
-      <div className="space-y-6">
-        <div className="text-center">
-          <div className="w-12 h-12 border-3 border-[#F25C54] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-[#C39BD3] mb-4">Processamento Neural: analisando suas respostas...</p>
-          <p className="text-sm text-white/80">Na última semana, <strong>1.024 pessoas</strong> começaram exatamente como você… e já sentiram mudança.</p>
-        </div>
-
-        <div className="space-y-4">
-          <label className="flex items-center gap-3 text-sm text-[#FCEEE3]">
-            <input
-              type="checkbox"
-              checked={agree1}
-              onChange={(e) => setAgree1(e.target.checked)}
-              className="w-4 h-4 rounded border-white/20 bg-white/10"
-            />
-            <span>Concordo em aplicar <strong>5–15 min/dia</strong> do plano.</span>
-          </label>
-
-          <label className="flex items-center gap-3 text-sm text-[#FCEEE3]">
-            <input
-              type="checkbox"
-              checked={agree2}
-              onChange={(e) => setAgree2(e.target.checked)}
-              className="w-4 h-4 rounded border-white/20 bg-white/10"
-            />
-            <span>Quero receber apenas o <strong>essencial</strong>.</span>
-          </label>
-
-          <input
-            type="email"
-            placeholder="Seu e-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 rounded-xl bg-white/10 border border-white/20 text-[#FCEEE3] placeholder-white/50"
-            required
-          />
-
-          <input
-            type="tel"
-            placeholder="Seu WhatsApp"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full p-3 rounded-xl bg-white/10 border border-white/20 text-[#FCEEE3] placeholder-white/50"
-          />
-
-          <motion.button
-            className="w-full p-4 rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] text-white font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!email || !agree1 || !agree2}
-            onClick={() => {
-              setAnswers(prev => ({ ...prev, email, phone }));
-              giveXp(step.reward);
-              setTimeout(nextStep, 1000);
-            }}
-            whileHover={{ scale: !email || !agree1 || !agree2 ? 1 : 1.02 }}
-            whileTap={{ scale: !email || !agree1 || !agree2 ? 1 : 0.98 }}
-          >
-            Continuar
-          </motion.button>
-        </div>
-      </div>
-    );
-  };
-
-  const renderDiagnosisStep = (step: Step) => {
-    const scrollLevel = parseInt(answers.step_3?.split('-')[1]) || 5;
-    const delayFreq = answers.step_3 || '';
-    
-    let level = "MÉDIO";
-    if (scrollLevel >= 8 || delayFreq.includes('9-10')) level = "EXTREMO";
-    else if (scrollLevel >= 5) level = "ALTO";
-
-    const damages = answers.step_5 || ['carreira'];
-    const bullets = [
-      `Área mais afetada: ${damages[0]}${damages[1] ? ` e ${damages[1]}` : ''}.`,
-      `Gatilho de fuga: ${scrollLevel > 6 ? 'celular' : 'adiamento/ansiedade'}.`,
-      `Quebra de foco: pico no período atual.`
-    ];
-
-    return (
-      <div className="space-y-6">
-        {/* Diagnóstico Principal */}
-        <div className="rounded-2xl bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] p-6 border border-white/10">
-          <div className="text-sm opacity-90 mb-2">Seu nível de procrastinação:</div>
-          <div className={`text-4xl font-black mb-3 ${
-            level === "EXTREMO" ? "text-red-500" :
-            level === "ALTO" ? "text-orange-500" :
-            "text-yellow-500"
-          }`}>
-            {level}
-          </div>
-          <p className="text-[#C39BD3] mb-4">
-            {level === "EXTREMO" ? "Você está na beira do abismo. Ou muda, ou afunda." :
-              level === "ALTO" ? "Piloto automático comendo tua energia e confiança." :
-              "Você tenta, mas se sabota mais do que avança."}
-          </p>
-          <ul className="space-y-2 text-sm">
-            {bullets.map((bullet, index) => (
-              <li key={index} className="flex items-start gap-2">
-                <span className="text-[#F25C54] mt-1">•</span>
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Ciclo de Adiamento */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="rounded-2xl bg-gradient-to-br from-gray-700 to-gray-800 p-6 border border-white/10"
-        >
-          <div className="text-center">
-            <div className="text-2xl mb-3">💀</div>
-            <p className="text-white/90 italic leading-relaxed">
-              "Você está preso num ciclo de adiamento que já tá roubando sua energia, destruindo sua autoconfiança e atrasando seus maiores sonhos. E se você continuar assim, sua vida não vai só ficar parada… ela vai andar pra trás."
-            </p>
-          </div>
-        </motion.div>
-
-        <div className="border-t border-white/20 my-6"></div>
-
-        {/* Consequências Negativas */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="rounded-2xl bg-gradient-to-br from-red-900/50 to-red-800/50 p-6 border border-red-500/30"
-        >
-          <h3 className="text-xl font-bold text-red-400 mb-4 flex items-center gap-2">
-            <span>❌</span>
-            Se nada mudar, daqui a meses você vai:
-          </h3>
-          <ul className="space-y-3 text-white/90">
-            <li className="flex items-start gap-3">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Perder oportunidades que nunca mais voltam.</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Ver sua carreira e seu dinheiro travados.</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Se sentir cada vez mais frustrado, pesado e arrependido.</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Olhar pro espelho e odiar a pessoa que deixou tudo escapar.</span>
-            </li>
-          </ul>
-        </motion.div>
-
-        <div className="border-t border-white/20 my-6"></div>
-
-        {/* Mensagem de Esperança */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-          className="rounded-2xl bg-gradient-to-br from-emerald-900/50 to-emerald-800/50 p-6 border border-emerald-500/30"
-        >
-          <h3 className="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
-            <span>✨</span>
-            Mas há esperança:
-          </h3>
-          <div className="space-y-4 text-white/90">
-            <p className="flex items-start gap-3">
-              <span className="text-emerald-400 mt-1">⚡</span>
-              <span className="italic">
-                "Se você agir HOJE, pode reverter esse ciclo em poucas semanas e conquistar foco, disciplina e orgulho real — mesmo que já tenha tentado antes sem sucesso."
-              </span>
-            </p>
-            <p className="flex items-start gap-3">
-              <span className="text-emerald-400 mt-1">👉</span>
-              <span>
-                Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e transformar sua vida.
-              </span>
-            </p>
-          </div>
-        </motion.div>
-
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="w-full p-4 rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] text-white font-bold transition-all duration-300 mt-6"
-          onClick={() => {
-            giveXp(step.reward);
-            setTimeout(nextStep, 500);
-          }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          Continuar
-        </motion.button>
-      </div>
-    );
-  };
-
-  const renderOfferStep = (step: Step) => {
-    return (
-      <div className="space-y-6">
-        <div className="rounded-2xl bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] p-6 border border-white/10">
-          <p className="text-sm text-white/90">
-            ✨ Em <strong>5 dias</strong> você sente tração. Em <strong>14 dias</strong>, rotina disciplinada — mesmo se já fracassou antes.
-          </p>
-        </div>
-
-        <div className="grid gap-4">
-          <div className="p-4 rounded-xl bg-[#4B2E83] border border-white/10">
-            <p className="text-sm text-white/90">"Perdia cliente. Em 2 semanas fechei mais que em 3 meses."</p>
-            <div className="text-xs text-white/60 mt-2">João — vendedor</div>
-          </div>
-          <div className="p-4 rounded-xl bg-[#1d3a2b] border border-white/10">
-            <p className="text-sm text-white/90">"Travava no celular. Hoje termino o TCC e cumpro rotina."</p>
-            <div className="text-xs text-white/60 mt-2">Larissa — estudante</div>
-          </div>
-          <div className="p-4 rounded-xl bg-[#3b173b] border border-white/10">
-            <p className="text-sm text-white/90">"Não era preguiça; era falta de clareza. Faturei mais."</p>
-            <div className="text-xs text-white/60 mt-2">Camila — empreendedora</div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e] p-4 border border-white/10">
-          <p className="text-sm text-white/90">
-            A cada hora, dezenas entram. <strong>Bônus Técnica X</strong> limitado. Se voltar amanhã, pode não ter.
-          </p>
-        </div>
-
-        <div className="flex items-center justify-between p-6 rounded-2xl bg-black/20 border border-white/10">
-          <div>
-            <div className="text-sm text-white/90">Plano personalizado vitalício</div>
-            <div className="text-3xl font-black text-[#FFCC48]">R$ 37</div>
-            <div className="text-xs text-white/60">Acesso imediato + Bônus Técnica X (limitado)</div>
-          </div>
-          <motion.button
-            className="px-6 py-3 rounded-xl bg-[#39FF88] hover:bg-[#2dd477] text-black font-bold transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              giveXp(50);
-              alert("Redirecionando para pagamento...");
-            }}
-          >
-            QUERO ESMAGAR A PROCRASTINAÇÃO
-          </motion.button>
-        </div>
-      </div>
-    );
-  };
-
   const renderStep = () => {
     const step = steps[currentStep - 1];
     if (!step) return null;
 
+    const stepProps = { step, setAnswers, giveXp, nextStep };
+
     if (step.type === 'loading') {
-      return renderLoadingStep(step);
+      return <LoadingStep {...stepProps} />;
     } else if (step.type === 'diagnosis') {
-      return renderDiagnosisStep(step);
+      return <DiagnosisStep {...stepProps} answers={answers} />;
     } else if (step.type === 'offer') {
-      return renderOfferStep(step);
+      return <OfferStep {...stepProps} />;
     } else if (step.type === 'checkbox') {
-      return renderCheckboxStep(step);
+      return <CheckboxStep {...stepProps} />;
     } else {
-      return renderRadioStep(step);
+      return <RadioStep {...stepProps} />;
     }
   };
 
