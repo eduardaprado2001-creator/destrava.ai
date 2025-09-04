@@ -336,19 +336,7 @@ export default function QuizDestravaAi() {
         hudAvatar: "Armadura psíquica ativando (nível 5).",
         progress: 76,
         xpReward: 5,
-        question: `🚨 Chega de dicas soltas que não funcionam. O que você precisa é de um plano brutalmente claro, feito só pra você.
-
-A real é simples:
-👉 Seus próprios pensamentos estão te sabotando.
-👉 Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.
-
-⚡ Mas quando você acerta a mente, a procrastinação desmorona. No lugar dela nasce a versão sua que faz, termina e conquista. Isso não é teoria de coach. 👉 É sobrevivência.
-
-👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior. 💀 Essa pode ser sua última chance de virar o jogo.
-
-📌 "Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação."
-
-Selecione todas as opções aplicáveis:`,
+        question: "",
         choices: [
           { label: "🤔 Quebra-cabeças (treinar sua mente pra ficar afiada)", value: "quebra_cabecas" },
           { label: "🧠 Aumento do QI (pensar mais rápido e melhor)", value: "aumento_qi" },
@@ -571,6 +559,65 @@ Selecione todas as opções aplicáveis:`,
           >
             {stepData.question}
           </motion.p>
+        )}
+
+        {/* Conteúdo especial para a página Virada mental */}
+        {stepData.id === 12 && (
+          <motion.div
+            className="space-y-4 mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <div className="bg-red-900/30 border border-red-500/30 rounded-2xl p-4">
+              <p className="text-red-400 font-bold mb-2">🚨 Chega de dicas soltas que não funcionam.</p>
+              <p className="text-white">O que você precisa é de um plano brutalmente claro, feito só pra você.</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] rounded-2xl p-4 ring-1 ring-white/10">
+              <p className="text-white font-bold mb-3">A real é simples:</p>
+              <div className="space-y-2 text-sm">
+                <p className="flex items-start gap-2">
+                  <span className="text-[#F25C54]">👉</span>
+                  <span>Seus próprios pensamentos estão te sabotando.</span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <span className="text-[#F25C54]">👉</span>
+                  <span>Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#4B2E83] to-[#3c2569] rounded-2xl p-4 ring-1 ring-white/10">
+              <p className="text-white mb-3">
+                <span className="text-yellow-400">⚡</span> Mas quando você acerta a mente, a procrastinação desmorona.
+              </p>
+              <p className="text-[#C39BD3] mb-3">
+                No lugar dela nasce a versão sua que faz, termina e conquista.
+              </p>
+              <p className="text-white font-bold">
+                Isso não é teoria de coach. <span className="text-[#F25C54]">👉 É sobrevivência.</span>
+              </p>
+            </div>
+
+            <div className="bg-gray-900/50 border border-gray-600/30 rounded-2xl p-4">
+              <p className="text-white mb-2">
+                <span className="text-[#F25C54]">👉</span> Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior.
+              </p>
+              <p className="text-red-400 font-bold">
+                <span className="text-red-500">💀</span> Essa pode ser sua última chance de virar o jogo.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#3b173b] to-[#2a1129] rounded-2xl p-4 ring-1 ring-white/10">
+              <p className="text-white">
+                <span className="text-yellow-400">📌</span> "Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação."
+              </p>
+              <p className="text-[#C39BD3] mt-3 font-medium">
+                Selecione todas as opções aplicáveis:
+              </p>
+            </div>
+          </motion.div>
         )}
 
         <motion.div 
