@@ -171,7 +171,7 @@ export default function QuizDestravaAi() {
       {
         id: 2,
         kind: "radio",
-        title: "Idade: o tempo já era",
+        title: "Sua idade diz muito sobre o quanto a procrastinação já vem roubando da sua vida",
         hudAvatar: "Foco leve nos olhos.",
         progress: 16,
         xpReward: 2,
