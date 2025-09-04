@@ -247,7 +247,7 @@ export default function QuizDestravaAi() {
   )
 
   // === Componentes de página ===
-  const PageCheckboxQuestion: React.FC<{ stepData: StepQuestion; onChange: (vals: string[]) => void }> = ({ stepData, onChange }) => {
+  const PageRadio: React.FC<{ stepData: StepQuestion } & { onSelect: (v: string) => void }> = ({ stepData, onSelect }) => (
     <Container>
       <Hud />
       {stepData.title && (
@@ -277,7 +277,7 @@ export default function QuizDestravaAi() {
   )
 
   // === Componente para checkbox ===
-  const PageCheckbox: React.FC<{ stepData: StepQuestion; onSelect: (values: string[]) => void }> = ({ stepData, onSelect }) => {
+  const PageCheckbox: React.FC<{ stepData: StepQuestion; onChange: (vals: string[]) => void }> = ({ stepData, onChange }) => {
     const [selected, setSelected] = useState<string[]>([])
 
     const toggleSelection = (value: string) => {
@@ -294,7 +294,7 @@ export default function QuizDestravaAi() {
     const handleContinue = () => {
       if (selected.length > 0) {
         play(SFX.boom)
-        onSelect(selected)
+        onChange(selected)
         next(stepData.xpReward, `step_${stepData.id}`)
       }
     }
@@ -402,9 +402,9 @@ export default function QuizDestravaAi() {
           )}
 
           {step === 5 && (
-            <PageCheckboxQuestion
+            <PageCheckbox
               stepData={steps[4]}
-              onSelect={(values) => {
+              onChange={(values) => {
                 setAnswers(prev => ({ ...prev, damages: values }))
               }}
             />
@@ -429,67 +429,4 @@ export default function QuizDestravaAi() {
       </AnimatePresence>
     </section>
   )
-
-  // === Componente para checkbox ===
-  const PageCheckbox: React.FC<{ stepData: StepQuestion; onSelect: (values: string[]) => void }> = ({ stepData, onSelect }) => {
-    const [selected, setSelected] = useState<string[]>([])
-
-    const toggleSelection = (value: string) => {
-      setSelected(prev => {
-        if (prev.includes(value)) {
-          return prev.filter(v => v !== value)
-        } else if (prev.length < (stepData.maxSelections || 999)) {
-          return [...prev, value]
-        }
-        return prev
-      })
-    }
-
-    const handleContinue = () => {
-      if (selected.length > 0) {
-        play(SFX.boom)
-        onSelect(selected)
-        next(stepData.xpReward, `step_${stepData.id}`)
-      }
-    }
-
-    return (
-      <Container>
-        <Hud />
-        {stepData.title && (
-          <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">{stepData.title}</h3>
-        )}
-        {stepData.question && <p className="text-sm text-[#C39BD3] mb-6">{stepData.question}</p>}
-
-        <div className="grid gap-3 mb-6">
-          {stepData.choices?.map((c) => (
-            <button
-              key={c.value}
-              onClick={() => {
-                play(SFX.ping)
-                toggleSelection(c.value)
-              }}
-              className={`group flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 hover:scale-[1.02] transition shadow-[0_20px_60px_rgba(0,0,0,.35)] ${
-                selected.includes(c.value)
-                  ? 'bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e]'
-                  : 'bg-gradient-to-br from-[#5e348f] to-[#3d225e]'
-              }`}
-            >
-              <span className="text-left text-[15px]">{c.label}</span>
-              {selected.includes(c.value) && <Check className="size-5 text-green-400" />}
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={handleContinue}
-          disabled={selected.length === 0}
-          className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#FF6A00] disabled:bg-gray-600 disabled:cursor-not-allowed p-4 font-bold text-white transition-colors"
-        >
-          Continuar ({selected.length} selecionado{selected.length !== 1 ? 's' : ''})
-        </button>
-        {stepData.insight && <p className="mt-6 text-xs opacity-80 italic text-center">{stepData.insight}</p>}
-      </Container>
-    )
-  }
 }
