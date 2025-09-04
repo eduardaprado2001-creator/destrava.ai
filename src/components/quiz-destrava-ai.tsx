@@ -29,11 +29,11 @@ const COLORS = {
 
 // === SFX (Usando os links diretos para os MP3 no GitHub) ===
 const SFX = {
-  ping: "https://raw.githubusercontent.com/usuario/repositorio/master/assets/sounds/ping.mp3",
-  boom: "https://raw.githubusercontent.com/usuario/repositorio/master/assets/sounds/boom.mp3",
-  scan: "https://raw.githubusercontent.com/usuario/repositorio/master/assets/sounds/scan.mp3",
-  alarm: "https://raw.githubusercontent.com/usuario/repositorio/master/assets/sounds/alarm.mp3",
-  victory: "https://raw.githubusercontent.com/usuario/repositorio/master/assets/sounds/victory.mp3"
+  ping: "/Ping sound effect.mp3",
+  boom: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  scan: "/Loading Sound Effect (Royalty free Sound)#shorts.mp3",
+  alarm: "/Efeito sonoro Atenção.mp3",
+  victory: "/Efeito sonoro (Vitória).mp3"
 }
 
 // Tipos de pergunta
