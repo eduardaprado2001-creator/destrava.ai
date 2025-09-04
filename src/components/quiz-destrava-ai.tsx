@@ -884,6 +884,70 @@ Selecione todas as opções aplicáveis:`,
           )}
         </AnimatePresence>
 
+        {/* Conteúdo adicional */}
+        <motion.div
+          className="space-y-6 mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {/* Ciclo de adiamento */}
+          <div className="bg-gray-900/50 border border-gray-600/30 rounded-2xl p-4">
+            <p className="text-gray-300 italic text-center leading-relaxed">
+              💀 "Você está preso num ciclo de adiamento que já tá roubando sua energia, destruindo sua autoconfiança e atrasando seus maiores sonhos.
+              E se você continuar assim, sua vida não vai só ficar parada… ela vai andar pra trás."
+            </p>
+          </div>
+
+          {/* Divisor */}
+          <div className="border-t border-white/10"></div>
+
+          {/* Consequências negativas */}
+          <div className="bg-red-900/30 border border-red-500/30 rounded-2xl p-4">
+            <h4 className="text-red-400 font-bold mb-3 flex items-center gap-2">
+              <span>❌</span>
+              Se nada mudar, daqui a meses você vai:
+            </h4>
+            <ul className="space-y-2 text-sm text-red-200">
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Perder oportunidades que nunca mais voltam.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Ver sua carreira e seu dinheiro travados.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Se sentir cada vez mais frustrado, pesado e arrependido.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Olhar pro espelho e odiar a pessoa que deixou tudo escapar.</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Divisor */}
+          <div className="border-t border-white/10"></div>
+
+          {/* Esperança */}
+          <div className="bg-green-900/30 border border-green-500/30 rounded-2xl p-4">
+            <h4 className="text-green-400 font-bold mb-3 flex items-center gap-2">
+              <span>✨</span>
+              Mas há esperança:
+            </h4>
+            <div className="space-y-3 text-sm">
+              <p className="text-green-200">
+                ⚡ "Se você agir HOJE, pode reverter esse ciclo em poucas semanas e conquistar foco, disciplina e orgulho real — mesmo que já tenha tentado antes sem sucesso."
+              </p>
+              <p className="text-green-200">
+                👉 Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e transformar sua vida.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Fase 3: Call to Action */}
         <AnimatePresence>
           {phase >= 3 && (
