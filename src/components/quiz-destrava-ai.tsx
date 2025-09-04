@@ -157,11 +157,11 @@ export default function QuizDestravaAi() {
       {
         id: 1,
         kind: "radio",
-        title: "Estalo Brutal",
+        title: "",
         hudAvatar: "Sombra, olhos cansados.",
         progress: 8,
         xpReward: 1,
-        question: "Daqui a 1 ano sua vida vai estar IGUAL — travada, sem dinheiro e sem orgulho. Bora encarar a verdade?",
+        question: "Está na hora de encarar a verdade: sua vida está estagnada, e a procrastinação está dominando. Você vai continuar na zona de conforto ou tomar a decisão de mudar sua vida?\n\nAgora é a hora de agir.",
         choices: [
           { label: "COMEÇAR O DIAGNÓSTICO", value: "start" },
         ],
