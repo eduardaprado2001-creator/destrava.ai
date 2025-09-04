@@ -246,38 +246,40 @@ export default function QuizDestravaAi() {
     </div>
   )
 
-  // === Componentes de página ===
-  const PageRadio: React.FC<{ stepData: StepQuestion } & { onSelect: (v: string) => void }> = ({ stepData, onSelect }) => (
-    <Container>
-      <Hud />
-      {stepData.title && (
-        <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">{stepData.title}</h3>
-      )}
-      {stepData.question && <p className="text-sm text-[#C39BD3] mb-6">{stepData.question}</p>}
+  // === Componente para radio ===
+  const PageRadio: React.FC<{ stepData: StepQuestion; onSelect: (value: string) => void }> = ({ stepData, onSelect }) => {
+    return (
+      <Container>
+        <Hud />
+        {stepData.title && (
+          <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">{stepData.title}</h3>
+        )}
+        {stepData.question && <p className="text-sm text-[#C39BD3] mb-6">{stepData.question}</p>}
 
-      <div className="grid gap-3">
-        {stepData.choices?.map((c) => (
-          <button
-            key={c.value}
-            onClick={() => {
-              play(SFX.ping) // Som de clique
-              onSelect(c.value)
-              next(stepData.xpReward, `step_${stepData.id}`)
-            }}
-            className="group flex items-center justify-between w-full rounded-2xl bg-gradient-to-br from-[#5e348f] to-[#3d225e] p-4 ring-1 ring-white/10 hover:scale-[1.02] transition shadow-[0_20px_60px_rgba(0,0,0,.35)]"
-          >
-            <span className="text-left text-[15px]">{c.label}</span>
-            <ChevronRight className="size-5 opacity-70 group-hover:translate-x-1 transition" />
-          </button>
-        ))}
-      </div>
+        <div className="grid gap-3">
+          {stepData.choices?.map((c) => (
+            <button
+              key={c.value}
+              onClick={() => {
+                play(SFX.ping)
+                onSelect(c.value)
+                next(stepData.xpReward, `step_${stepData.id}`)
+              }}
+              className="group flex items-center justify-between w-full rounded-2xl bg-gradient-to-br from-[#5e348f] to-[#3d225e] p-4 ring-1 ring-white/10 hover:scale-[1.02] transition shadow-[0_20px_60px_rgba(0,0,0,.35)]"
+            >
+              <span className="text-left text-[15px]">{c.label}</span>
+              <ChevronRight className="size-5 opacity-70 group-hover:translate-x-1 transition" />
+            </button>
+          ))}
+        </div>
 
-      {stepData.insight && <p className="mt-6 text-xs opacity-80 italic">{stepData.insight}</p>}
-    </Container>
-  )
+        {stepData.insight && <p className="mt-6 text-xs opacity-80 italic">{stepData.insight}</p>}
+      </Container>
+    )
+  }
 
   // === Componente para checkbox ===
-  const PageCheckbox: React.FC<{ stepData: StepQuestion; onChange: (vals: string[]) => void }> = ({ stepData, onChange }) => {
+  const PageCheckbox: React.FC<{ stepData: StepQuestion; onSelect: (values: string[]) => void }> = ({ stepData, onSelect }) => {
     const [selected, setSelected] = useState<string[]>([])
 
     const toggleSelection = (value: string) => {
@@ -294,7 +296,7 @@ export default function QuizDestravaAi() {
     const handleContinue = () => {
       if (selected.length > 0) {
         play(SFX.boom)
-        onChange(selected)
+        onSelect(selected)
         next(stepData.xpReward, `step_${stepData.id}`)
       }
     }
@@ -338,6 +340,7 @@ export default function QuizDestravaAi() {
       </Container>
     )
   }
+
   // === Render principal por step ===
   return (
     <section id="quiz" className="relative mx-auto max-w-6xl px-4 py-12">
@@ -360,16 +363,6 @@ export default function QuizDestravaAi() {
               stepData={steps[0]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, start: value }))
-              }}
-            />
-          )}
-
-          {step === 2 && (
-            <PageRadio
-              stepData={steps[1]}
-              onSelect={(v) => {
-                setAnswers((a) => ({ ...a, age: v }))
-                next(2, "step_2")
               }}
             />
           )}
@@ -404,7 +397,7 @@ export default function QuizDestravaAi() {
           {step === 5 && (
             <PageCheckbox
               stepData={steps[4]}
-              onChange={(values) => {
+              onSelect={(values) => {
                 setAnswers(prev => ({ ...prev, damages: values }))
               }}
             />
