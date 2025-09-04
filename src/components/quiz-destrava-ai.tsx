@@ -721,4 +721,4 @@ export default function QuizDestravaAi() {
 
     useEffect(() => {
       // Som de processamento/carregamento
-      play
+     play(SFX.processing)
