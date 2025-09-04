@@ -2,17 +2,43 @@
 
 import { useMemo, useRef, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Check, ChevronRight, Loader2, Timer, Sparkles, Zap, Target, Trophy, Star, Award, Shield, AlertTriangle, Clock, Heart, DollarSign, Users, Briefcase, TrendingUp } from "lucide-react"
+import { Check, ChevronRight, Loader2, AlarmClock, Timer, Shield, Sparkles, Zap, AlertTriangle, Trophy, Clock, Target } from "lucide-react"
 
-// === SFX ===
+/**
+ * QuizDestravaAi – fluxo gamificado em 13 telas
+ * - Mantém as MESMAS cores e vibe do componente LandingDestravaAi
+ * - HUD com progresso/XP/Avatar
+ * - SFX leves com <audio> (placeholders base64 prontos p/ substituição)
+ * - Animações consistentes (framer-motion)
+ * - Coleta e-mail/telefone no loading (P8)
+ * - Diagnóstico dinâmico (P11)
+ * - Oferta final única (P13) com depoimentos (curtos) e CTA
+ *
+ * Como usar: <QuizDestravaAi /> em uma seção #quiz da sua LandingDestravaAi
+ */
+
+// === Paleta (idêntica / derivada do seu código) ===
+const COLORS = {
+  bgGradFrom: "#2b1a4e",
+  bgGradVia: "#3c2569",
+  bgGradTo: "#4B2E83",
+  coral: "#F25C54", // acento róseo do seu header/logo
+  dirty: "#FCEEE3",
+  lilac: "#C39BD3",
+  red: "#FF3B3B", // headline impacto
+  orange: "#FF6A00", // CTA laranja radioativo
+  neon: "#39FF88", // neon green sutil (ajuste se tiver var css)
+}
+
+// === SFX (corretos caminhos para arquivos MP3) ===
 const SFX = {
-  ping: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  boom: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  scan: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  alarm: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  levelUp: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  success: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
-  failure: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3",
+  ping: "/Ping sound effect.mp3", // som de clique
+  boom: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3", // som de falha
+  scan: "/Loading Sound Effect (Royalty free Sound)#shorts.mp3", // som de carregamento
+  alarm: "/Efeito sonoro Atenção.mp3", // som de alerta
+  levelUp: "/Efeito sonoro (Vitória).mp3", // som de avanço de fase
+  success: "/Efeito sonoro (Vitória).mp3", // som de sucesso
+  failure: "/Efeito sonoro Atenção.mp3", // som de falha
 }
 
 // Tipos de pergunta
@@ -21,8 +47,8 @@ type Choice = { label: string; value: string; insight?: string }
 type StepBase = {
   id: number
   title?: string
-  hudAvatar: string
-  progress: number
+  hudAvatar: string // descrição de estado do avatar
+  progress: number // 0..100
   xpReward: number
   insight?: string
 }
@@ -57,7 +83,11 @@ export default function QuizDestravaAi() {
   const [answers, setAnswers] = useState<Answers>({})
   const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([])
   const [loadingProgress, setLoadingProgress] = useState(0)
-  const [showDiagnosis, setShowDiagnosis] = useState(false)
+  const [sliderValue, setSliderValue] = useState(5)
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [agree1, setAgree1] = useState(false)
+  const [agree2, setAgree2] = useState(false)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -89,9 +119,21 @@ export default function QuizDestravaAi() {
   }
 
   const progress = useMemo(() => {
+    // 13 telas → 0..100
     const map: Record<number, number> = {
-      1: 8, 2: 16, 3: 24, 4: 32, 5: 40, 6: 48, 7: 56,
-      8: 64, 9: 72, 10: 80, 11: 88, 12: 96, 13: 100,
+      1: 8,
+      2: 16,
+      3: 24,
+      4: 32,
+      5: 40,
+      6: 48,
+      7: 56,
+      8: 64,
+      9: 72,
+      10: 80,
+      11: 88,
+      12: 96,
+      13: 100,
     }
     return map[step] || 0
   }, [step])
@@ -99,7 +141,7 @@ export default function QuizDestravaAi() {
   // === Definição das Páginas (13) ===
   const steps: StepQuestion[] = useMemo(
     () => [
-      // P1 – Estalo brutal
+      // P1 – Estalo brutal (CTA start)
       {
         id: 1,
         kind: "radio",
@@ -108,7 +150,9 @@ export default function QuizDestravaAi() {
         progress: 8,
         xpReward: 1,
         question: "Daqui a 1 ano sua vida vai estar IGUAL — travada, sem dinheiro e sem orgulho. Bora encarar a verdade?",
-        choices: [{ label: "COMEÇAR O DIAGNÓSTICO", value: "start" }],
+        choices: [
+          { label: "COMEÇAR O DIAGNÓSTICO", value: "start" },
+        ],
         insight: "Quem foge da verdade, casa com a mentira.",
       },
       // P2 – Idade
@@ -129,25 +173,17 @@ export default function QuizDestravaAi() {
         ],
         insight: "Cada década sem ação é um caixão pro teu potencial.",
       },
-      // P3 – Scroll
+      // P3 – Scroll + Adiamento (combo)
       {
         id: 3,
-        kind: "radio",
+        kind: "slider",
         title: "Prisão Digital",
         hudAvatar: "Pescoço erguendo.",
         progress: 24,
         xpReward: 6,
-        question: "Quanto o scroll te destrói hoje? (seja honesto)",
-        choices: [
-          { label: "Nada ou quase nada", value: "0-2" },
-          { label: "Pouco, mas incomoda", value: "3-4" },
-          { label: "Moderado, me atrapalha", value: "5-6" },
-          { label: "Muito, destrói meu foco", value: "7-8" },
-          { label: "Extremo, acaba comigo", value: "9-10" },
-        ],
-        insight: "Teu polegar é o carrasco dos teus objetivos.",
+        question: "Quanto o scroll te destrói hoje? (0 = nada, 10 = quase todo dia me arregaça)",
       },
-      // P4 – Reflexo do fracasso
+      // P4 – Reflexo
       {
         id: 4,
         kind: "radio",
@@ -163,15 +199,15 @@ export default function QuizDestravaAi() {
         ],
         insight: "O espelho não mente: ou age, ou apodrece.",
       },
-      // P5 – Prejuízo já causado
+      // P5 – Prejuízo (multi)
       {
         id: 5,
         kind: "checkbox",
         title: "Prejuízo já causado",
         hudAvatar: "Fendas de luz no peito.",
         progress: 40,
-        xpReward: 10,
-        question: "O que a procrastinação já destruiu? (escolha até 2)",
+        xpReward: 10, // até +10 (limite 2)
+        question: "O que a procrastinação já destruiu? (máx 2)",
         choices: [
           { label: "Carreira", value: "carreira" },
           { label: "Dinheiro", value: "dinheiro" },
@@ -182,7 +218,7 @@ export default function QuizDestravaAi() {
         maxSelections: 2,
         insight: "Cada área fodida é um grito do teu eu que desistiu.",
       },
-      // P6 – Foco total agora
+      // P6 – Prioridade & Área
       {
         id: 6,
         kind: "radio",
@@ -201,7 +237,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "A prioridade que escolhe define a vida que constrói.",
       },
-      // P7 – Sua vida em 12 meses
+      // P7 – 12 meses
       {
         id: 7,
         kind: "radio",
@@ -217,7 +253,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "A vida que quer não chega — é construída.",
       },
-      // P8 – Loading/Processamento
+      // P8 – Loading + social + coleta
       {
         id: 8,
         kind: "loading",
@@ -225,10 +261,9 @@ export default function QuizDestravaAi() {
         hudAvatar: "Olhos fechados, download de consciência.",
         progress: 64,
         xpReward: 5,
-        question: "Seu diagnóstico está chegando...",
         insight: "Quem assume o compromisso, colhe o resultado.",
       },
-      // P9 – O futuro sem ação
+      // P9 – Futuro sem ação + pergunta extra
       {
         id: 9,
         kind: "radio",
@@ -245,7 +280,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "Cada desistência é uma mini‑morte.",
       },
-      // P10 – Virada mental
+      // P10 – Virada + CTA diagnóstico
       {
         id: 10,
         kind: "radio",
@@ -253,11 +288,12 @@ export default function QuizDestravaAi() {
         hudAvatar: "Armadura psíquica ativando (nível 5).",
         progress: 80,
         xpReward: 5,
-        question: "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
+        question:
+          "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
         choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
         insight: "Clareza sem ação é autoengano.",
       },
-      // P11 – Diagnóstico
+      // P11 – Diagnóstico dinâmico
       {
         id: 11,
         kind: "diagnosis",
@@ -284,7 +320,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "O futuro pune quem hesita.",
       },
-      // P13 – Oferta final
+      // P13 – Oferta final única
       {
         id: 13,
         kind: "offer",
@@ -300,111 +336,111 @@ export default function QuizDestravaAi() {
 
   // === Render Helpers ===
   const Container: React.FC<{ children: any }> = ({ children }) => (
-    <div className="relative mx-auto max-w-3xl w-full">
+    <div
+      className="relative mx-auto max-w-3xl w-full"
+      style={{
+        color: COLORS.dirty,
+      }}
+    >
       <div className="rounded-3xl p-6 md:p-8 bg-gradient-to-br from-[#2b1a4e]/70 via-[#3c2569]/70 to-[#4B2E83]/70 ring-1 ring-white/10 shadow-[0_20px_60px_rgba(0,0,0,.35)] backdrop-blur-sm">
         {children}
       </div>
     </div>
   )
 
-  const Hud = () => {
-    const currentStep = steps.find((s) => s.id === step)
-    return (
-      <div className="mb-6 flex items-center justify-between text-xs">
-        <div className="flex items-center gap-3">
-          <motion.span 
-            className="px-3 py-1 rounded-full bg-white/10 font-medium"
-            key={xp}
-            initial={{ scale: 1.2 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Zap className="inline size-3 mr-1 text-yellow-400" />
-            XP {xp}/140
-          </motion.span>
-          <span className="px-3 py-1 rounded-full bg-white/10 text-[10px] max-w-[200px] truncate">
-            Avatar: {currentStep?.hudAvatar}
-          </span>
-        </div>
-        <div className="flex-1 mx-4 h-2 rounded-full bg-white/10 overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-gradient-to-r from-[#F25C54] to-[#FF3B3B]"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          />
-        </div>
-        <span className="opacity-80 font-medium">{Math.round(progress)}%</span>
-      </div>
-    )
-  }
-
-  // === Componente para radio ===
-  const PageRadio: React.FC<{ stepData: StepQuestion; onSelect: (value: string) => void }> = ({ stepData, onSelect }) => {
-    return (
-      <Container>
-        <Hud />
-        {stepData.title && (
-          <motion.h3 
-            className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {stepData.title}
-          </motion.h3>
-        )}
-        {stepData.question && (
-          <motion.p 
-            className="text-sm text-[#C39BD3] mb-6 leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            {stepData.question}
-          </motion.p>
-        )}
-
-        <motion.div 
-          className="grid gap-3"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+  const Hud = () => (
+    <div className="mb-6 flex items-center justify-between text-xs">
+      <div className="flex items-center gap-3">
+        <motion.span 
+          className="px-3 py-1 rounded-full bg-white/10 font-medium"
+          key={xp}
+          initial={{ scale: 1.2 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.3 }}
         >
-          {stepData.choices?.map((c, index) => (
-            <motion.button
-              key={c.value}
-              onClick={() => {
-                play(SFX.ping)
-                onSelect(c.value)
-                setTimeout(() => next(stepData.xpReward, `step_${stepData.id}`), 300)
-              }}
-              className="group flex items-center justify-between w-full rounded-2xl bg-gradient-to-br from-[#5e348f] to-[#3d225e] p-4 ring-1 ring-white/10 hover:scale-[1.02] transition-all duration-300 shadow-[0_20px_60px_rgba(0,0,0,.35)] hover:shadow-[0_25px_70px_rgba(0,0,0,.4)]"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="text-left text-[15px] font-medium">{c.label}</span>
-              <ChevronRight className="size-5 opacity-70 group-hover:translate-x-1 transition-transform" />
-            </motion.button>
-          ))}
-        </motion.div>
+          <Zap className="inline size-3 mr-1 text-yellow-400" />
+          XP {xp}/140
+        </motion.span>
+        <span className="px-3 py-1 rounded-full bg-white/10 text-[10px] max-w-[200px] truncate">
+          Avatar: {steps.find((s) => s.id === step)?.hudAvatar}
+        </span>
+      </div>
+      <div className="flex-1 mx-4 h-2 rounded-full bg-white/10 overflow-hidden">
+        <motion.div
+          className="h-full rounded-full bg-gradient-to-r from-[#F25C54] to-[#FF3B3B]"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        />
+      </div>
+      <span className="opacity-80 font-medium">{Math.round(progress)}%</span>
+    </div>
+  )
 
-        {stepData.insight && (
-          <motion.p 
-            className="mt-6 text-xs opacity-80 italic text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+  // === Componentes de página ===
+  const PageRadio: React.FC<{ stepData: StepQuestion } & { onSelect: (v: string) => void }> = ({ stepData, onSelect }) => (
+    <Container>
+      <Hud />
+      {stepData.title && (
+        <motion.h3 
+          className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {stepData.title}
+        </motion.h3>
+      )}
+      {stepData.question && (
+        <motion.p 
+          className="text-sm text-[#C39BD3] mb-6 leading-relaxed"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          {stepData.question}
+        </motion.p>
+      )}
+
+      <motion.div 
+        className="grid gap-3"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        {stepData.choices?.map((c, index) => (
+          <motion.button
+            key={c.value}
+            onClick={() => {
+              play(SFX.ping)
+              onSelect(c.value)
+              setTimeout(() => next(stepData.xpReward, `step_${stepData.id}`), 300)
+            }}
+            className="group flex items-center justify-between w-full rounded-2xl bg-gradient-to-br from-[#5e348f] to-[#3d225e] p-4 ring-1 ring-white/10 hover:scale-[1.02] transition-all duration-300 shadow-[0_20px_60px_rgba(0,0,0,.35)] hover:shadow-[0_25px_70px_rgba(0,0,0,.4)]"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            {stepData.insight}
-          </motion.p>
-        )}
-      </Container>
-    )
-  }
+            <span className="text-left text-[15px] font-medium">{c.label}</span>
+            <ChevronRight className="size-5 opacity-70 group-hover:translate-x-1 transition-transform" />
+          </motion.button>
+        ))}
+      </motion.div>
+
+      {stepData.insight && (
+        <motion.p 
+          className="mt-6 text-xs opacity-80 italic text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          {stepData.insight}
+        </motion.p>
+      )}
+    </Container>
+  )
 
   // === Componente para checkbox ===
   const PageCheckbox: React.FC<{ stepData: StepQuestion; onSelect: (values: string[]) => void }> = ({ stepData, onSelect }) => {
@@ -519,13 +555,106 @@ export default function QuizDestravaAi() {
     )
   }
 
+  // === Componente Slider ===
+  const PageSlider: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    const handleSliderChange = (value: number) => {
+      setSliderValue(value)
+      play(SFX.ping)
+    }
+
+    const handleContinue = () => {
+      play(SFX.success)
+      setAnswers(prev => ({ ...prev, scrollLevel: sliderValue }))
+      next(stepData.xpReward, `step_${stepData.id}`)
+    }
+
+    return (
+      <Container>
+        <Hud />
+        {stepData.title && (
+          <motion.h3 
+            className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {stepData.title}
+          </motion.h3>
+        )}
+        {stepData.question && (
+          <motion.p 
+            className="text-sm text-[#C39BD3] mb-6 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            {stepData.question}
+          </motion.p>
+        )}
+
+        <motion.div 
+          className="mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div className="flex items-center justify-between mb-4 text-sm">
+            <span>Nada (0)</span>
+            <span className="text-2xl font-bold text-[#F25C54]">{sliderValue}</span>
+            <span>Extremo (10)</span>
+          </div>
+          
+          <input
+            type="range"
+            min="0"
+            max="10"
+            value={sliderValue}
+            onChange={(e) => handleSliderChange(Number(e.target.value))}
+            className="w-full h-3 bg-white/10 rounded-full appearance-none cursor-pointer slider"
+            style={{
+              background: `linear-gradient(to right, #F25C54 0%, #F25C54 ${sliderValue * 10}%, rgba(255,255,255,0.1) ${sliderValue * 10}%, rgba(255,255,255,0.1) 100%)`
+            }}
+          />
+          
+          <div className="mt-4 text-center">
+            <span className={`text-lg font-bold ${
+              sliderValue >= 8 ? 'text-red-400' : 
+              sliderValue >= 5 ? 'text-orange-400' : 
+              'text-green-400'
+            }`}>
+              {sliderValue >= 8 ? 'CRÍTICO' : sliderValue >= 5 ? 'ALTO' : 'CONTROLADO'}
+            </span>
+          </div>
+        </motion.div>
+
+        <motion.button
+          onClick={handleContinue}
+          className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] p-4 font-bold text-white transition-all duration-300 shadow-[0_15px_40px_rgba(242,92,84,.4)] hover:shadow-[0_20px_50px_rgba(242,92,84,.6)]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Continuar
+        </motion.button>
+
+        {stepData.insight && (
+          <motion.p 
+            className="mt-6 text-xs opacity-80 italic text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {stepData.insight}
+          </motion.p>
+        )}
+      </Container>
+    )
+  }
+
   // === Componente Loading ===
   const PageLoading: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
-    const [email, setEmail] = useState("")
-    const [phone, setPhone] = useState("")
-    const [agree1, setAgree1] = useState(false)
-    const [agree2, setAgree2] = useState(false)
-
     useEffect(() => {
       play(SFX.scan)
       const interval = setInterval(() => {
@@ -944,7 +1073,7 @@ export default function QuizDestravaAi() {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
         >
-          {/* Fundo decorativo */}
+          {/* Fundo decorativo consistente com a landing */}
           <div className="absolute inset-0 -z-10 pointer-events-none">
             <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-red-600/30 blur-[120px]" />
             <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-purple-900/40 blur-[120px]" />
@@ -970,16 +1099,8 @@ export default function QuizDestravaAi() {
             />
           )}
 
-          {/* Step 3 - Scroll */}
-          {step === 3 && (
-            <PageRadio
-              stepData={steps[2]}
-              onSelect={(value) => {
-                const level = parseInt(value.split('-')[1]) || 5
-                setAnswers(prev => ({ ...prev, scrollLevel: level }))
-              }}
-            />
-          )}
+          {/* Step 3 - Scroll (Slider) */}
+          {step === 3 && <PageSlider stepData={steps[2]} />}
 
           {/* Step 4 - Reflexo */}
           {step === 4 && (
@@ -1061,6 +1182,28 @@ export default function QuizDestravaAi() {
           {step === 13 && <PageOffer stepData={steps[12]} />}
         </motion.div>
       </AnimatePresence>
+
+      <style jsx>{`
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #F25C54;
+          cursor: pointer;
+          box-shadow: 0 0 10px rgba(242, 92, 84, 0.5);
+        }
+        
+        .slider::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #F25C54;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 0 10px rgba(242, 92, 84, 0.5);
+        }
+      `}</style>
     </section>
   )
 }
