@@ -756,7 +756,7 @@ export default function QuizDestravaAi() {
             transition={{ duration: 0.5 }}
           >
             <Loader2 className="size-4 animate-spin text-[#F25C54]" />
-            <span>Processamento Neural: analisando suas respostas…</span>
+            <span>🔄 Estamos avaliando suas respostas e preparando o diagnóstico personalizado para você…</span>
           </motion.div>
           
           <motion.h3 
@@ -781,22 +781,83 @@ export default function QuizDestravaAi() {
               transition={{ duration: 0.1 }}
             />
           </motion.div>
-          
-          <motion.p 
-            className="text-sm text-[#C39BD3] mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            Na última semana, <b>1.024 pessoas</b> começaram exatamente como você… e já sentiram mudança.
-          </motion.p>
         </div>
 
+        {/* Choque de Realidade */}
+        <motion.div 
+          className="rounded-2xl bg-gradient-to-br from-red-900/30 to-red-800/30 p-6 ring-1 ring-red-500/20 mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <div className="text-center mb-4">
+            <AlertTriangle className="size-8 text-red-400 mx-auto mb-3" />
+            <h4 className="text-lg font-bold text-red-400 mb-3">🚨 A verdade é dura:</h4>
+            <p className="text-sm text-white/90 mb-4 leading-relaxed">
+              Se você continuar permitindo que a procrastinação controle sua vida, não vai ser apenas o seu tempo que será roubado…
+            </p>
+            <p className="text-lg font-bold text-red-300 mb-4">👉 Sua vida inteira vai ser engolida.</p>
+          </div>
+          
+          <div className="space-y-2 text-sm mb-4">
+            <div className="flex items-center gap-2 text-red-300">
+              <span>❌</span>
+              <span>Sua carreira continuará travada e sem progressos.</span>
+            </div>
+            <div className="flex items-center gap-2 text-red-300">
+              <span>❌</span>
+              <span>Seu dinheiro vai escorrer pelos dedos, sem saber como retomar o controle.</span>
+            </div>
+            <div className="flex items-center gap-2 text-red-300">
+              <span>❌</span>
+              <span>Seus relacionamentos vão se enfraquecer, e você vai se afastar daquilo que importa.</span>
+            </div>
+            <div className="flex items-center gap-2 text-red-300">
+              <span>❌</span>
+              <span>Sua confiança vai pro lixo, deixando você se sentindo incapaz de mudar.</span>
+            </div>
+          </div>
+          
+          <p className="text-sm text-white/80 text-center">
+            E o pior de tudo: as respostas que você forneceu até agora já revelam os pontos exatos onde você está se sabotando.
+          </p>
+        </motion.div>
+
+        {/* Projeção de Futuro */}
+        <motion.div 
+          className="rounded-2xl bg-gradient-to-br from-gray-900/50 to-black/50 p-6 ring-1 ring-white/10 mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <div className="text-center">
+            <div className="text-2xl mb-3">💀</div>
+            <p className="text-sm text-white/90 mb-3">
+              "Se você não tomar uma atitude agora, daqui a 1 ano sua vida será a mesma."
+            </p>
+            <p className="text-sm text-gray-300 mb-4 leading-relaxed">
+              E em 5 anos, talvez você nem se reconheça mais: cansado, frustrado, arrependido, enterrando sonhos que poderiam ser sua realidade.
+            </p>
+            <div className="text-xl font-bold text-[#F25C54]">⚡ É agora ou nunca.</div>
+          </div>
+        </motion.div>
+
+        {/* Call to Action */}
+        <motion.div 
+          className="rounded-2xl bg-gradient-to-br from-[#F25C54]/20 to-[#FF3B3B]/20 p-6 ring-1 ring-[#F25C54]/30 mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <div className="text-center mb-4">
+            <div className="text-lg font-bold text-white mb-2">⏳ Agora é a hora de agir.</div>
+          </div>
+        </motion.div>
         <motion.div 
           className="space-y-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 1.0 }}
         >
           <label className="flex items-center gap-3 text-sm cursor-pointer">
             <input 
@@ -805,7 +866,7 @@ export default function QuizDestravaAi() {
               checked={agree1}
               onChange={(e) => setAgree1(e.target.checked)}
             />
-            <span>Concordo em aplicar <b>5–15 min/dia</b> do plano.</span>
+            <span>📈 Concordo em aplicar <b>5–15 min/dia</b> do plano e quero dar o primeiro passo para a mudança.</span>
           </label>
           
           <label className="flex items-center gap-3 text-sm cursor-pointer">
@@ -815,20 +876,20 @@ export default function QuizDestravaAi() {
               checked={agree2}
               onChange={(e) => setAgree2(e.target.checked)}
             />
-            <span>Quero receber apenas o <b>essencial</b>.</span>
+            <span>✔️ Quero receber apenas o <b>essencial</b> e focar no que vai me transformar.</span>
           </label>
           
           <div className="grid md:grid-cols-2 gap-3 mt-4">
             <input
               type="email"
-              placeholder="Seu e-mail"
+              placeholder="📧 Seu e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="rounded-xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#F25C54] transition-all"
             />
             <input
               type="tel"
-              placeholder="Seu WhatsApp"
+              placeholder="📱 Seu WhatsApp"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               className="rounded-xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#F25C54] transition-all"
@@ -840,7 +901,7 @@ export default function QuizDestravaAi() {
           className="mt-6 flex justify-end"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
         >
           <button
             onClick={handleContinue}
@@ -849,7 +910,7 @@ export default function QuizDestravaAi() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Continuar <ChevronRight className="size-4" />
+            🔘 Continuar <ChevronRight className="size-4" />
           </button>
         </motion.div>
 
@@ -858,9 +919,9 @@ export default function QuizDestravaAi() {
             className="mt-4 text-xs opacity-80 italic text-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5, delay: 1.4 }}
           >
-            {stepData.insight}
+            💬 {stepData.insight}
           </motion.p>
         )}
       </Container>
