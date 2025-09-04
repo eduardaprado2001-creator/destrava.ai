@@ -331,13 +331,26 @@ export default function QuizDestravaAi() {
       // P12 – Virada + CTA diagnóstico
       {
         id: 12,
-        kind: "radio",
+        kind: "checkbox",
         title: "Virada mental: a última chamada",
         hudAvatar: "Armadura psíquica ativando (nível 5).",
         progress: 76,
         xpReward: 5,
-        question: "🚨 **Chega de dicas soltas que não funcionam. O que você precisa é de um plano brutalmente claro, feito só pra você.**\n\nA real é simples:\n\n👉 Seus próprios pensamentos estão te sabotando.\n\n👉 Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.\n\n⚡ Mas quando você acerta a mente, a procrastinação desmorona.\n\nNo lugar dela nasce a versão sua que **faz, termina e conquista**.\n\nIsso não é teoria de coach.\n\n👉 É sobrevivência.\n\n👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior.\n\n💀 **Essa pode ser sua última chance de virar o jogo.**",
-        choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
+        question: "🚨 Chega de dicas soltas que não funcionam. O que você precisa é de um plano brutalmente claro, feito só pra você.\n\nA real é simples:\n👉 Seus próprios pensamentos estão te sabotando.\n👉 Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.\n\n⚡ Mas quando você acerta a mente, a procrastinação desmorona. No lugar dela nasce a versão sua que **faz, termina e conquista**. Isso não é teoria de coach. 👉 É sobrevivência.\n\n👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior. 💀 **Essa pode ser sua última chance de virar o jogo.**\n\n📌 *\"Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação.\"*\n\nSelecione todas as opções aplicáveis:",
+        choices: [
+          { label: "🤔 Quebra-cabeças (treinar sua mente pra ficar afiada)", value: "quebra_cabecas" },
+          { label: "🧠 Aumento do QI (pensar mais rápido e melhor)", value: "aumento_qi" },
+          { label: "🎯 Definição de metas (clareza brutal no que fazer)", value: "definicao_metas" },
+          { label: "🧘🏻 Relaxamento (parar de travar por ansiedade)", value: "relaxamento" },
+          { label: "🧎🏻 Desintoxicação de dopamina (libertar-se do vício do celular)", value: "desintoxicacao_dopamina" },
+          { label: "🌐 Rede (construir conexões de alto nível)", value: "rede" },
+          { label: "💡 Melhorando a memória (lembrar do que importa, não do lixo)", value: "melhorar_memoria" },
+          { label: "💭 Análise de sonhos (entender o que sua mente tá gritando)", value: "analise_sonhos" },
+          { label: "🧩 Lógica (resolver problemas sem enrolar)", value: "logica" },
+          { label: "⌛ Gestão de tempo (finalmente dominar suas horas)", value: "gestao_tempo" },
+          { label: "💖 Autocuidado (cuidar de você antes que o mundo te destrua)", value: "autocuidado" }
+        ],
+        maxSelections: 11,
         insight: "Clareza sem ação é autoengano.",
       },
       // P13 – Diagnóstico dinâmico
