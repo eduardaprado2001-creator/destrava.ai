@@ -336,7 +336,19 @@ export default function QuizDestravaAi() {
         hudAvatar: "Armadura psíquica ativando (nível 5).",
         progress: 76,
         xpReward: 5,
-        question: "🚨 Chega de dicas soltas que não funcionam. O que você precisa é de um plano brutalmente claro, feito só pra você.\n\nA real é simples:\n👉 Seus próprios pensamentos estão te sabotando.\n👉 Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.\n\n⚡ Mas quando você acerta a mente, a procrastinação desmorona. No lugar dela nasce a versão sua que **faz, termina e conquista**. Isso não é teoria de coach. 👉 É sobrevivência.\n\n👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior. 💀 **Essa pode ser sua última chance de virar o jogo.**\n\n📌 *\"Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação.\"*\n\nSelecione todas as opções aplicáveis:",
+        question: `🚨 Chega de dicas soltas que não funcionam. O que você precisa é de um plano brutalmente claro, feito só pra você.
+
+A real é simples:
+👉 Seus próprios pensamentos estão te sabotando.
+👉 Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.
+
+⚡ Mas quando você acerta a mente, a procrastinação desmorona. No lugar dela nasce a versão sua que faz, termina e conquista. Isso não é teoria de coach. 👉 É sobrevivência.
+
+👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior. 💀 Essa pode ser sua última chance de virar o jogo.
+
+📌 "Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação."
+
+Selecione todas as opções aplicáveis:`,
         choices: [
           { label: "🤔 Quebra-cabeças (treinar sua mente pra ficar afiada)", value: "quebra_cabecas" },
           { label: "🧠 Aumento do QI (pensar mais rápido e melhor)", value: "aumento_qi" },
