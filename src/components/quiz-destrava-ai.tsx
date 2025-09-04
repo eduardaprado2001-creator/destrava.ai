@@ -162,15 +162,56 @@ export default function QuizDestravaAi() {
       // P3 – Scroll + Adiamento (combo)
       {
         id: 3,
-        kind: "slider",
+        kind: "radio",
         title: "Prisão Digital + Adiamento",
         hudAvatar: "Pescoço erguendo.",
         progress: 24,
         xpReward: 6,
-        question:
-          "Quanto o scroll te destrói hoje? (0 = nada, 10 = quase todo dia me arregaça). Depois selecione com que frequência você adia o que importa.",
+        question: "Quanto o scroll te destrói hoje? (seja honesto)",
+        choices: [
+          { label: "Nada ou quase nada", value: "0-2" },
+          { label: "Pouco, mas incomoda", value: "3-4" },
+          { label: "Moderado, me atrapalha", value: "5-6" },
+          { label: "Muito, destrói meu foco", value: "7-8" },
+          { label: "Extremo, acaba comigo", value: "9-10" },
+        ],
+        insight: "Teu polegar é o carrasco dos teus objetivos.",
       },
-      // Adicionar outras páginas conforme necessário...
+      // P4 – Reflexo do fracasso
+      {
+        id: 4,
+        kind: "radio",
+        title: "Reflexo do fracasso",
+        hudAvatar: "Reflexo distorcido ao fundo.",
+        progress: 32,
+        xpReward: 4,
+        question: "No espelho, você tá matando sua melhor versão?",
+        choices: [
+          { label: "Sempre", value: "sempre" },
+          { label: "Muitas vezes", value: "muitas" },
+          { label: "Às vezes", value: "asvezes" },
+        ],
+        insight: "O espelho não mente: ou age, ou apodrece.",
+      },
+      // P5 – Prejuízo já causado
+      {
+        id: 5,
+        kind: "checkbox",
+        title: "Prejuízo já causado",
+        hudAvatar: "Fendas de luz no peito.",
+        progress: 40,
+        xpReward: 10,
+        question: "O que a procrastinação já destruiu? (escolha até 2)",
+        choices: [
+          { label: "Carreira", value: "carreira" },
+          { label: "Dinheiro", value: "dinheiro" },
+          { label: "Relacionamentos", value: "relacionamentos" },
+          { label: "Saúde", value: "saude" },
+          { label: "Confiança", value: "confianca" },
+        ],
+        maxSelections: 2,
+        insight: "Cada área fodida é um grito do teu eu que desistiu.",
+      },
     ],
     []
   )
@@ -255,9 +296,8 @@ export default function QuizDestravaAi() {
           {step === 1 && (
             <PageRadio
               stepData={steps[0]}
-              onSelect={() => {
-                play(SFX.ping)
-                next(1, "step_1")
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, start: value }))
               }}
             />
           )}
@@ -272,9 +312,122 @@ export default function QuizDestravaAi() {
             />
           )}
 
-          {/* Adicione outros steps conforme necessário */}
+          {step === 2 && (
+            <PageRadio
+              stepData={steps[1]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, age: value }))
+              }}
+            />
+          )}
+
+          {step === 3 && (
+            <PageRadio
+              stepData={steps[2]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, scrollLevel: parseInt(value.split('-')[1]) || 5 }))
+              }}
+            />
+          )}
+
+          {step === 4 && (
+            <PageRadio
+              stepData={steps[3]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, mirrorPain: value }))
+              }}
+            />
+          )}
+
+          {step === 5 && (
+            <PageCheckbox
+              stepData={steps[4]}
+              onSelect={(values) => {
+                setAnswers(prev => ({ ...prev, damages: values }))
+              }}
+            />
+          )}
+
+          {step > 5 && (
+            <Container>
+              <Hud />
+              <div className="text-center py-12">
+                <h3 className="text-2xl font-bold text-white mb-4">Quiz em Desenvolvimento</h3>
+                <p className="text-[#C39BD3] mb-6">Mais etapas serão adicionadas em breve!</p>
+                <button
+                  onClick={() => setStep(1)}
+                  className="px-6 py-3 bg-[#F25C54] hover:bg-[#FF6A00] rounded-xl font-bold transition-colors"
+                >
+                  Recomeçar Quiz
+                </button>
+              </div>
+            </Container>
+          )}
         </motion.div>
       </AnimatePresence>
     </section>
   )
+
+  // === Componente para checkbox ===
+  const PageCheckbox: React.FC<{ stepData: StepQuestion; onSelect: (values: string[]) => void }> = ({ stepData, onSelect }) => {
+    const [selected, setSelected] = useState<string[]>([])
+
+    const toggleSelection = (value: string) => {
+      setSelected(prev => {
+        if (prev.includes(value)) {
+          return prev.filter(v => v !== value)
+        } else if (prev.length < (stepData.maxSelections || 999)) {
+          return [...prev, value]
+        }
+        return prev
+      })
+    }
+
+    const handleContinue = () => {
+      if (selected.length > 0) {
+        play(SFX.boom)
+        onSelect(selected)
+        next(stepData.xpReward, `step_${stepData.id}`)
+      }
+    }
+
+    return (
+      <Container>
+        <Hud />
+        {stepData.title && (
+          <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">{stepData.title}</h3>
+        )}
+        {stepData.question && <p className="text-sm text-[#C39BD3] mb-6">{stepData.question}</p>}
+
+        <div className="grid gap-3 mb-6">
+          {stepData.choices?.map((c) => (
+            <button
+              key={c.value}
+              onClick={() => {
+                play(SFX.ping)
+                toggleSelection(c.value)
+              }}
+              className={`group flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 hover:scale-[1.02] transition shadow-[0_20px_60px_rgba(0,0,0,.35)] ${
+                selected.includes(c.value)
+                  ? 'bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e]'
+                  : 'bg-gradient-to-br from-[#5e348f] to-[#3d225e]'
+              }`}
+            >
+              <span className="text-left text-[15px]">{c.label}</span>
+              {selected.includes(c.value) && <Check className="size-5 text-green-400" />}
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={handleContinue}
+          disabled={selected.length === 0}
+          className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#FF6A00] disabled:bg-gray-600 disabled:cursor-not-allowed p-4 font-bold text-white transition-colors"
+        >
+          Continuar ({selected.length} selecionado{selected.length !== 1 ? 's' : ''})
+        </button>
+        {stepData.insight && <p className="mt-6 text-xs opacity-80 italic text-center">{stepData.insight}</p>}
+      </Container>
+    )
+  }
 }
