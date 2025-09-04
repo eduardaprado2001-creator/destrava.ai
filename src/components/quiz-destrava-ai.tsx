@@ -126,12 +126,12 @@ export default function QuizDestravaAi() {
     if (reward) giveXp(reward, reason)
     // Som de avanço de fase (leve e positivo)
     play(SFX.advance)
-    setStep((s) => Math.min(s + 1, 14))
+    setStep((s) => Math.min(s + 1, 15))
     play(SFX.levelUp)
   }
 
   const progress = useMemo(() => {
-    // 14 telas → 0..100
+    // 15 telas → 0..100
     const map: Record<number, number> = {
       1: 8,
       2: 16,
@@ -141,12 +141,13 @@ export default function QuizDestravaAi() {
       6: 44,
       7: 52,
       8: 60,
-      9: 68,
-      10: 76,
-      11: 84,
-      12: 92,
-      13: 96,
-      14: 100,
+      9: 64,
+      10: 68,
+      11: 72,
+      12: 76,
+      13: 84,
+      14: 92,
+      15: 96,
     }
     return map[step] || 0
   }, [step])
@@ -284,9 +285,26 @@ export default function QuizDestravaAi() {
         ],
         insight: "A vida que quer não chega — é construída.",
       },
-      // P9 – Loading + social + coleta
+      // P9 – Impacto da disciplina
       {
         id: 9,
+        kind: "radio",
+        title: "Qual seria o impacto de se tornar alguém disciplinado, focado e admirado — um exemplo vivo de determinação que inspira quem tá ao seu redor?",
+        hudAvatar: "Postura ereta, olhar determinado.",
+        progress: 64,
+        xpReward: 7,
+        question: "",
+        choices: [
+          { label: "Seria transformador, mudaria minha vida inteira", value: "transformador" },
+          { label: "Me traria orgulho de verdade", value: "orgulho" },
+          { label: "Mudaria meus resultados de forma absurda", value: "resultados" },
+          { label: "Me faria ser respeitado por todos (e por mim mesmo)", value: "respeito" },
+        ],
+        insight: "A pessoa que você pode se tornar já existe dentro de você.",
+      },
+      // P9 – Loading + social + coleta
+      {
+        id: 10,
         kind: "loading",
         title: "Processamento Neural",
         hudAvatar: "Olhos fechados, download de consciência.",
@@ -296,11 +314,11 @@ export default function QuizDestravaAi() {
       },
       // P10 – Futuro sem ação + pergunta extra
       {
-        id: 10,
+        id: 11,
         kind: "radio",
         title: "O futuro sem ação",
         hudAvatar: "Rosto meio luz/meio sombra.",
-        progress: 76,
+        progress: 72,
         xpReward: 5,
         question: "Quantas vezes você começou com energia e largou no meio?",
         choices: [
@@ -313,11 +331,11 @@ export default function QuizDestravaAi() {
       },
       // P11 – Virada + CTA diagnóstico
       {
-        id: 11,
+        id: 12,
         kind: "radio",
         title: "Virada mental: a última chamada",
         hudAvatar: "Armadura psíquica ativando (nível 5).",
-        progress: 84,
+        progress: 76,
         xpReward: 5,
         question:
           "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
@@ -326,21 +344,21 @@ export default function QuizDestravaAi() {
       },
       // P12 – Diagnóstico dinâmico
       {
-        id: 12,
+        id: 13,
         kind: "diagnosis",
         title: "Diagnóstico Final: a verdade nua",
         hudAvatar: "Armadura 7/10.",
-        progress: 92,
+        progress: 84,
         xpReward: 10,
         insight: "A dor de agora é a conta do que adiou.",
       },
       // P13 – Compromisso
       {
-        id: 13,
+        id: 14,
         kind: "commitment",
         title: "Compromisso de tempo diário",
         hudAvatar: "9/10, olhos em brasa.",
-        progress: 96,
+        progress: 92,
         xpReward: 9,
         question: "Quanto tempo por dia você vai investir para sair do ciclo?",
         choices: [
@@ -353,11 +371,11 @@ export default function QuizDestravaAi() {
       },
       // P14 – Oferta final única
       {
-        id: 14,
+        id: 15,
         kind: "offer",
         title: "Oferta Final",
         hudAvatar: "10/10, armadura completa.",
-        progress: 100,
+        progress: 96,
         xpReward: 5,
         insight: "Ou você ri da procrastinação hoje, ou ela ri de você amanhã.",
       },
@@ -1205,43 +1223,53 @@ export default function QuizDestravaAi() {
           )}
 
           {/* Step 9 - Loading */}
-          {step === 9 && <PageLoading stepData={steps[8]} />}
-
-          {/* Step 10 - Padrão de desistência */}
-          {step === 10 && (
+          {step === 9 && (
             <PageRadio
-              stepData={steps[9]}
+              stepData={steps[8]}
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, disciplineImpact: value }))
+              }}
+            />
+          )}
+
+          {/* Step 10 - Loading */}
+          {step === 10 && <PageLoading stepData={steps[9]} />}
+
+          {/* Step 11 - Padrão de desistência */}
+          {step === 11 && (
+            <PageRadio
+              stepData={steps[10]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, quitPattern: value }))
               }}
             />
           )}
 
-          {/* Step 11 - Última chamada */}
-          {step === 11 && (
+          {/* Step 12 - Última chamada */}
+          {step === 12 && (
             <PageRadio
-              stepData={steps[10]}
+              stepData={steps[11]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, lastCall: value }))
               }}
             />
           )}
 
-          {/* Step 12 - Diagnóstico */}
-          {step === 12 && <PageDiagnosis stepData={steps[11]} />}
+          {/* Step 13 - Diagnóstico */}
+          {step === 13 && <PageDiagnosis stepData={steps[12]} />}
 
-          {/* Step 13 - Compromisso */}
-          {step === 13 && (
+          {/* Step 14 - Compromisso */}
+          {step === 14 && (
             <PageRadio
-              stepData={steps[12]}
+              stepData={steps[13]}
               onSelect={(value) => {
                 setAnswers(prev => ({ ...prev, commitment: value }))
               }}
             />
           )}
 
-          {/* Step 14 - Oferta Final */}
-          {step === 14 && <PageOffer stepData={steps[13]} />}
+          {/* Step 15 - Oferta Final */}
+          {step === 15 && <PageOffer stepData={steps[14]} />}
         </motion.div>
       </AnimatePresence>
 
