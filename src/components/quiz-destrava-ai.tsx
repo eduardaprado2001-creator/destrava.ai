@@ -127,7 +127,6 @@ export default function QuizDestravaAi() {
     // Som de avanço de fase (leve e positivo)
     play(SFX.advance)
     setStep((s) => Math.min(s + 1, 15))
-    play(SFX.levelUp)
   }
 
   const progress = useMemo(() => {
@@ -152,7 +151,7 @@ export default function QuizDestravaAi() {
     return map[step] || 0
   }, [step])
 
-  // === Definição das Páginas (13) ===
+  // === Definição das Páginas (15) ===
   const steps: StepQuestion[] = useMemo(
     () => [
       // P1 – Estalo brutal (CTA start)
@@ -302,7 +301,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "A pessoa que você pode se tornar já existe dentro de você.",
       },
-      // P9 – Loading + social + coleta
+      // P10 – Loading + social + coleta
       {
         id: 10,
         kind: "loading",
@@ -312,7 +311,7 @@ export default function QuizDestravaAi() {
         xpReward: 5,
         insight: "Quem assume o compromisso, colhe o resultado.",
       },
-      // P10 – Futuro sem ação + pergunta extra
+      // P11 – Futuro sem ação + pergunta extra
       {
         id: 11,
         kind: "radio",
@@ -329,7 +328,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "Cada desistência é uma mini‑morte.",
       },
-      // P11 – Virada + CTA diagnóstico
+      // P12 – Virada + CTA diagnóstico
       {
         id: 12,
         kind: "radio",
@@ -342,7 +341,7 @@ export default function QuizDestravaAi() {
         choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
         insight: "Clareza sem ação é autoengano.",
       },
-      // P12 – Diagnóstico dinâmico
+      // P13 – Diagnóstico dinâmico
       {
         id: 13,
         kind: "diagnosis",
@@ -352,7 +351,7 @@ export default function QuizDestravaAi() {
         xpReward: 10,
         insight: "A dor de agora é a conta do que adiou.",
       },
-      // P13 – Compromisso
+      // P14 – Compromisso
       {
         id: 14,
         kind: "commitment",
@@ -369,7 +368,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "O futuro pune quem hesita.",
       },
-      // P14 – Oferta final única
+      // P15 – Oferta final única
       {
         id: 15,
         kind: "offer",
@@ -712,8 +711,8 @@ export default function QuizDestravaAi() {
 
   // === Componente Loading ===
   const PageLoading: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    const [phase, setPhase] = useState(0)
     const [loadingProgress, setLoadingProgress] = useState(0)
-    const [currentPhase, setCurrentPhase] = useState(0)
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [agree1, setAgree1] = useState(false)
@@ -721,4 +720,491 @@ export default function QuizDestravaAi() {
 
     useEffect(() => {
       // Som de processamento/carregamento
-     play(SFX.processing)
+      play(SFX.processing)
+
+      // Fase 0: Carregamento inicial
+      const timer1 = setTimeout(() => setPhase(1), 2000)
+      
+      // Fase 1: Choque de realidade
+      const timer2 = setTimeout(() => setPhase(2), 4000)
+      
+      // Fase 2: Projeção de futuro
+      const timer3 = setTimeout(() => setPhase(3), 6000)
+
+      // Progresso da barra
+      const progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(progressInterval)
+            return 100
+          }
+          return prev + 2
+        })
+      }, 100)
+
+      return () => {
+        clearTimeout(timer1)
+        clearTimeout(timer2)
+        clearTimeout(timer3)
+        clearInterval(progressInterval)
+      }
+    }, [])
+
+    const handleContinue = () => {
+      if (email && agree1 && agree2) {
+        play(SFX.click)
+        setAnswers(prev => ({ ...prev, email, phone }))
+        next(stepData.xpReward, `step_${stepData.id}`)
+      } else {
+        play(SFX.error)
+      }
+    }
+
+    return (
+      <Container>
+        <Hud />
+        
+        {/* Fase 0: Carregamento inicial */}
+        <AnimatePresence>
+          {phase >= 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-6"
+            >
+              <div className="flex items-center justify-center mb-4">
+                <Loader2 className="size-8 animate-spin text-[#F25C54]" />
+              </div>
+              <p className="text-lg text-[#C39BD3]">
+                🔄 Estamos avaliando suas respostas e preparando o diagnóstico personalizado para você…
+              </p>
+              
+              {/* Barra de progresso */}
+              <div className="mt-4 w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-[#F25C54] to-[#FF3B3B] rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${loadingProgress}%` }}
+                  transition={{ duration: 0.1 }}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Fase 1: Choque de realidade */}
+        <AnimatePresence>
+          {phase >= 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-6"
+            >
+              <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-4">
+                Processamento Neural
+              </h3>
+              
+              <div className="bg-red-900/30 border border-red-500/30 rounded-2xl p-4 mb-4">
+                <p className="text-red-400 font-bold mb-3">🚨 A verdade é dura:</p>
+                <p className="text-white mb-4">
+                  Se você continuar permitindo que a procrastinação controle sua vida, não vai ser apenas o seu tempo que será roubado…
+                </p>
+                <p className="text-red-300 font-bold mb-4">👉 Sua vida inteira vai ser engolida.</p>
+                
+                <div className="space-y-2 text-sm">
+                  <p className="flex items-start gap-2">
+                    <span className="text-red-400">❌</span>
+                    <span>Sua carreira continuará travada e sem progressos.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="text-red-400">❌</span>
+                    <span>Seu dinheiro vai escorrer pelos dedos, sem saber como retomar o controle.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="text-red-400">❌</span>
+                    <span>Seus relacionamentos vão se enfraquecer, e você vai se afastar daquilo que importa.</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <span className="text-red-400">❌</span>
+                    <span>Sua confiança vai pro lixo, deixando você se sentindo incapaz de mudar.</span>
+                  </p>
+                </div>
+                
+                <p className="mt-4 text-white font-medium">
+                  E o pior de tudo: as respostas que você forneceu até agora já revelam os pontos exatos onde você está se sabotando.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Fase 2: Projeção de futuro */}
+        <AnimatePresence>
+          {phase >= 2 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-6"
+            >
+              <div className="bg-gray-900/50 border border-gray-600/30 rounded-2xl p-4">
+                <p className="text-gray-300 font-bold mb-3">💀 "Se você não tomar uma atitude agora, daqui a 1 ano sua vida será a mesma."</p>
+                <p className="text-gray-400">
+                  E em 5 anos, talvez você nem se reconheça mais: cansado, frustrado, arrependido, enterrando sonhos que poderiam ser sua realidade.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Fase 3: Call to Action */}
+        <AnimatePresence>
+          {phase >= 3 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="text-center mb-6">
+                <p className="text-2xl font-bold text-[#F25C54] mb-2">⚡ É agora ou nunca.</p>
+                <p className="text-xl font-bold text-white mb-6">⏳ Agora é a hora de agir.</p>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={agree1}
+                    onChange={(e) => setAgree1(e.target.checked)}
+                    className="mt-1 size-4 rounded border-white/20 bg-white/10 text-[#F25C54] focus:ring-[#F25C54]"
+                  />
+                  <span className="text-sm">
+                    📈 Concordo em aplicar 5–15 min/dia do plano e quero dar o primeiro passo para a mudança.
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={agree2}
+                    onChange={(e) => setAgree2(e.target.checked)}
+                    className="mt-1 size-4 rounded border-white/20 bg-white/10 text-[#F25C54] focus:ring-[#F25C54]"
+                  />
+                  <span className="text-sm">
+                    ✔️ Quero receber apenas o essencial e focar no que vai me transformar.
+                  </span>
+                </label>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <input
+                  type="email"
+                  placeholder="📧 Seu e-mail"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full p-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#F25C54] focus:ring-1 focus:ring-[#F25C54] outline-none"
+                  required
+                />
+                <input
+                  type="tel"
+                  placeholder="📱 Seu WhatsApp"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full p-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder-white/60 focus:border-[#F25C54] focus:ring-1 focus:ring-[#F25C54] outline-none"
+                />
+              </div>
+
+              <button
+                onClick={handleContinue}
+                disabled={!email || !agree1 || !agree2}
+                className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] disabled:bg-gray-600 disabled:cursor-not-allowed p-4 font-bold text-white transition-all duration-300 shadow-[0_15px_40px_rgba(242,92,84,.4)] hover:shadow-[0_20px_50px_rgba(242,92,84,.6)]"
+              >
+                🔘 Continuar
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {stepData.insight && phase >= 3 && (
+          <motion.p 
+            className="mt-6 text-xs opacity-80 italic text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            💬 {stepData.insight}
+          </motion.p>
+        )}
+      </Container>
+    )
+  }
+
+  // === Componente Diagnóstico ===
+  const PageDiagnosis: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    const scrollLevel = answers.scrollLevel || 5
+    const damages = answers.damages || ['carreira']
+    
+    let level = "MÉDIO"
+    let levelColor = "text-yellow-400"
+    let description = "Você tenta, mas se sabota mais do que avança."
+    
+    if (scrollLevel >= 8) {
+      level = "EXTREMO"
+      levelColor = "text-red-400"
+      description = "Você está na beira do abismo. Ou muda, ou afunda."
+    } else if (scrollLevel >= 5) {
+      level = "ALTO"
+      levelColor = "text-orange-400"
+      description = "Piloto automático comendo tua energia e confiança."
+    }
+
+    const bullets = [
+      `Área mais afetada: ${damages[0]}${damages[1] ? ` e ${damages[1]}` : ''}.`,
+      `Gatilho de fuga: ${scrollLevel > 6 ? 'celular' : 'adiamento/ansiedade'}.`,
+      `Quebra de foco: pico no período atual.`
+    ]
+
+    const handleContinue = () => {
+      play(SFX.click)
+      next(stepData.xpReward, `step_${stepData.id}`)
+    }
+
+    return (
+      <Container>
+        <Hud />
+        <motion.h3 
+          className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {stepData.title}
+        </motion.h3>
+
+        <motion.div
+          className="bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] rounded-2xl p-6 ring-1 ring-white/10 mb-6"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="text-sm opacity-90 mb-2">Seu nível de procrastinação:</div>
+          <div className={`text-4xl font-black mb-4 ${levelColor}`}>
+            {level}
+          </div>
+          <p className="text-[#C39BD3] mb-4 leading-relaxed">
+            {description}
+          </p>
+          <ul className="space-y-2 text-sm">
+            {bullets.map((bullet, index) => (
+              <motion.li
+                key={index}
+                className="flex items-start gap-2"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <span className="text-[#F25C54] mt-1">•</span>
+                <span>{bullet}</span>
+              </motion.li>
+            ))}
+          </ul>
+        </motion.div>
+
+        <motion.button
+          onClick={handleContinue}
+          className="w-full rounded-2xl bg-[#F25C54] hover:bg-[#ff6f68] p-4 font-bold text-white transition-all duration-300 shadow-[0_15px_40px_rgba(242,92,84,.4)] hover:shadow-[0_20px_50px_rgba(242,92,84,.6)]"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Continuar
+        </motion.button>
+
+        {stepData.insight && (
+          <motion.p 
+            className="mt-6 text-xs opacity-80 italic text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            {stepData.insight}
+          </motion.p>
+        )}
+      </Container>
+    )
+  }
+
+  // === Componente Oferta ===
+  const PageOffer: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    const handlePurchase = () => {
+      play(SFX.victory)
+      giveXp(50, "purchase_intent")
+      // Aqui você adicionaria a integração com o sistema de pagamento
+      alert("Redirecionando para pagamento...")
+    }
+
+    return (
+      <Container>
+        <Hud />
+        <motion.h3 
+          className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-6 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {stepData.title}
+        </motion.h3>
+
+        {/* Benefício principal */}
+        <motion.div
+          className="bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] rounded-2xl p-6 ring-1 ring-white/10 mb-6"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="text-sm text-[#C39BD3] mb-2">✨ Transformação Garantida</p>
+          <p className="text-white font-bold">
+            Em <span className="text-[#F25C54]">5 dias</span> você sente tração. Em <span className="text-[#F25C54]">14 dias</span>, rotina disciplinada — mesmo se já fracassou antes.
+          </p>
+        </motion.div>
+
+        {/* Depoimentos rápidos */}
+        <motion.div
+          className="grid md:grid-cols-3 gap-4 mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="bg-[#4B2E83] rounded-xl p-4 ring-1 ring-white/10">
+            <p className="text-sm mb-2">"Perdia cliente. Em 2 semanas fechei mais que em 3 meses."</p>
+            <div className="text-xs opacity-80">João — vendedor</div>
+          </div>
+          <div className="bg-[#1d3a2b] rounded-xl p-4 ring-1 ring-white/10">
+            <p className="text-sm mb-2">"Travava no celular. Hoje termino o TCC e cumpro rotina."</p>
+            <div className="text-xs opacity-80">Larissa — estudante</div>
+          </div>
+          <div className="bg-[#3b173b] rounded-xl p-4 ring-1 ring-white/10">
+            <p className="text-sm mb-2">"Não era preguiça; era falta de clareza. Faturei mais."</p>
+            <div className="text-xs opacity-80">Camila — empreendedora</div>
+          </div>
+        </motion.div>
+
+        {/* Urgência */}
+        <motion.div
+          className="bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e] rounded-2xl p-4 ring-1 ring-white/10 mb-6"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <p className="text-sm text-center">
+            A cada hora, dezenas entram. <span className="font-bold text-[#FFCC48]">Bônus Técnica X</span> limitado. Se voltar amanhã, pode não ter.
+          </p>
+        </motion.div>
+
+        {/* Oferta principal */}
+        <motion.div
+          className="bg-black/20 rounded-2xl p-6 ring-1 ring-white/10 mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-sm opacity-90 mb-1">Plano personalizado vitalício</div>
+              <div className="text-4xl font-black text-[#FFCC48] mb-1">R$ 37</div>
+              <div className="text-xs opacity-80">Acesso imediato + Bônus Técnica X (limitado)</div>
+            </div>
+            <motion.button
+              onClick={handlePurchase}
+              className="bg-[#39FF88] hover:bg-[#2dd66f] text-black font-black px-6 py-4 rounded-2xl transition-all duration-300 shadow-[0_15px_40px_rgba(57,255,136,.4)] hover:shadow-[0_20px_50px_rgba(57,255,136,.6)]"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              QUERO ESMAGAR A PROCRASTINAÇÃO
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {stepData.insight && (
+          <motion.p 
+            className="mt-6 text-xs opacity-80 italic text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            {stepData.insight}
+          </motion.p>
+        )}
+      </Container>
+    )
+  }
+
+  // === Render Principal ===
+  const currentStepData = steps.find(s => s.id === step)
+  if (!currentStepData) return null
+
+  return (
+    <div className="min-h-screen w-full bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-white p-4 flex items-center justify-center">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.4 }}
+          className="w-full"
+        >
+          {currentStepData.kind === "radio" && (
+            <PageRadio 
+              stepData={currentStepData} 
+              onSelect={(value) => {
+                const key = `step_${currentStepData.id}` as keyof Answers
+                setAnswers(prev => ({ ...prev, [key]: value }))
+              }} 
+            />
+          )}
+          
+          {currentStepData.kind === "checkbox" && (
+            <PageCheckbox 
+              stepData={currentStepData} 
+              onSelect={(values) => {
+                const key = `step_${currentStepData.id}` as keyof Answers
+                setAnswers(prev => ({ ...prev, [key]: values }))
+              }} 
+            />
+          )}
+          
+          {currentStepData.kind === "slider" && (
+            <PageSlider stepData={currentStepData} />
+          )}
+          
+          {currentStepData.kind === "loading" && (
+            <PageLoading stepData={currentStepData} />
+          )}
+          
+          {currentStepData.kind === "diagnosis" && (
+            <PageDiagnosis stepData={currentStepData} />
+          )}
+          
+          {currentStepData.kind === "commitment" && (
+            <PageRadio 
+              stepData={currentStepData} 
+              onSelect={(value) => {
+                setAnswers(prev => ({ ...prev, commitment: value }))
+              }} 
+            />
+          )}
+          
+          {currentStepData.kind === "offer" && (
+            <PageOffer stepData={currentStepData} />
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  )
+}
