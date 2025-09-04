@@ -336,8 +336,7 @@ export default function QuizDestravaAi() {
         hudAvatar: "Armadura psíquica ativando (nível 5).",
         progress: 76,
         xpReward: 5,
-        question:
-          "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
+        question: "🚨 **Chega de dicas soltas que não funcionam. O que você precisa é de um plano brutalmente claro, feito só pra você.**\n\nA real é simples:\n\n👉 Seus próprios pensamentos estão te sabotando.\n\n👉 Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.\n\n⚡ Mas quando você acerta a mente, a procrastinação desmorona.\n\nNo lugar dela nasce a versão sua que **faz, termina e conquista**.\n\nIsso não é teoria de coach.\n\n👉 É sobrevivência.\n\n👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior.\n\n💀 **Essa pode ser sua última chance de virar o jogo.**",
         choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
         insight: "Clareza sem ação é autoengano.",
       },
