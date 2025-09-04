@@ -143,7 +143,7 @@ export default function LandingDestravaAi() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[0.9] text-[#FCEEE3] mb-6"
           >
-            ⚡ Daqui a 1 ano, sua vida vai estar <span className="text-red-500">IGUAL</span> — travada, sem dinheiro e sem orgulho.
+            ⚡ Daqui a 1 ano, sua vida vai estar <span className="text-red-500">IGUAL</span>
           </motion.h1>
 
           <motion.p
