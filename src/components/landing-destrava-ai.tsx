@@ -338,7 +338,7 @@ export default function LandingDestravaAi() {
               transition={{ duration: 0.3 }}
               viewport={{ once: true }}
               onClick={() => {
-                window.location.href = '/quiz.html'
+                setShowQuiz(true)
                 ;(window as any).__ga?.gainXp?.(50, "cta_click")
               }}
               className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xl rounded-2xl shadow-[0_20px_60px_rgba(220,38,38,.6)] hover:shadow-[0_25px_70px_rgba(220,38,38,.8)] transform transition-all duration-300 ring-2 ring-red-500/30 hover:ring-red-400/50"
