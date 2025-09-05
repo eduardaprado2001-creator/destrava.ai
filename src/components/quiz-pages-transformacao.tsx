@@ -163,7 +163,7 @@ export function Page01({ progress, xp, avatarState, onNext, gainXp }: PageProps)
         </button>
       </div>
 
-      <p className="mt-4 text-xs opacity-80 italic">Quem foge da verdade, casa com a mentira.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">Quem foge da verdade, casa com a mentira.</p>
     </Frame>
   )
 }
@@ -198,7 +198,7 @@ export function Page02({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           </button>
         ))}
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">Cada década sem ação é um caixão pro teu potencial.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">Cada década sem ação é um caixão pro teu potencial.</p>
     </Frame>
   )
 }
@@ -249,7 +249,7 @@ export function Page03({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           Continuar
         </CTA>
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">Teu polegar é o carrasco dos teus objetivos.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">Teu polegar é o carrasco dos teus objetivos.</p>
     </Frame>
   )
 }
@@ -278,7 +278,7 @@ export function Page04({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           </button>
         ))}
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">O espelho não mente: ou age, ou apodrece.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">O espelho não mente: ou age, ou apodrece.</p>
     </Frame>
   )
 }
@@ -313,7 +313,7 @@ export function Page05({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           Continuar
         </CTA>
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">Cada área fodida é um grito do teu eu que desistiu.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">Cada área fodida é um grito do teu eu que desistiu.</p>
     </Frame>
   )
 }
@@ -352,7 +352,7 @@ export function Page06({ progress, xp, avatarState, onNext, gainXp, setAnswer, a
           Continuar
         </CTA>
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">A prioridade que escolhe define a vida que constrói.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">A prioridade que escolhe define a vida que constrói.</p>
     </Frame>
   )
 }
@@ -385,7 +385,7 @@ export function Page07({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           </button>
         ))}
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">A vida que quer não chega — é construída.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">A vida que quer não chega — é construída.</p>
     </Frame>
   )
 }
@@ -443,7 +443,7 @@ export function Page08({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           Continuar
         </CTA>
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">Quem assume o compromisso, colhe o resultado.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">Quem assume o compromisso, colhe o resultado.</p>
     </Frame>
   )
 }
@@ -473,7 +473,7 @@ export function Page09({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           </button>
         ))}
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">Cada desistência é uma mini-morte.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">Cada desistência é uma mini-morte.</p>
     </Frame>
   )
 }
@@ -500,7 +500,7 @@ export function Page10({ progress, xp, avatarState, onNext, gainXp }: PageProps)
           <ChevronRight className="size-5 opacity-80" />
         </button>
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">Clareza sem ação é autoengano.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">Clareza sem ação é autoengano.</p>
     </Frame>
   )
 }
@@ -554,7 +554,7 @@ export function Page11({ progress, xp, avatarState, onNext, gainXp, answers }: P
           Continuar
         </CTA>
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">A dor de agora é a conta do que adiou.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">A dor de agora é a conta do que adiou.</p>
     </Frame>
   )
 }
@@ -587,7 +587,7 @@ export function Page12({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
           </button>
         ))}
       </div>
-      <p className="mt-4 text-xs opacity-80 italic">O futuro pune quem hesita.</p>
+      <p className="mt-4 text-xs opacity-80 italic text-center">O futuro pune quem hesita.</p>
     </Frame>
   )
 }
@@ -628,7 +628,7 @@ export function Page13({ progress, xp, avatarState, onNext, gainXp }: PageProps)
         </CTA>
       </div>
 
-      <p className="mt-5 text-xs opacity-80 italic">Ou você ri da procrastinação hoje, ou ela ri da tua cara amanhã.</p>
+      <p className="mt-5 text-xs opacity-80 italic text-center">Ou você ri da procrastinação hoje, ou ela ri da tua cara amanhã.</p>
     </Frame>
   )
 }
