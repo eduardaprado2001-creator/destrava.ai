@@ -125,7 +125,6 @@ export default function QuizDestravaAi() {
     setStep((s) => Math.min(s + 1, 13))
     // Som de avanço de nível mais dramático
     setTimeout(() => playActionSound('levelup'), 500)
-  }
 
   const progress = useMemo(() => {
     // 13 telas → 0..100
@@ -172,7 +171,7 @@ export default function QuizDestravaAi() {
         hudAvatar: "Foco leve nos olhos.",
         progress: 16,
         xpReward: 2,
-        question: "⌛ Sua idade diz muito sobre o quanto a procrastinação já vem roubando da sua vida. Quantos anos você tem?",
+        question: "Quantos anos você tem?",
         choices: [
           { label: "Menos de 20 — Ainda dá tempo de virar tudo.", value: "<20" },
           { label: "21 a 29 — Agora ou perde os melhores anos.", value: "21-29" },
@@ -247,7 +246,10 @@ export default function QuizDestravaAi() {
         ],
         insight: "A prioridade que escolhe define a vida que constrói.",
       },
-      // P7 – 12 meses
+      // P
+    ]
+  )
+}7 – 12 meses
       {
         id: 7,
         kind: "radio",
@@ -312,6 +314,10 @@ export default function QuizDestravaAi() {
         progress: 88,
         xpReward: 10,
         insight: "A dor de agora é a conta do que adiou.",
+      }
+    ]
+  )
+}ta do que adiou.",
       },
       // P12 – Compromisso
       {
