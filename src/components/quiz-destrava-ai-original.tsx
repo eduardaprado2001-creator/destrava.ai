@@ -381,7 +381,7 @@ export default function QuizDestravaAi() {
           <button
             key={c.value}
             onClick={() => {
-              play(SFX.ping)
+              playActionSound('click')
               onSelect(c.value)
               next(stepData.xpReward, `step_${stepData.id}`)
             }}
