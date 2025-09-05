@@ -149,16 +149,18 @@ export function Page01({ progress, xp, avatarState, onNext, gainXp }: PageProps)
           ))}
       </div>
 
-      <div className="mt-6 flex justify-end">
-        <CTA
-          color={THEME.orange}
+      <div className="mt-6">
+        <button
           onClick={() => {
+            play(SFX.ping)
             gainXp(1, "p1_start")
             onNext()
           }}
+          className="w-full flex items-center justify-between rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-br from-[#FF6A00] to-[#FF3B3B] hover:scale-[1.02]"
         >
-          COMEÇAR O DIAGNÓSTICO
-        </CTA>
+          <span className="text-left text-[15px] font-bold">COMEÇAR O DIAGNÓSTICO</span>
+          <ChevronRight className="size-5 opacity-80" />
+        </button>
       </div>
 
       <p className="mt-4 text-xs opacity-80 italic">Quem foge da verdade, casa com a mentira.</p>
@@ -168,7 +170,6 @@ export function Page01({ progress, xp, avatarState, onNext, gainXp }: PageProps)
 
 // ========================= P2 – Idade =========================
 export function Page02({ progress, xp, avatarState, onNext, gainXp, setAnswer }: PageProps) {
-  const [v, setV] = useState<string>("")
   const opts = [
     "Menos de 20 — Ainda dá tempo de virar tudo.",
     "21 a 29 — Agora ou perde os melhores anos.",
@@ -182,20 +183,20 @@ export function Page02({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
       <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">⌛ "Sua idade diz muito sobre o quanto a procrastinação já vem roubando da sua vida. Quantos anos você tem?"</h3>
       <div className="grid gap-3">
         {opts.map((label) => (
-          <RadioItem key={label} label={label} active={v === label} onClick={() => setV(label)} />
+          <button
+            key={label}
+            onClick={() => {
+              play(SFX.ping)
+              setAnswer("age", label)
+              gainXp(2, "p2_age")
+              onNext()
+            }}
+            className="flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] hover:scale-[1.02]"
+          >
+            <span className="text-left text-[15px]">{label}</span>
+            <ChevronRight className="size-5 opacity-80" />
+          </button>
         ))}
-      </div>
-      <div className="mt-5 flex justify-end">
-        <CTA
-          onClick={() => {
-            setAnswer("age", v)
-            gainXp(2, "p2_age")
-            onNext()
-          }}
-          disabled={!v}
-        >
-          Continuar
-        </CTA>
       </div>
       <p className="mt-4 text-xs opacity-80 italic">Cada década sem ação é um caixão pro teu potencial.</p>
     </Frame>
@@ -255,7 +256,6 @@ export function Page03({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
 
 // ========================= P4 – Reflexo do Fracasso =========================
 export function Page04({ progress, xp, avatarState, onNext, gainXp, setAnswer }: PageProps) {
-  const [v, setV] = useState<string>("")
   const opts = ["Sempre", "Muitas vezes", "Às vezes"]
   return (
     <Frame>
@@ -263,20 +263,20 @@ export function Page04({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
       <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">No espelho, você tá matando sua melhor versão?</h3>
       <div className="grid gap-3">
         {opts.map((label) => (
-          <RadioItem key={label} label={label} active={v === label} onClick={() => setV(label)} />
+          <button
+            key={label}
+            onClick={() => {
+              play(SFX.ping)
+              setAnswer("mirror", label)
+              gainXp(4, "p4_mirror")
+              onNext()
+            }}
+            className="flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] hover:scale-[1.02]"
+          >
+            <span className="text-left text-[15px]">{label}</span>
+            <ChevronRight className="size-5 opacity-80" />
+          </button>
         ))}
-      </div>
-      <div className="mt-5 flex justify-end">
-        <CTA
-          onClick={() => {
-            setAnswer("mirror", v)
-            gainXp(4, "p4_mirror")
-            onNext()
-          }}
-          disabled={!v}
-        >
-          Continuar
-        </CTA>
       </div>
       <p className="mt-4 text-xs opacity-80 italic">O espelho não mente: ou age, ou apodrece.</p>
     </Frame>
@@ -359,7 +359,6 @@ export function Page06({ progress, xp, avatarState, onNext, gainXp, setAnswer, a
 
 // ========================= P7 – Vida em 12 Meses =========================
 export function Page07({ progress, xp, avatarState, onNext, gainXp, setAnswer }: PageProps) {
-  const [v, setV] = useState<string>("")
   const opts = [
     "Resultados reais, projetos do papel.",
     "Disciplina, confiança e orgulho.",
@@ -371,20 +370,20 @@ export function Page07({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
       <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">Daqui a 12 meses, como quer se enxergar?</h3>
       <div className="grid gap-3">
         {opts.map((label) => (
-          <RadioItem key={label} label={label} active={v === label} onClick={() => setV(label)} />
+          <button
+            key={label}
+            onClick={() => {
+              play(SFX.ping)
+              setAnswer("vision12", label)
+              gainXp(6, "p7_future")
+              onNext()
+            }}
+            className="flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] hover:scale-[1.02]"
+          >
+            <span className="text-left text-[15px]">{label}</span>
+            <ChevronRight className="size-5 opacity-80" />
+          </button>
         ))}
-      </div>
-      <div className="mt-5 flex justify-end">
-        <CTA
-          onClick={() => {
-            setAnswer("vision12", v)
-            gainXp(6, "p7_future")
-            onNext()
-          }}
-          disabled={!v}
-        >
-          Continuar
-        </CTA>
       </div>
       <p className="mt-4 text-xs opacity-80 italic">A vida que quer não chega — é construída.</p>
     </Frame>
@@ -451,7 +450,6 @@ export function Page08({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
 
 // ========================= P9 – Futuro Sem Ação =========================
 export function Page09({ progress, xp, avatarState, onNext, gainXp, setAnswer }: PageProps) {
-  const [v, setV] = useState<string>("")
   const opts = ["Muitas (padrão)", "Algumas (dói)", "Raramente", "Nunca (😈)"]
   return (
     <Frame>
@@ -460,20 +458,20 @@ export function Page09({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
       <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">Quantas vezes começou com energia e largou no meio?</h3>
       <div className="grid gap-3">
         {opts.map((label) => (
-          <RadioItem key={label} label={label} active={v === label} onClick={() => setV(label)} />
+          <button
+            key={label}
+            onClick={() => {
+              play(SFX.ping)
+              setAnswer("quitPattern", label)
+              gainXp(5, "p9_future")
+              onNext()
+            }}
+            className="flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] hover:scale-[1.02]"
+          >
+            <span className="text-left text-[15px]">{label}</span>
+            <ChevronRight className="size-5 opacity-80" />
+          </button>
         ))}
-      </div>
-      <div className="mt-5 flex justify-end">
-        <CTA
-          onClick={() => {
-            setAnswer("quitPattern", v)
-            gainXp(5, "p9_future")
-            onNext()
-          }}
-          disabled={!v}
-        >
-          Continuar
-        </CTA>
       </div>
       <p className="mt-4 text-xs opacity-80 italic">Cada desistência é uma mini-morte.</p>
     </Frame>
@@ -489,16 +487,18 @@ export function Page10({ progress, xp, avatarState, onNext, gainXp }: PageProps)
       <p className="text-sm text-[#C39BD3] mb-6">
         Ou você controla a mente, ou a procrastinação te controla. Suas respostas já revelaram o que te prende.
       </p>
-      <div className="flex justify-end">
-        <CTA
-          color={THEME.coral}
+      <div className="mt-6">
+        <button
           onClick={() => {
+            play(SFX.ping)
             gainXp(5, "p10_cta_diag")
             onNext()
           }}
+          className="w-full flex items-center justify-between rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-br from-[#F25C54] to-[#FF3B3B] hover:scale-[1.02]"
         >
-          VER MEU DIAGNÓSTICO PERSONALIZADO
-        </CTA>
+          <span className="text-left text-[15px] font-bold">VER MEU DIAGNÓSTICO PERSONALIZADO</span>
+          <ChevronRight className="size-5 opacity-80" />
+        </button>
       </div>
       <p className="mt-4 text-xs opacity-80 italic">Clareza sem ação é autoengano.</p>
     </Frame>
