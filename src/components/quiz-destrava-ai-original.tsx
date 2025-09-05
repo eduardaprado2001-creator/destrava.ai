@@ -91,15 +91,31 @@ export default function QuizDestravaAi() {
     if (!src) return
     try {
       const a = new Audio(src)
-      a.volume = 0.25
+      a.volume = 0.3
       a.play().catch(() => {})
     } catch {}
+  }
+
+  // Som específico para diferentes tipos de ação
+  const playActionSound = (action: 'click' | 'success' | 'error' | 'levelup' | 'scan') => {
+    const soundMap = {
+      click: SFX.ping,
+      success: SFX.success,
+      error: SFX.failure,
+      levelup: SFX.levelUp,
+      scan: SFX.scan
+    }
+    play(soundMap[action])
   }
 
   const giveXp = (amount: number, reason = "") => {
     setXp((x) => {
       const v = x + amount
       ;(window as any).__ga?.gainXp?.(amount, reason)
+        playActionSound('levelup')
+      if (amount > 0) {
+        setTimeout(() => playActionSound('success'), 200)
+      }
       return v
     })
   }
@@ -107,7 +123,8 @@ export default function QuizDestravaAi() {
   const next = (reward = 0, reason = "") => {
     if (reward) giveXp(reward, reason)
     setStep((s) => Math.min(s + 1, 13))
-  }
+    // Som de avanço de nível mais dramático
+    setTimeout(() => playActionSound('levelup'), 500)
 
   const progress = useMemo(() => {
     // 13 telas → 0..100
@@ -363,7 +380,7 @@ export default function QuizDestravaAi() {
           <button
             key={c.value}
             onClick={() => {
-              play(SFX.ping)
+              playActionSound('click')
               onSelect(c.value)
               next(stepData.xpReward, `step_${stepData.id}`)
             }}
@@ -381,13 +398,13 @@ export default function QuizDestravaAi() {
 
   const PageCheckbox: React.FC<{
     stepData: StepQuestion
-    onChange: (vals: string[]) => void
+          playActionSound('click')
   }> = ({ stepData, onChange }) => {
     const [selected, setSelected] = useState<string[]>([])
-    const toggle = (v: string) => {
+          playActionSound('success')
       setSelected((arr) => {
         let nxt = arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]
-        if (stepData.maxSelections && nxt.length > stepData.maxSelections) nxt = nxt.slice(0, stepData.maxSelections)
+          playActionSound('error')
         play(SFX.ping)
         return nxt
       })
