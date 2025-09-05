@@ -343,11 +343,47 @@
       {
         id: 10,
         title: "Virada mental: a última chamada",
-        question: "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
-        choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
+        question: `🚨 Chega de dicas soltas que não funcionam.
+
+O que você precisa é de um plano brutalmente claro, feito só pra você.
+
+A real é simples:
+
+👉 Seus próprios pensamentos estão te sabotando.
+
+👉 Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.
+
+⚡ Mas quando você acerta a mente, a procrastinação desmorona.
+
+No lugar dela nasce a versão sua que faz, termina e conquista.
+
+Isso não é teoria de coach. 👉 É sobrevivência.
+
+👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior.
+
+💀 Essa pode ser sua última chance de virar o jogo.
+
+📌 "Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação."
+
+<strong>Selecione todas as opções aplicáveis:</strong>`,
+        choices: [
+          { label: "🤔 Quebra-cabeças (treinar sua mente pra ficar afiada)", value: "quebra_cabecas" },
+          { label: "🧠 Aumento do QI (pensar mais rápido e melhor)", value: "aumento_qi" },
+          { label: "🎯 Definição de metas (clareza brutal no que fazer)", value: "definicao_metas" },
+          { label: "🧘🏻 Relaxamento (parar de travar por ansiedade)", value: "relaxamento" },
+          { label: "🧎🏻 Desintoxicação de dopamina (libertar-se do vício do celular)", value: "desintoxicacao_dopamina" },
+          { label: "🌐 Rede (construir conexões de alto nível)", value: "rede" },
+          { label: "💡 Melhorando a memória (lembrar do que importa, não do lixo)", value: "melhorar_memoria" },
+          { label: "💭 Análise de sonhos (entender o que sua mente tá gritando)", value: "analise_sonhos" },
+          { label: "🧩 Lógica (resolver problemas sem enrolar)", value: "logica" },
+          { label: "⌛ Gestão de tempo (finalmente dominar suas horas)", value: "gestao_tempo" },
+          { label: "💖 Autocuidado (cuidar de você antes que o mundo te destrua)", value: "autocuidado" }
+        ],
         reward: 5,
         avatar: "Armadura psíquica ativando (nível 5).",
         insight: "Clareza sem ação é autoengano."
+        type: "checkbox",
+        maxSelections: 11
       },
       {
         id: 11,
@@ -454,6 +490,7 @@
 
     function renderCheckboxStep(step) {
       document.getElementById('question').textContent = step.question;
+      document.getElementById('question').innerHTML = step.question;
       const choicesContainer = document.getElementById('choices');
       let selected = [];
       
@@ -475,18 +512,31 @@
       });
 
       const continueBtn = document.createElement('button');
-      continueBtn.textContent = 'Continuar';
+      continueBtn.textContent = `Continuar (${selected.length} selecionados)`;
       continueBtn.className = 'button';
       continueBtn.style.background = '#F25C54';
       continueBtn.style.marginTop = '20px';
       continueBtn.onclick = () => {
-        if (selected.length > 0) {
-          answers[`step_${step.id}`] = selected;
-          giveXp(step.reward);
-          nextStep();
-        }
+        answers[`step_${step.id}`] = selected;
+        giveXp(step.reward);
+        nextStep();
       };
       choicesContainer.appendChild(continueBtn);
+      
+      // Update button text when selections change
+      const updateContinueButton = () => {
+        continueBtn.textContent = `Continuar (${selected.length} selecionados)`;
+      };
+      
+      // Modify existing button click handlers to update continue button
+      step.choices.forEach((choice, index) => {
+        const button = choicesContainer.children[index];
+        const originalOnClick = button.onclick;
+        button.onclick = () => {
+          originalOnClick();
+          updateContinueButton();
+        };
+      });
     }
 
     function renderLoadingStep(step) {
