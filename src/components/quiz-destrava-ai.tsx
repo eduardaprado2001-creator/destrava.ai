@@ -462,7 +462,109 @@ export default function QuizDestravaAi() {
         </motion.p>
       )}
 
+      {/* Warning Section */}
+      {stepData.id === 1 && (
+        <div className="mt-8 space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="rounded-xl bg-gradient-to-r from-red-900/40 to-red-800/40 p-6 ring-1 ring-red-500/30"
+          >
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">💀</span>
+              <p className="text-white leading-relaxed">
+                "Você está preso num ciclo de adiamento que já tá roubando sua energia, destruindo sua autoconfiança e atrasando seus maiores sonhos.
+                E se você continuar assim, sua vida não vai só ficar parada… ela vai andar pra trás."
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+            className="rounded-xl bg-gradient-to-r from-gray-900/40 to-gray-800/40 p-6 ring-1 ring-gray-500/30"
+          >
+            <div className="flex items-start gap-3 mb-4">
+              <span className="text-xl">❌</span>
+              <h4 className="text-red-400 font-bold">Se nada mudar, daqui a meses você vai:</h4>
+            </div>
+            <ul className="space-y-2 ml-8 text-gray-300">
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Perder oportunidades que nunca mais voltam.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Ver sua carreira e seu dinheiro travados.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Se sentir cada vez mais frustrado, pesado e arrependido.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-1">•</span>
+                <span>Olhar pro espelho e odiar a pessoa que deixou tudo escapar.</span>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+            className="rounded-xl bg-gradient-to-r from-emerald-900/40 to-emerald-800/40 p-6 ring-1 ring-emerald-500/30"
+          >
+            <div className="flex items-start gap-3 mb-4">
+              <span className="text-xl">✨</span>
+              <h4 className="text-emerald-400 font-bold">Mas há esperança:</h4>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <span className="text-xl">⚡</span>
+                <p className="text-white leading-relaxed">
+                  "Se você agir HOJE, pode reverter esse ciclo em poucas semanas e conquistar foco, disciplina e orgulho real — mesmo que já tenha tentado antes sem sucesso."
+                </p>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <span className="text-xl">👉</span>
+                <p className="text-emerald-200 leading-relaxed">
+                  Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e transformar sua vida.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       <motion.div 
+        
+        <!-- Seção de Aviso -->
+        <div style="margin-top: 24px; space-y: 16px;">
+          <div style="padding: 20px; background: linear-gradient(135deg, #7f1d1d, #991b1b); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px;">
+            <p style="font-size: 16px; font-weight: bold; color: white; margin-bottom: 12px;">💀 "Você está preso num ciclo de adiamento que já tá roubando sua energia, destruindo sua autoconfiança e atrasando seus maiores sonhos.</p>
+            <p style="font-size: 16px; color: #fca5a5;">E se você continuar assim, sua vida não vai só ficar parada… ela vai andar pra trás."</p>
+          </div>
+          
+          <div style="padding: 20px; background: linear-gradient(135deg, #374151, #1f2937); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px;">
+            <p style="font-size: 16px; font-weight: bold; color: #ef4444; margin-bottom: 12px;">❌ Se nada mudar, daqui a meses você vai:</p>
+            <ul style="list-style: none; padding: 0; margin: 0; color: #d1d5db;">
+              <li style="margin-bottom: 8px; font-size: 14px;">• Perder oportunidades que nunca mais voltam.</li>
+              <li style="margin-bottom: 8px; font-size: 14px;">• Ver sua carreira e seu dinheiro travados.</li>
+              <li style="margin-bottom: 8px; font-size: 14px;">• Se sentir cada vez mais frustrado, pesado e arrependido.</li>
+              <li style="margin-bottom: 8px; font-size: 14px;">• Olhar pro espelho e odiar a pessoa que deixou tudo escapar.</li>
+            </ul>
+          </div>
+          
+          <div style="padding: 20px; background: linear-gradient(135deg, #065f46, #047857); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px;">
+            <p style="font-size: 16px; font-weight: bold; color: #10b981; margin-bottom: 12px;">✨ Mas há esperança:</p>
+            <p style="font-size: 16px; color: white; margin-bottom: 12px;">⚡ "Se você agir HOJE, pode reverter esse ciclo em poucas semanas e conquistar foco, disciplina e orgulho real — mesmo que já tenha tentado antes sem sucesso."</p>
+            <p style="font-size: 16px; color: #6ee7b7;">👉 Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e transformar sua vida.</p>
+          </div>
+        </div>
         className="grid gap-3"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -620,75 +722,6 @@ export default function QuizDestravaAi() {
           </motion.div>
         )}
 
-
-      {/* Seção de Aviso e Esperança */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 1.0 }}
-        className="mt-8 space-y-6"
-      >
-        {/* Aviso Principal */}
-        <div className="rounded-2xl bg-gradient-to-r from-red-900/40 to-red-800/40 p-6 ring-1 ring-red-500/30">
-          <div className="flex items-start gap-3">
-            <span className="text-2xl">💀</span>
-            <p className="text-[#FCEEE3] leading-relaxed">
-              "Você está preso num ciclo de adiamento que já tá roubando sua energia, destruindo sua autoconfiança e atrasando seus maiores sonhos.
-              E se você continuar assim, sua vida não vai só ficar parada… ela vai andar pra trás."
-            </p>
-          </div>
-        </div>
-
-        {/* Consequências */}
-        <div className="rounded-2xl bg-gradient-to-r from-gray-800/40 to-gray-700/40 p-6 ring-1 ring-gray-600/30">
-          <div className="flex items-start gap-3 mb-4">
-            <span className="text-xl">❌</span>
-            <h4 className="text-white font-bold">Se nada mudar, daqui a meses você vai:</h4>
-          </div>
-          <ul className="space-y-2 ml-8 text-[#FCEEE3]">
-            <li className="flex items-start gap-2">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Perder oportunidades que nunca mais voltam.</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Ver sua carreira e seu dinheiro travados.</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Se sentir cada vez mais frustrado, pesado e arrependido.</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-red-400 mt-1">•</span>
-              <span>Olhar pro espelho e odiar a pessoa que deixou tudo escapar.</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Esperança */}
-        <div className="rounded-2xl bg-gradient-to-r from-emerald-900/40 to-emerald-800/40 p-6 ring-1 ring-emerald-500/30">
-          <div className="flex items-start gap-3 mb-4">
-            <span className="text-2xl">✨</span>
-            <h4 className="text-white font-bold">Mas há esperança:</h4>
-          </div>
-          
-          <div className="space-y-4 ml-8">
-            <div className="flex items-start gap-3">
-              <span className="text-xl">⚡</span>
-              <p className="text-[#FCEEE3] leading-relaxed">
-                "Se você agir HOJE, pode reverter esse ciclo em poucas semanas e conquistar foco, disciplina e orgulho real — mesmo que já tenha tentado antes sem sucesso."
-              </p>
-            </div>
-            
-            <div className="flex items-start gap-3">
-              <span className="text-xl">👉</span>
-              <p className="text-[#FCEEE3] leading-relaxed">
-                Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e transformar sua vida.
-              </p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
         <motion.div 
           className="grid gap-3 mb-6"
           initial={{ opacity: 0, y: 30 }}
