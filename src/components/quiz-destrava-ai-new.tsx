@@ -56,6 +56,8 @@ export default function QuizDestravaAiNew() {
 
   const onNext = () => {
     setCurrentPage(prev => Math.min(prev + 1, 13))
+    // Scroll para o topo da página quando muda de página
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const pageProps: PageProps = {
