@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import { Quote } from "lucide-react"
 import { motion } from "framer-motion"
 import { GamificationLayer } from "./gamification-layer-refined"
-import QuizDestravaAi from "./quiz-destrava-ai"
 
 function NewsCard({
   tag,
@@ -67,22 +66,12 @@ function TestimonialCard({ name, city, text, color }: { name: string; city: stri
 
 export default function LandingDestravaAi() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const [showQuiz, setShowQuiz] = useState(false)
   
   useEffect(() => {
     audioRef.current = new Audio(
       "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAA...", // (silencioso de 1s — placeholder)
     )
   }, [])
-
-  if (showQuiz) {
-    return (
-      <div className="min-h-screen w-full bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-white">
-        <GamificationLayer />
-        <QuizDestravaAi />
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-white">
@@ -346,10 +335,8 @@ export default function LandingDestravaAi() {
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.3 }}
               viewport={{ once: true }}
-              onClick={() => {
-                setShowQuiz(true)
-                ;(window as any).__ga?.gainXp?.(50, "cta_click")
-              }}
+              href="/quiz.html"
+              onClick={() => (window as any).__ga?.gainXp?.(50, "cta_click")}
               className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xl rounded-2xl shadow-[0_20px_60px_rgba(220,38,38,.6)] hover:shadow-[0_25px_70px_rgba(220,38,38,.8)] transform transition-all duration-300 ring-2 ring-red-500/30 hover:ring-red-400/50"
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
