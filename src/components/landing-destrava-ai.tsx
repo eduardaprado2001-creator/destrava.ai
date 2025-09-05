@@ -66,12 +66,23 @@ function TestimonialCard({ name, city, text, color }: { name: string; city: stri
 export default function LandingDestravaAi() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [showQuiz, setShowQuiz] = useState(false)
+  const [showQuiz, setShowQuiz] = useState(false)
   
   useEffect(() => {
     audioRef.current = new Audio(
       "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAA...", // (silencioso de 1s — placeholder)
     )
   }, [])
+
+  // Se showQuiz for true, mostra apenas o quiz
+  if (showQuiz) {
+    return (
+      <div className="min-h-screen w-full bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-white">
+        <GamificationLayer />
+        <QuizDestravaAiNew />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-white">
@@ -359,8 +370,6 @@ export default function LandingDestravaAi() {
           </div>
         </div>
       </section>
-
-      {showQuiz && <QuizDestravaAiNew />}
 
       <footer className="border-t border-white/10 bg-[#381f66]/60 backdrop-blur">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-[#FCEEE3] flex flex-col md:flex-row items-center justify-between gap-4">
