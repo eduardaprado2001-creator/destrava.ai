@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { Quote } from "lucide-react"
 import { motion } from "framer-motion"
 import { GamificationLayer } from "./gamification-layer-refined"
+import QuizDestravaAiNew from "./quiz-destrava-ai-new"
 
 function NewsCard({
   tag,
@@ -355,6 +356,8 @@ export default function LandingDestravaAi() {
           </div>
         </div>
       </section>
+
+      <QuizDestravaAiNew />
 
       <footer className="border-t border-white/10 bg-[#381f66]/60 backdrop-blur">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-[#FCEEE3] flex flex-col md:flex-row items-center justify-between gap-4">
