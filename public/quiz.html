@@ -271,23 +271,6 @@
         avatar: "Reflexo distorcido ao fundo.",
         insight: "O espelho não mente: ou age, ou apodrece."
       },
-      {
-        id: 8,
-        title: "Prejuízo já causado",
-        question: "O que a procrastinação já destruiu? (escolha até 2)",
-          { label: "Saúde", value: "saude" },
-          { label: "Projetos pessoais", value: "projetos" }
-        ],
-        reward: 8,
-        avatar: "Armadura 6/10.",
-        insight: "Prioridade sem ação é só fantasia."
-      },
-      {
-        id: 10,
-        title: "Processamento Neural",
-        type: "loading",
-        reward: 15,
-        avatar: "Armadura 7/10.",
         insight: "A dor de agora é a conta do que adiou."
       },
       {
@@ -519,7 +502,7 @@ O que você precisa é de um plano brutalmente claro, feito só pra você.
 
       const damages = answers.step_8 || ['carreira'];
       const bullets = [
-        `Área mais afetada: ${damages[0]}${damages[1] ? ` e ${damages[1]}` : ''}.`,
+        `Foco principal: desenvolvimento pessoal.`,
         `Gatilho de fuga: ${scrollLevel > 6 ? 'celular' : 'adiamento/ansiedade'}.`,
         `Quebra de foco: pico no período atual.`
       ];
