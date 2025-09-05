@@ -305,7 +305,54 @@ export default function QuizDestravaAi() {
       {
         id: 10,
         kind: "loading",
-        question: "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
+        title: "Processamento Neural",
+        hudAvatar: "Olhos fechados, download de consciência.",
+        progress: 68,
+        xpReward: 5,
+        insight: "Quem assume o compromisso, colhe o resultado.",
+      },
+      // P11 – Futuro sem ação + pergunta extra
+      {
+        id: 11,
+        kind: "radio",
+        title: "O futuro sem ação",
+        hudAvatar: "Rosto meio luz/meio sombra.",
+        progress: 72,
+        xpReward: 5,
+        question: "Quantas vezes você começou algo cheio de energia… e largou no meio, se sentindo um fracassado?",
+        choices: [
+          { label: "Muitas vezes, é um padrão na minha vida", value: "muitas" },
+          { label: "Algumas vezes, mas me destrói", value: "algumas" },
+          { label: "Raramente, mas já aconteceu", value: "raro" },
+          { label: "Nunca (mentira que ninguém marca 😈)", value: "nunca" },
+        ],
+        insight: "Cada desistência é uma mini‑morte.",
+      },
+      // P12 – Virada + CTA diagnóstico
+      {
+        id: 12,
+        kind: "checkbox",
+        title: "Virada mental: a última chamada",
+        hudAvatar: "Armadura psíquica ativando (nível 5).",
+        progress: 76,
+        xpReward: 5,
+        question: "",
+        choices: [
+          { label: "🤔 Quebra-cabeças (treinar sua mente pra ficar afiada)", value: "quebra_cabecas" },
+          { label: "🧠 Aumento do QI (pensar mais rápido e melhor)", value: "aumento_qi" },
+          { label: "🎯 Definição de metas (clareza brutal no que fazer)", value: "definicao_metas" },
+          { label: "🧘🏻 Relaxamento (parar de travar por ansiedade)", value: "relaxamento" },
+          { label: "🧎🏻 Desintoxicação de dopamina (libertar-se do vício do celular)", value: "desintoxicacao_dopamina" },
+          { label: "🌐 Rede (construir conexões de alto nível)", value: "rede" },
+          { label: "💡 Melhorando a memória (lembrar do que importa, não do lixo)", value: "melhorar_memoria" },
+          { label: "💭 Análise de sonhos (entender o que sua mente tá gritando)", value: "analise_sonhos" },
+          { label: "🧩 Lógica (resolver problemas sem enrolar)", value: "logica" },
+          { label: "⌛ Gestão de tempo (finalmente dominar suas horas)", value: "gestao_tempo" },
+          { label: "💖 Autocuidado (cuidar de você antes que o mundo te destrua)", value: "autocuidado" }
+        ],
+        maxSelections: 11,
+        insight: "Clareza sem ação é autoengano.",
+      },
       // P13 – Diagnóstico dinâmico
       {
         id: 13,
