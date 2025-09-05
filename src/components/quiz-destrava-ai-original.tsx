@@ -535,13 +535,17 @@ export default function QuizDestravaAi() {
     const [agree2, setAgree2] = useState(false)
 
     useEffect(() => {
-      play(SFX.scan)
+      playActionSound('success')
+      // Som especial para a oferta final
+      setTimeout(() => play(SFX.boom), 1500)
       const t = setTimeout(() => {}, 400)
       return () => clearTimeout(t)
     }, [])
 
     return (
-      <Container>
+      playActionSound('levelup')
+      // Som extra dramático para compra
+      setTimeout(() => play(SFX.success), 300)
         <Hud />
         <div className="flex items-center gap-2 text-sm opacity-90 mb-2">
           <Loader2 className="size-4 animate-spin" />
