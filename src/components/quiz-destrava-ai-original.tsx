@@ -125,6 +125,7 @@ export default function QuizDestravaAi() {
     setStep((s) => Math.min(s + 1, 13))
     // Som de avanço de nível mais dramático
     setTimeout(() => playActionSound('levelup'), 500)
+  }
 
   const progress = useMemo(() => {
     // 13 telas → 0..100
@@ -310,11 +311,7 @@ export default function QuizDestravaAi() {
         hudAvatar: "Armadura 7/10.",
         progress: 88,
         xpReward: 10,
-        insight: "A dor de agora é a con
-      }
-    ]
-  )
-}ta do que adiou.",
+        insight: "A dor de agora é a conta do que adiou.",
       },
       // P12 – Compromisso
       {
@@ -384,7 +381,7 @@ export default function QuizDestravaAi() {
           <button
             key={c.value}
             onClick={() => {
-              playActionSound('click')
+              play(SFX.ping)
               onSelect(c.value)
               next(stepData.xpReward, `step_${stepData.id}`)
             }}

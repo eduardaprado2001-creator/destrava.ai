@@ -388,6 +388,6 @@ export default function LandingDestravaAi() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   )
 }
