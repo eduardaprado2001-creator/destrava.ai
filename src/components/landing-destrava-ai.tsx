@@ -65,6 +65,7 @@ function TestimonialCard({ name, city, text, color }: { name: string; city: stri
 
 export default function LandingDestravaAi() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [showQuiz, setShowQuiz] = useState(false)
   
   useEffect(() => {
     audioRef.current = new Audio(
@@ -334,8 +335,10 @@ export default function LandingDestravaAi() {
               whileTap={{ scale: 0.95 }}
               transition={{ duration: 0.3 }}
               viewport={{ once: true }}
-              href="/quiz.html"
-              onClick={() => (window as any).__ga?.gainXp?.(50, "cta_click")}
+              onClick={() => {
+                (window as any).__ga?.gainXp?.(50, "cta_click")
+                setShowQuiz(true)
+              }}
               className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xl rounded-2xl shadow-[0_20px_60px_rgba(220,38,38,.6)] hover:shadow-[0_25px_70px_rgba(220,38,38,.8)] transform transition-all duration-300 ring-2 ring-red-500/30 hover:ring-red-400/50"
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -357,7 +360,7 @@ export default function LandingDestravaAi() {
         </div>
       </section>
 
-      <QuizDestravaAiNew />
+      {showQuiz && <QuizDestravaAiNew />}
 
       <footer className="border-t border-white/10 bg-[#381f66]/60 backdrop-blur">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-[#FCEEE3] flex flex-col md:flex-row items-center justify-between gap-4">
