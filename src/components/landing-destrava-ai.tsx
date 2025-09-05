@@ -66,7 +66,6 @@ function TestimonialCard({ name, city, text, color }: { name: string; city: stri
 export default function LandingDestravaAi() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const [showQuiz, setShowQuiz] = useState(false)
-  const [showQuiz, setShowQuiz] = useState(false)
   
   useEffect(() => {
     audioRef.current = new Audio(
