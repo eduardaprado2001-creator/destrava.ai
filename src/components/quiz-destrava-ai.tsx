@@ -1015,28 +1015,110 @@ export default function QuizDestravaAi() {
 
   // === Componente Diagnóstico ===
   const PageDiagnosis: React.FC<{ stepData: StepQuestion }> = ({ stepData }) => {
+    // Análise personalizada baseada nas respostas
     const scrollLevel = answers.scrollLevel || 5
-    const damages = answers.damages || ['carreira']
+    const age = answers.step_2 || ''
+    const delayFreq = answers.step_3 || ''
+    const mirrorPain = answers.step_5 || ''
+    const damages = answers.step_6 || ['carreira']
+    const priority = answers.step_7 || ''
+    const vision12 = answers.step_8 || ''
+    const quitPattern = answers.step_11 || ''
     
-    let level = "MÉDIO"
-    let levelColor = "text-yellow-400"
-    let description = "Você tenta, mas se sabota mais do que avança."
+    // Cálculo do nível de procrastinação baseado em múltiplos fatores
+    let severityScore = 0
     
-    if (scrollLevel >= 8) {
+    // Pontuação baseada no scroll
+    if (scrollLevel >= 8) severityScore += 3
+    else if (scrollLevel >= 6) severityScore += 2
+    else if (scrollLevel >= 4) severityScore += 1
+    
+    // Pontuação baseada na frequência de procrastinação
+    if (delayFreq === 'sempre') severityScore += 3
+    else if (delayFreq === 'frequentemente') severityScore += 2
+    else if (delayFreq === 'asvezes') severityScore += 1
+    
+    // Pontuação baseada na dor no espelho
+    if (mirrorPain === 'sempre') severityScore += 2
+    else if (mirrorPain === 'muitas') severityScore += 1
+    
+    // Pontuação baseada no padrão de desistência
+    if (quitPattern === 'muitas') severityScore += 2
+    else if (quitPattern === 'algumas') severityScore += 1
+    
+    // Determinar nível e descrição personalizada
+    let level = "BAIXO"
+    let levelColor = "text-green-400"
+    let description = ""
+    let personalizedInsights: string[] = []
+    
+    if (severityScore >= 8) {
       level = "EXTREMO"
       levelColor = "text-red-400"
-      description = "Você está na beira do abismo. Ou muda, ou afunda."
-    } else if (scrollLevel >= 5) {
+      description = "Você está na beira do abismo. A procrastinação dominou sua vida completamente."
+    } else if (severityScore >= 5) {
       level = "ALTO"
       levelColor = "text-orange-400"
-      description = "Piloto automático comendo tua energia e confiança."
+      description = "Piloto automático destruindo sua energia, tempo e autoestima diariamente."
+    } else if (severityScore >= 3) {
+      level = "MÉDIO"
+      levelColor = "text-yellow-400"
+      description = "Você tenta, mas se sabota mais do que avança. Está na hora de quebrar esse ciclo."
+    } else {
+      level = "CONTROLADO"
+      levelColor = "text-green-400"
+      description = "Você tem controle, mas ainda há pontos de melhoria para otimizar sua produtividade."
     }
 
-    const bullets = [
-      `Área mais afetada: ${damages[0]}${damages[1] ? ` e ${damages[1]}` : ''}.`,
-      `Gatilho de fuga: ${scrollLevel > 6 ? 'celular' : 'adiamento/ansiedade'}.`,
-      `Quebra de foco: pico no período atual.`
-    ]
+    // Insights personalizados baseados nas respostas específicas
+    if (damages.length > 0) {
+      const damageText = damages.length === 1 ? damages[0] : `${damages[0]} e ${damages[1]}`
+      personalizedInsights.push(`🎯 Área mais prejudicada: ${damageText}`)
+    }
+    
+    if (scrollLevel >= 7) {
+      personalizedInsights.push(`📱 Vício digital severo: ${scrollLevel}/10 no scroll destrutivo`)
+    } else if (scrollLevel >= 4) {
+      personalizedInsights.push(`📱 Distração digital moderada: precisa de controle`)
+    }
+    
+    if (age.includes('30-39') || age.includes('40-49') || age.includes('50+')) {
+      personalizedInsights.push(`⏰ Urgência temporal: cada ano perdido é mais difícil de recuperar`)
+    } else if (age.includes('21-29')) {
+      personalizedInsights.push(`🚀 Janela de oportunidade: ainda está nos anos mais produtivos`)
+    }
+    
+    if (delayFreq === 'sempre' || delayFreq === 'frequentemente') {
+      personalizedInsights.push(`🔄 Padrão crônico: procrastinação virou seu modo padrão de operação`)
+    }
+    
+    if (mirrorPain === 'sempre' || mirrorPain === 'muitas') {
+      personalizedInsights.push(`💔 Autoestima em queda: você sabe que está desperdiçando seu potencial`)
+    }
+    
+    if (quitPattern === 'muitas' || quitPattern === 'algumas') {
+      personalizedInsights.push(`❌ Ciclo de desistência: histórico de projetos abandonados`)
+    }
+    
+    if (priority === 'tudo') {
+      personalizedInsights.push(`🎪 Falta de foco: tentar fazer tudo ao mesmo tempo é receita para não fazer nada`)
+    } else if (priority) {
+      personalizedInsights.push(`🎯 Prioridade identificada: ${priority} precisa de atenção imediata`)
+    }
+    
+    // Se não tiver insights suficientes, adicionar alguns genéricos baseados no nível
+    if (personalizedInsights.length < 3) {
+      if (level === "EXTREMO") {
+        personalizedInsights.push(`🚨 Estado crítico: procrastinação controlando 80%+ das suas decisões`)
+        personalizedInsights.push(`⚰️ Zona de perigo: sonhos morrendo por falta de ação`)
+      } else if (level === "ALTO") {
+        personalizedInsights.push(`⚠️ Alerta vermelho: padrões destrutivos bem estabelecidos`)
+        personalizedInsights.push(`🔥 Ponto de virada: ainda dá tempo, mas a janela está fechando`)
+      } else if (level === "MÉDIO") {
+        personalizedInsights.push(`⚖️ Equilíbrio instável: oscila entre produtivo e procrastinador`)
+        personalizedInsights.push(`🎢 Montanha-russa: momentos de foco seguidos de autossabotagem`)
+      }
+    }
 
     const handleContinue = () => {
       play(SFX.click)
@@ -1068,20 +1150,20 @@ export default function QuizDestravaAi() {
           <p className="text-[#C39BD3] mb-4 leading-relaxed">
             {description}
           </p>
-          <ul className="space-y-2 text-sm">
-            {bullets.map((bullet, index) => (
+          <div className="space-y-3 text-sm">
+            {personalizedInsights.slice(0, 4).map((insight, index) => (
               <motion.li
                 key={index}
-                className="flex items-start gap-2"
+                className="flex items-start gap-3 p-2 rounded-lg bg-white/5"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ duration: 0.4, delay: index * 0.15 }}
               >
-                <span className="text-[#F25C54] mt-1">•</span>
-                <span>{bullet}</span>
+                <span className="text-[#F25C54] text-base leading-none">{insight.split(' ')[0]}</span>
+                <span className="flex-1">{insight.substring(insight.indexOf(' ') + 1)}</span>
               </motion.li>
             ))}
-          </ul>
+          </div>
         </motion.div>
 
         <motion.button
