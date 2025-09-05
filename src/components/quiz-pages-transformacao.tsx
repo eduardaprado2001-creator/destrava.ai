@@ -179,7 +179,7 @@ export function Page02({ progress, xp, avatarState, onNext, gainXp, setAnswer }:
   return (
     <Frame>
       <Hud progress={progress} xp={xp} avatarState={avatarState} />
-      <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">Quantos anos você tem?</h3>
+      <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">⌛ "Sua idade diz muito sobre o quanto a procrastinação já vem roubando da sua vida. Quantos anos você tem?"</h3>
       <div className="grid gap-3">
         {opts.map((label) => (
           <RadioItem key={label} label={label} active={v === label} onClick={() => setV(label)} />
