@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Check, ChevronRight, Loader2, AlarmClock, Timer, Shield, Sparkles, Zap } from "lucide-react"
+import { Check, ChevronRight, Loader2, Timer, Sparkles } from "lucide-react"
 
 /**
  * QuizDestravaAi – fluxo gamificado em 13 telas
@@ -30,12 +30,15 @@ const COLORS = {
   neon: "#39FF88", // neon green sutil (ajuste se tiver var css)
 }
 
-// === SFX (placeholders em base64 – substitua quando quiser) ===
+// === SFX (corretos caminhos para arquivos MP3) ===
 const SFX = {
-  ping: "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAA...", // clique/ping curto
-  boom: "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAABvb20tYm9vbS0t...",
-  scan: "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAHNjYW4tYmlu...",
-  alarm: "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAGFsYXJtLXNvZnQ...",
+  ping: "/Ping sound effect.mp3", // som de clique
+  boom: "/Boom Swoosh - Efeito Sonoro Gratuito.mp3", // som de falha
+  scan: "/Loading Sound Effect (Royalty free Sound)#shorts.mp3", // som de carregamento
+  alarm: "/Efeito sonoro Atenção.mp3", // som de alerta
+  levelUp: "/Efeito sonoro (Vitória).mp3", // som de avanço de fase
+  success: "/Efeito sonoro (Vitória).mp3", // som de sucesso
+  failure: "/Efeito sonoro Atenção.mp3", // som de falha
 }
 
 // Tipos de pergunta
