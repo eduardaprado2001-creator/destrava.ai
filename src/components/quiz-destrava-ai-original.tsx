@@ -112,7 +112,7 @@ export default function QuizDestravaAi() {
     setXp((x) => {
       const v = x + amount
       ;(window as any).__ga?.gainXp?.(amount, reason)
-        playActionSound('levelup')
+      // Som de XP ganho
       if (amount > 0) {
         setTimeout(() => playActionSound('success'), 200)
       }
@@ -310,7 +310,11 @@ export default function QuizDestravaAi() {
         hudAvatar: "Armadura 7/10.",
         progress: 88,
         xpReward: 10,
-        insight: "A dor de agora é a conta do que adiou.",
+        insight: "A dor de agora é a con
+      }
+    ]
+  )
+}ta do que adiou.",
       },
       // P12 – Compromisso
       {
@@ -398,13 +402,13 @@ export default function QuizDestravaAi() {
 
   const PageCheckbox: React.FC<{
     stepData: StepQuestion
-          playActionSound('click')
+    onChange: (vals: string[]) => void
   }> = ({ stepData, onChange }) => {
     const [selected, setSelected] = useState<string[]>([])
-          playActionSound('success')
+    const toggle = (v: string) => {
       setSelected((arr) => {
         let nxt = arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]
-          playActionSound('error')
+        if (stepData.maxSelections && nxt.length > stepData.maxSelections) nxt = nxt.slice(0, stepData.maxSelections)
         play(SFX.ping)
         return nxt
       })
@@ -535,17 +539,13 @@ export default function QuizDestravaAi() {
     const [agree2, setAgree2] = useState(false)
 
     useEffect(() => {
-      playActionSound('success')
-      // Som especial para a oferta final
-      setTimeout(() => play(SFX.boom), 1500)
+      play(SFX.scan)
       const t = setTimeout(() => {}, 400)
       return () => clearTimeout(t)
     }, [])
 
     return (
-      playActionSound('levelup')
-      // Som extra dramático para compra
-      setTimeout(() => play(SFX.success), 300)
+      <Container>
         <Hud />
         <div className="flex items-center gap-2 text-sm opacity-90 mb-2">
           <Loader2 className="size-4 animate-spin" />
