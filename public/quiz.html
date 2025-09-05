@@ -343,26 +343,29 @@
       {
         id: 10,
         title: "Virada mental: a última chamada",
-        question: `💀
-"Você está preso num ciclo de adiamento que já tá roubando sua energia, destruindo sua autoconfiança e atrasando seus maiores sonhos. E se você continuar assim, sua vida não vai só ficar parada… ela vai andar pra trás."
+        question: `🚨 Chega de dicas soltas que não funcionam.
 
-❌
-Se nada mudar, daqui a meses você vai:
-•
-Perder oportunidades que nunca mais voltam.
-•
-Ver sua carreira e seu dinheiro travados.
-•
-Se sentir cada vez mais frustrado, pesado e arrependido.
-•
-Olhar pro espelho e odiar a pessoa que deixou tudo escapar.
-✨
-Mas há esperança:
-⚡
-"Se você agir HOJE, pode reverter esse ciclo em poucas semanas e conquistar foco, disciplina e orgulho real — mesmo que já tenha tentado antes sem sucesso."
+O que você precisa é de um plano brutalmente claro, feito só pra você.
+
+A real é simples:
 
 👉
-Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e transformar sua vida.
+Seus próprios pensamentos estão te sabotando.
+
+👉
+Eles te fazem enrolar, perder tempo e desperdiçar ANOS da sua vida.
+
+⚡ Mas quando você acerta a mente, a procrastinação desmorona.
+
+No lugar dela nasce a versão sua que faz, termina e conquista.
+
+Isso não é teoria de coach. 👉 É sobrevivência.
+
+👉 Ou você muda agora, ou daqui a 1 ano sua vida vai estar exatamente igual — ou pior.
+
+💀 Essa pode ser sua última chance de virar o jogo.
+
+📌 "Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação."
 
 <strong>Selecione todas as opções aplicáveis:</strong>`,
         choices: [
@@ -501,11 +504,12 @@ Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e 
           playSound('ping-sound');
           if (selected.includes(choice.value)) {
             selected = selected.filter(v => v !== choice.value);
-            button.style.background = 'linear-gradient(135deg, #1f3550, #0f1c2b)';
+            button.style.background = 'linear-gradient(135deg, #5e348f, #3d225e)';
           } else if (selected.length < step.maxSelections) {
             selected.push(choice.value);
             button.style.background = 'linear-gradient(135deg, #6a3a38, #3a1f1e)';
           }
+          updateContinueButton();
         };
         choicesContainer.appendChild(button);
       });
@@ -522,20 +526,9 @@ Não importa quantas vezes você fracassou, o plano certo vai virar sua mente e 
       };
       choicesContainer.appendChild(continueBtn);
       
-      // Update button text when selections change
-      const updateContinueButton = () => {
+      function updateContinueButton() {
         continueBtn.textContent = `Continuar (${selected.length} selecionados)`;
-      };
-      
-      // Modify existing button click handlers to update continue button
-      step.choices.forEach((choice, index) => {
-        const button = choicesContainer.children[index];
-        const originalOnClick = button.onclick;
-        button.onclick = () => {
-          originalOnClick();
-          updateContinueButton();
-        };
-      });
+      }
     }
 
     function renderLoadingStep(step) {
