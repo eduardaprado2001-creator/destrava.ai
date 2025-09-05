@@ -125,6 +125,7 @@ export default function QuizDestravaAi() {
     setStep((s) => Math.min(s + 1, 13))
     // Som de avanço de nível mais dramático
     setTimeout(() => playActionSound('levelup'), 500)
+  }
 
   const progress = useMemo(() => {
     // 13 telas → 0..100
@@ -246,8 +247,7 @@ export default function QuizDestravaAi() {
         ],
         insight: "A prioridade que escolhe define a vida que constrói.",
       },
-      // P
-      // P6 – Prioridade & Área
+      // P7 – 12 meses
       {
         id: 7,
         kind: "radio",
@@ -261,65 +261,6 @@ export default function QuizDestravaAi() {
           { label: "Disciplina, confiança e orgulho.", value: "disciplina" },
           { label: "Rotina produtiva no controle.", value: "rotina" },
         ],
-        insight: "A vida que quer não chega — é construída.",
-      },
-      // P8 – Loading + social + coleta
-      {
-        id: 8,
-        kind: "loading",
-        title: "Processamento Neural: diagnóstico",
-        hudAvatar: "Olhos fechados, download de consciência.",
-        progress: 64,
-        xpReward: 5,
-        insight: "Quem assume o compromisso, colhe o resultado.",
-      },
-      // P9 – Futuro sem ação + pergunta extra
-      {
-        id: 9,
-        kind: "radio",
-        title: "O futuro sem ação",
-        hudAvatar: "Rosto meio luz/meio sombra.",
-        progress: 72,
-        xpReward: 5,
-        question: "Quantas vezes você começou com energia e largou no meio?",
-        choices: [
-          { label: "Muitas (padrão)", value: "muitas" },
-          { label: "Algumas (dói)", value: "algumas" },
-          { label: "Raramente", value: "raro" },
-          { label: "Nunca (😈)", value: "nunca" },
-        ],
-        insight: "Cada desistência é uma mini‑morte.",
-      },
-      // P10 – Virada + CTA diagnóstico
-      {
-        id: 10,
-        kind: "radio",
-        title: "Virada mental: a última chamada",
-        hudAvatar: "Armadura psíquica ativando (nível 5).",
-        progress: 80,
-        xpReward: 5,
-        question:
-          "Ou você controla a mente, ou a procrastinação te controla. Quer ver seu diagnóstico personalizado agora?",
-        choices: [{ label: "VER MEU DIAGNÓSTICO PERSONALIZADO", value: "cta" }],
-        insight: "Clareza sem ação é autoengano.",
-      },
-      // P11 – Diagnóstico dinâmico
-      {
-        id: 11,
-        kind: "diagnosis",
-        title: "Diagnóstico Final: a verdade nua",
-        hudAvatar: "Armadura 7/10.",
-        progress: 88,
-        xpReward: 10,
-        insight: "A dor de agora é a conta do que adiou.",
-      }
-      // P7 – 12 meses
-      {
-        id: 7,
-          { label: "Resultados reais, projetos do papel.", value: "resultados" },
-          { label: "Disciplina, confiança e orgulho.", value: "disciplina" },
-          { label: "Rotina produtiva no controle.", value: "rotina" },
-        xpReward: 6,
         insight: "A vida que quer não chega — é construída.",
       },
       // P8 – Loading + social + coleta
