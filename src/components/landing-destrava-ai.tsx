@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useRef, useState } from "react"
 import { Quote } from "lucide-react"
 import { motion } from "framer-motion"
