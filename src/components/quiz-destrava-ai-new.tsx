@@ -55,8 +55,6 @@ const PROGRESS_MAP_21 = [5, 9, 14, 19, 24, 29, 33, 38, 43, 48, 52, 57, 62, 67, 7
 
 const PROGRESS_MAP_22 = [4, 9, 13, 18, 22, 27, 31, 36, 40, 45, 50, 54, 59, 63, 68, 72, 77, 81, 86, 90, 95, 100]
 
-const PROGRESS_MAP_21 = [5, 9, 14, 19, 24, 29, 33, 38, 43, 48, 52, 57, 62, 67, 71, 76, 81, 86, 90, 95, 100]
-
 export default function QuizDestravaAiNew() {
   const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
   const [xp, setXp] = useState(0)
