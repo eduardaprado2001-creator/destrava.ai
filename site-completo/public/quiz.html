@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Destrava Aí</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, #2b1a4e, #4B2E83);
+      color: #FCEEE3;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    #quiz-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(43, 26, 78, 0.7);
+      border-radius: 24px;
+      padding: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 24px;
+      color: white;
+    }
+    
+    #question {
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+      color: #C39BD3;
+      line-height: 1.6;
+    }
+    
+    #choices {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .button {
+      background: linear-gradient(135deg, #5e348f, #3d225e);
+      border: none;
+      padding: 16px 20px;
+      border-radius: 16px;
+      cursor: pointer;
+      color: #FCEEE3;
+      font-weight: bold;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .button:hover {
+      transform: scale(1.02);
+      background: linear-gradient(135deg, #6a3a38, #3a1f1e);
+    }
+    
+    .button:active {
+      transform: scale(0.98);
+    }
+    
+    #next-btn {
+      background: #F25C54;
+      display: block;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    #next-btn:hover {
+      background: #ff6f68;
+    }
+    
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      font-size: 12px;
+    }
+    
+    .xp-info {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .xp-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+    
+    .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin: 0 16px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #F25C54, #FF3B3B);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    
+    .insight {
+      margin-top: 16px;
+      font-size: 12px;
+      opacity: 0.8;
+      font-style: italic;
+      text-align: center;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px 0;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #F25C54;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #FCEEE3;
+      font-size: 14px;
+    }
+    
+    .form-group input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .diagnosis-card {
+      background: linear-gradient(135deg, #1f3550, #0f1c2b);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+    
+    .level-extreme { color: #ff6b6b; }
+    .level-alto { color: #ffa726; }
+    .level-medio { color: #FFCC48; }
+  </style>
+</head>
+<body>
+
+  <div id="quiz-container">
+    <div class="hud">
+      <div class="xp-info">
+        <span class="xp-badge">XP <span id="xp-display">0</span>/140</span>
+        <span class="xp-badge">Avatar: <span id="avatar-state">Iniciando...</span></span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      <span id="progress-percent">0%</span>
+    </div>
+    
+    <h1 id="step-title">Quiz Destrava Aí</h1>
+    <p id="question">Carregando...</p>
+    <div id="choices"></div>
+    <div id="insight" class="insight"></div>
+  </div>
+
+  <audio id="ping-sound" preload="auto">
+    <source src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQAA..." type="audio/mpeg">
+  </audio>
+  <audio id="boom-sound" preload="auto">
+    <source src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAABvb20tYm9vbS0t..." type="audio/mpeg">
+  </audio>
+
+  <script>
+    let currentStep = 1;
+    let xp = 0;
+    let answers = {};
+    
+    const pingSound = document.getElementById('ping-sound');
+    const boomSound = document.getElementById('boom-sound');
+
+    const steps = [
+      {
+        id: 1,
+        title: "Estalo Brutal",
+        question: "Daqui a 1 ano sua vida vai estar IGUAL — travada, sem dinheiro e sem orgulho. Bora encarar a verdade?",
+        choices: [{ label: "COMEÇAR O DIAGNÓSTICO", value: "start" }],
+        reward: 1,
+        avatar: "Sombra, olhos cansados.",
+        insight: "Quem foge da verdade, casa com a mentira."
+      },
+      {
+        id: 2,
+        title: "Idade: o tempo já era",
+        question: "Quantos anos você tem?",
+        choices: [
+          { label: "Menos de 20 — Ainda dá tempo de virar tudo.", value: "<20" },
+          { label: "21 a 29 — Agora ou perde os melhores anos.", value: "21-29" },
+          { label: "30 a 39 — Ou muda, ou começa a enterrar sonhos.", value: "30-39" },
+          { label: "40 a 49 — É hoje ou nunca.", value: "40-49" },
+          { label: "50+ — Procrastinar agora é suicídio de futuro.", value: "50+" }
+        ],
+        reward: 2,
+        avatar: "Foco leve nos olhos.",
+        insight: "Cada década sem ação é um caixão pro teu potencial."
+      },
+      {
+        id: 3,
+        title: "Prisão Digital",
+        question: "Quanto o scroll te destrói hoje? (seja honesto)",
+        choices: [
+          { label: "Nada ou quase nada", value: "0-2" },
+          { label: "Pouco, mas incomoda", value: "3-4" },
+          { label: "Moderado, me atrapalha", value: "5-6" },
+          { label: "Muito, destrói meu foco", value: "7-8" },
+          { label: "Extremo, acaba comigo", value: "9-10" }
+        ],
+        reward: 6,
+        avatar: "Pescoço erguendo.",
+        insight: "Teu polegar é o carrasco dos teus objetivos."
+      },
+      {
+        id: 7,
+        title: "Reflexo do fracasso",
+        question: "No espelho, você tá matando sua melhor versão?",
+        choices: [
+          { label: "Sempre", value: "sempre" },
+          { label: "Muitas vezes", value: "muitas" },
+          { label: "Às vezes", value: "asvezes" }
+        ],
+        reward: 4,
+        avatar: "Reflexo distorcido ao fundo.",
+        insight: "O espelho não mente: ou age, ou apodrece."
+      },
+      {
+        id: 11,
+        title: "Virada mental: a última chamada",
+        question: `🚨 Chega de dicas soltas que não funcionam.
+
+O que você precisa é de um plano brutalmente claro, feito só pra você.
+
+📌 "Pra montar seu plano personalizado, marque os tópicos que mais fazem sentido pra você — e que vão se tornar sua arma contra a procrastinação."
+
+<strong>Selecione todas as opções aplicáveis:</strong>`,
+        choices: [
+          { label: "🤔 Quebra-cabeças (treinar sua mente pra ficar afiada)", value: "quebra_cabecas" },
+          { label: "🧠 Aumento do QI (pensar mais rápido e melhor)", value: "aumento_qi" },
+          { label: "🎯 Definição de metas (clareza brutal no que fazer)", value: "definicao_metas" },
+          { label: "🧘🏻 Relaxamento (parar de travar por ansiedade)", value: "relaxamento" },
+          { label: "🧎🏻 Desintoxicação de dopamina (libertar-se do vício do celular)", value: "desintoxicacao_dopamina" },
+          { label: "🌐 Rede (construir conexões de alto nível)", value: "rede" },
+          { label: "💡 Melhorando a memória (lembrar do que importa, não do lixo)", value: "melhorar_memoria" },
+          { label: "💭 Análise de sonhos (entender o que sua mente tá gritando)", value: "analise_sonhos" },
+          { label: "🧩 Lógica (resolver problemas sem enrolar)", value: "logica" },
+          { label: "⌛ Gestão de tempo (finalmente dominar suas horas)", value: "gestao_tempo" },
+          { label: "💖 Autocuidado (cuidar de você antes que o mundo te destrua)", value: "autocuidado" }
+        ],
+        reward: 5,
+        avatar: "Armadura psíquica ativando (nível 5).",
+        insight: "Clareza sem ação é autoengano.",
+        type: "checkbox",
+        maxSelections: 11
+      },
+      {
+        id: 12,
+        title: "Diagnóstico Final: a verdade nua",
+        type: "diagnosis",
+        reward: 10,
+        avatar: "Armadura 7/10.",
+        insight: "A dor de agora é a conta do que adiou."
+      },
+      {
+        id: 13,
+        title: "Compromisso de tempo diário",
+        question: "Quanto tempo por dia você vai investir para sair do ciclo?",
+        choices: [
+          { label: "5 min/dia — Começar agora", value: "5" },
+          { label: "10 min/dia — Pronto pra mudar", value: "10" },
+          { label: "15 min/dia — Compromisso de verdade", value: "15" },
+          { label: "20+ min/dia — Vou dar tudo", value: "20+" }
+        ],
+        reward: 9,
+        avatar: "9/10, olhos em brasa.",
+        insight: "O futuro pune quem hesita."
+      },
+      {
+        id: 14,
+        title: "Oferta Final",
+        type: "offer",
+        reward: 5,
+        avatar: "10/10, armadura completa.",
+        insight: "Ou você ri da procrastinação hoje, ou ela ri de você amanhã."
+      }
+    ];
+
+    function playSound(soundId) {
+      try {
+        const sound = document.getElementById(soundId);
+        sound.volume = 0.25;
+        sound.play().catch(() => {});
+      } catch (e) {}
+    }
+
+    function giveXp(amount) {
+      xp += amount;
+      document.getElementById('xp-display').textContent = xp;
+      
+      // Integração com sistema de gamificação global
+      if (window.__ga) {
+        window.__ga.gainXp(amount, `step_${currentStep}`);
+      }
+    }
+
+    function updateProgress() {
+      const progressMap = {
+        1: 8, 2: 16, 3: 24, 4: 32, 5: 40, 6: 48, 7: 56, 
+        8: 64, 9: 72, 10: 80, 11: 88, 12: 96, 13: 100
+      };
+      const progress = progressMap[currentStep] || 0;
+      document.getElementById('progress-fill').style.width = progress + '%';
+      document.getElementById('progress-percent').textContent = progress + '%';
+    }
+
+    function renderStep() {
+      const step = steps[currentStep - 1];
+      if (!step) return;
+
+      document.getElementById('step-title').textContent = step.title;
+      document.getElementById('avatar-state').textContent = step.avatar;
+      document.getElementById('insight').textContent = step.insight || '';
+      updateProgress();
+
+      const choicesContainer = document.getElementById('choices');
+      choicesContainer.innerHTML = '';
+
+      if (step.type === 'loading') {
+        renderLoadingStep(step);
+      } else if (step.type === 'diagnosis') {
+        renderDiagnosisStep(step);
+      } else if (step.type === 'offer') {
+        renderOfferStep(step);
+      } else if (step.type === 'checkbox') {
+        renderCheckboxStep(step);
+      } else {
+        renderRadioStep(step);
+      }
+    }
+
+    function renderRadioStep(step) {
+      document.getElementById('question').textContent = step.question;
+      const choicesContainer = document.getElementById('choices');
+      
+      step.choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.className = 'button';
+        button.textContent = choice.label;
+        button.onclick = () => {
+          playSound('ping-sound');
+          answers[`step_${step.id}`] = choice.value;
+          giveXp(step.reward);
+          nextStep();
+        };
+        choicesContainer.appendChild(button);
+      });
+    }
+
+    function renderCheckboxStep(step) {
+      document.getElementById('question').innerHTML = step.question;
+      const choicesContainer = document.getElementById('choices');
+      let selected = [];
+      
+      step.choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.className = 'button';
+        button.textContent = choice.label;
+        button.onclick = () => {
+          playSound('ping-sound');
+          if (selected.includes(choice.value)) {
+            selected = selected.filter(v => v !== choice.value);
+            button.style.background = 'linear-gradient(135deg, #5e348f, #3d225e)';
+          } else if (selected.length < step.maxSelections) {
+            selected.push(choice.value);
+            button.style.background = 'linear-gradient(135deg, #6a3a38, #3a1f1e)';
+          }
+          updateContinueButton();
+        };
+        choicesContainer.appendChild(button);
+      });
+
+      const continueBtn = document.createElement('button');
+      continueBtn.textContent = `Continuar (${selected.length} selecionados)`;
+      continueBtn.className = 'button';
+      continueBtn.style.background = '#F25C54';
+      continueBtn.style.marginTop = '20px';
+      continueBtn.onclick = () => {
+        answers[`step_${step.id}`] = selected;
+        giveXp(step.reward);
+        nextStep();
+      };
+      choicesContainer.appendChild(continueBtn);
+      
+      function updateContinueButton() {
+        continueBtn.textContent = `Continuar (${selected.length} selecionados)`;
+      }
+    }
+
+    function renderLoadingStep(step) {
+      document.getElementById('question').innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Processamento Neural: analisando suas respostas...</p>
+          <p style="margin-top: 16px;">Na última semana, <b>1.024 pessoas</b> começaram exatamente como você… e já sentiram mudança.</p>
+        </div>
+      `;
+      
+      const choicesContainer = document.getElementById('choices');
+      choicesContainer.innerHTML = `
+        <div class="checkbox-group">
+          <input type="checkbox" id="agree1" style="width: auto;">
+          <label for="agree1">Concordo em aplicar <b>5–15 min/dia</b> do plano.</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="agree2" style="width: auto;">
+          <label for="agree2">Quero receber apenas o <b>essencial</b>.</label>
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" placeholder="Seu e-mail" required>
+        </div>
+        <div class="form-group">
+          <input type="tel" id="phone" placeholder="Seu WhatsApp">
+        </div>
+        <button id="continue-loading" class="button" style="background: #F25C54; width: 100%; margin-top: 16px;">
+          Continuar
+        </button>
+      `;
+
+      document.getElementById('continue-loading').onclick = () => {
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const agree1 = document.getElementById('agree1').checked;
+        const agree2 = document.getElementById('agree2').checked;
+
+        if (email && agree1 && agree2) {
+          answers.email = email;
+          answers.phone = phone;
+          giveXp(step.reward);
+          nextStep();
+        } else {
+          alert('Por favor, preencha todos os campos obrigatórios.');
+        }
+      };
+    }
+
+    function renderDiagnosisStep(step) {
+      const scrollLevel = parseInt(answers.step_3?.split('-')[1]) || 5;
+      const delayFreq = answers.step_3 || '';
+      
+      let level = "MÉDIO";
+      if (scrollLevel >= 8 || delayFreq.includes('9-10')) level = "EXTREMO";
+      else if (scrollLevel >= 5) level = "ALTO";
+
+      const damages = answers.step_8 || ['carreira'];
+      const bullets = [
+        `Foco principal: desenvolvimento pessoal.`,
+        `Gatilho de fuga: ${scrollLevel > 6 ? 'celular' : 'adiamento/ansiedade'}.`,
+        `Quebra de foco: pico no período atual.`
+      ];
+
+      document.getElementById('question').innerHTML = `
+        <div class="diagnosis-card">
+          <div style="font-size: 14px; opacity: 0.9;">Seu nível de procrastinação:</div>
+          <div class="level-${level.toLowerCase()}" style="font-size: 32px; font-weight: 900; margin: 8px 0;">
+            ${level}
+          </div>
+          <p style="margin: 12px 0; color: #C39BD3;">
+            ${level === "EXTREMO" ? "Você está na beira do abismo. Ou muda, ou afunda." :
+              level === "ALTO" ? "Piloto automático comendo tua energia e confiança." :
+              "Você tenta, mas se sabota mais do que avança."}
+          </p>
+          <ul style="margin-top: 16px; font-size: 14px;">
+            ${bullets.map(b => `<li style="margin-bottom: 8px;">${b}</li>`).join('')}
+          </ul>
+        </div>
+        <button class="button" style="background: #F25C54; width: 100%;" onclick="continueFromDiagnosis()">
+          Continuar
+        </button>
+      `;
+    }
+
+    function renderOfferStep(step) {
+      document.getElementById('question').innerHTML = `
+        <div style="margin-bottom: 20px; padding: 20px; background: linear-gradient(135deg, #1f3550, #0f1c2b); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+          <p style="font-size: 14px;">✨ Em <b>5 dias</b> você sente tração. Em <b>14 dias</b>, rotina disciplinada — mesmo se já fracassou antes.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          <div style="padding: 16px; background: #4B2E83; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+            <p style="font-size: 14px;">"Perdia cliente. Em 2 semanas fechei mais que em 3 meses."</p>
+            <div style="margin-top: 8px; font-size: 12px; opacity: 0.8;">João — vendedor</div>
+          </div>
+          <div style="padding: 16px; background: #1d3a2b; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+            <p style="font-size: 14px;">"Travava no celular. Hoje termino o TCC e cumpro rotina."</p>
+            <div style="margin-top: 8px; font-size: 12px; opacity: 0.8;">Larissa — estudante</div>
+          </div>
+          <div style="padding: 16px; background: #3b173b; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+            <p style="font-size: 14px;">"Não era preguiça; era falta de clareza. Faturei mais."</p>
+            <div style="margin-top: 8px; font-size: 12px; opacity: 0.8;">Camila — empreendedora</div>
+          </div>
+        </div>
+
+        <div style="padding: 16px; background: linear-gradient(135deg, #6a3a38, #3a1f1e); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+          <p style="font-size: 14px;">A cada hora, dezenas entram. <b>Bônus Técnica X</b> limitado. Se voltar amanhã, pode não ter.</p>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+          <div>
+            <div style="font-size: 14px; opacity: 0.9;">Plano personalizado vitalício</div>
+            <div style="font-size: 32px; font-weight: 900; color: #FFCC48;">R$ 37</div>
+            <div style="font-size: 12px; opacity: 0.8;">Acesso imediato + Bônus Técnica X (limitado)</div>
+          </div>
+          <button class="button" style="background: #39FF88; color: black; font-weight: 900; padding: 16px 24px;" onclick="finalPurchase()">
+            QUERO ESMAGAR A PROCRASTINAÇÃO
+          </button>
+        </div>
+      `;
+    }
+
+    function nextStep() {
+      if (currentStep < steps.length) {
+        currentStep++;
+        renderStep();
+      } else {
+        alert("Quiz finalizado!");
+      }
+    }
+
+    function continueFromDiagnosis() {
+      giveXp(10);
+      nextStep();
+    }
+
+    function finalPurchase() {
+      playSound('boom-sound');
+      giveXp(50);
+      alert("Redirecionando para pagamento...");
+      // Aqui você adicionaria a integração com o sistema de pagamento
+    }
+
+    // Inicializar o quiz
+    renderStep();
+  </script>
+</body>
+</html>
