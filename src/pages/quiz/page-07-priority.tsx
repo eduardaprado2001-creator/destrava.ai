@@ -1,13 +1,13 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 
-interface Page08Props {
+interface Page07Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
 }
 
-export function Page08Priority({ onNext, gainXp, setAnswer }: Page08Props) {
+export function Page07Priority({ onNext, gainXp, setAnswer }: Page07Props) {
   const options = [
     "Carreira",
     "Dinheiro", 
@@ -19,7 +19,7 @@ export function Page08Priority({ onNext, gainXp, setAnswer }: Page08Props) {
 
   const handleSelect = (value: string) => {
     setAnswer("priority", value);
-    gainXp(4, "p8_priority");
+    gainXp(4, "p7_priority");
     onNext();
   };
 
