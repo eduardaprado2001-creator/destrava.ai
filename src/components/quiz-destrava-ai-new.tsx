@@ -12,7 +12,6 @@ import { Page07Priority } from "../pages/quiz/page-07-priority"
 import { Page08Vision } from "../pages/quiz/page-08-vision"
 import { Page10Impact } from "../pages/quiz/page-10-impact"
 import { Page11Diagnosis } from "../pages/quiz/page-11-diagnosis"
-import { Page11Commitment } from "../pages/quiz/page-11-commitment"
 import { Page12Future } from "../pages/quiz/page-12-future"
 import { Page13MentalShift } from "../pages/quiz/page-13-mental-shift"
 import { Page14Behaviors } from "../pages/quiz/page-14-behaviors"
@@ -56,12 +55,14 @@ const PROGRESS_MAP_21 = [5, 9, 14, 19, 24, 29, 33, 38, 43, 48, 52, 57, 62, 67, 7
 
 const PROGRESS_MAP_22 = [4, 9, 13, 18, 22, 27, 31, 36, 40, 45, 50, 54, 59, 63, 68, 72, 77, 81, 86, 90, 95, 100]
 
+const PROGRESS_MAP_21 = [5, 9, 14, 19, 24, 29, 33, 38, 43, 48, 52, 57, 62, 67, 71, 76, 81, 86, 90, 95, 100]
+
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
-  const progress = PROGRESS_MAP_22[currentPage - 1] || 0
+  const progress = PROGRESS_MAP_21[currentPage - 1] || 0
   const avatarState = AVATAR_STATES[currentPage - 1] || "Iniciando..."
 
   const gainXp = (amount: number, reason?: string) => {
@@ -80,7 +81,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 22) {
+    if (currentPage >= 21) {
       // Fim do quiz
       return
     } else {
@@ -171,50 +172,46 @@ export default function QuizDestravaAiNew() {
             )}
             
            {currentPage === 11 && (
-              <Page11Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
-            )}
-            
-           {currentPage === 12 && (
               <Page12Future onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-           {currentPage === 13 && (
+           {currentPage === 12 && (
               <Page13MentalShift onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-           {currentPage === 14 && (
+           {currentPage === 13 && (
               <Page14Behaviors onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-            {currentPage === 15 && (
+            {currentPage === 14 && (
               <Page15DiagnosisTransition onNext={onNext} gainXp={gainXp} />
             )}
             
-            {currentPage === 16 && (
+            {currentPage === 15 && (
               <Page16Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} />
             )}
             
-            {currentPage === 17 && (
+            {currentPage === 16 && (
               <Page17RealityCheck onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-            {currentPage === 18 && (
+            {currentPage === 17 && (
               <Page18TimeCommitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-            {currentPage === 19 && (
+            {currentPage === 18 && (
               <Page19Consequences onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-            {currentPage === 20 && (
+            {currentPage === 19 && (
               <Page20Benefits onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-            {currentPage === 21 && (
+            {currentPage === 20 && (
               <Page21SocialProof onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-            {currentPage === 22 && (
+            {currentPage === 21 && (
               <Page22Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
