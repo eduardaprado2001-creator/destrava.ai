@@ -6,7 +6,8 @@ import { Page01Start } from "../pages/quiz/page-01-start"
 import { Page02Age } from "../pages/quiz/page-02-age"
 import { Page03DelayPattern } from "../pages/quiz/page-03-delay-pattern"
 import { Page04Scroll } from "../pages/quiz/page-03-scroll"
-import { Page05Mirror } from "../pages/quiz/page-04-mirror"
+import { Page05Damage } from "../pages/quiz/page-05-damage"
+import { Page06Mirror } from "../pages/quiz/page-06-mirror"
 import { Page06Loading } from "../pages/quiz/page-10-loading"
 import { Page07Diagnosis } from "../pages/quiz/page-11-diagnosis"
 import { Page08Commitment } from "../pages/quiz/page-12-commitment"
@@ -22,6 +23,7 @@ const AVATAR_STATES = [
   "Foco leve nos olhos.",
   "Reconhecendo padrões.",
   "Pescoço erguendo.",
+  "Fendas de luz no peito.",
   "Reflexo distorcido ao fundo.",
   "Olhos fechados, download de consciência.",
   "Armadura 7/10.",
@@ -29,10 +31,10 @@ const AVATAR_STATES = [
   "10/10, armadura completa.",
 ]
 
-const PROGRESS_MAP = [11, 22, 33, 44, 55, 66, 77, 88, 100]
+const PROGRESS_MAP = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState(1) // Páginas: 1,2,3,4,5,6,7,8,9
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
@@ -55,7 +57,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 9) {
+    if (currentPage >= 10) {
       // Fim do quiz
       return
     } else {
@@ -122,22 +124,26 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 5 && (
-              <Page05Mirror onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+              <Page05Damage onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
             {currentPage === 6 && (
-              <Page06Loading onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+              <Page06Mirror onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
             {currentPage === 7 && (
-              <Page07Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} />
+              <Page06Loading onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
             {currentPage === 8 && (
-              <Page08Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+              <Page07Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} />
             )}
             
             {currentPage === 9 && (
+              <Page08Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+            )}
+            
+            {currentPage === 10 && (
               <Page09Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
