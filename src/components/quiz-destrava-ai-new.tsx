@@ -16,7 +16,8 @@ import { Page11Commitment } from "../pages/quiz/page-11-commitment"
 import { Page12Future } from "../pages/quiz/page-12-future"
 import { Page13MentalShift } from "../pages/quiz/page-13-mental-shift"
 import { Page14Behaviors } from "../pages/quiz/page-14-behaviors"
-import { Page15Offer } from "../pages/quiz/page-15-offer"
+import { Page15DiagnosisTransition } from "../pages/quiz/page-15-diagnosis-transition"
+import { Page16Offer } from "../pages/quiz/page-16-offer"
 
 /**
  * QuizDestravaAiNew – Controlador principal do quiz com 13 páginas
@@ -43,12 +44,14 @@ const AVATAR_STATES = [
 
 const PROGRESS_MAP = [7, 13, 20, 27, 33, 40, 47, 53, 60, 67, 73, 80, 87, 93, 100]
 
+const PROGRESS_MAP_16 = [6, 12, 18, 25, 31, 37, 43, 50, 56, 62, 68, 75, 81, 87, 93, 100]
+
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
-  const progress = PROGRESS_MAP[currentPage - 1] || 0
+  const progress = PROGRESS_MAP_16[currentPage - 1] || 0
   const avatarState = AVATAR_STATES[currentPage - 1] || "Iniciando..."
 
   const gainXp = (amount: number, reason?: string) => {
@@ -67,7 +70,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 15) {
+    if (currentPage >= 16) {
       // Fim do quiz
       return
     } else {
@@ -174,7 +177,11 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 15 && (
-              <Page15Offer onNext={onNext} gainXp={gainXp} />
+              <Page15DiagnosisTransition onNext={onNext} gainXp={gainXp} />
+            )}
+            
+            {currentPage === 16 && (
+              <Page16Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
         </motion.div>
