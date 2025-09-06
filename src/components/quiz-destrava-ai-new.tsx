@@ -21,7 +21,9 @@ import { Page16Diagnosis } from "../pages/quiz/page-16-diagnosis"
 import { Page17RealityCheck } from "../pages/quiz/page-17-reality-check"
 import { Page18TimeCommitment } from "../pages/quiz/page-18-time-commitment"
 import { Page19Consequences } from "../pages/quiz/page-19-consequences"
-import { Page20Offer } from "../pages/quiz/page-20-offer"
+import { Page20Benefits } from "../pages/quiz/page-20-benefits"
+import { Page21SocialProof } from "../pages/quiz/page-21-social-proof"
+import { Page22Offer } from "../pages/quiz/page-22-offer"
 
 /**
  * QuizDestravaAiNew – Controlador principal do quiz com 13 páginas
