@@ -7,7 +7,7 @@ interface Page03Props {
   setAnswer: (key: string, value: any) => void;
 }
 
-export function Page03Scroll({ onNext, gainXp, setAnswer }: Page03Props) {
+export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
   const [scroll, setScroll] = useState(5);
   const [delay, setDelay] = useState<string>("");
   
@@ -19,7 +19,7 @@ export function Page03Scroll({ onNext, gainXp, setAnswer }: Page03Props) {
   const handleSubmit = () => {
     setAnswer("scroll", scroll);
     setAnswer("delay", delay);
-    gainXp(6, "p3_combo");
+    gainXp(6, "p4_combo");
     onNext();
   };
 

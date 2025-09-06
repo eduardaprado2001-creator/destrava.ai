@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { ChevronRight, Loader2 } from 'lucide-react';
 
-interface Page10Props {
+interface Page06Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
 }
 
-export function Page10Loading({ onNext, gainXp, setAnswer }: Page10Props) {
+export function Page06Loading({ onNext, gainXp, setAnswer }: Page06Props) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [agree1, setAgree1] = useState(false);
@@ -16,7 +16,7 @@ export function Page10Loading({ onNext, gainXp, setAnswer }: Page10Props) {
   const handleSubmit = () => {
     setAnswer("email", email);
     setAnswer("phone", phone);
-    gainXp(5, "p10_loading");
+    gainXp(5, "p6_loading");
     onNext();
   };
 

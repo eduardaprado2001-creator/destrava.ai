@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react';
 import { ChevronRight } from 'lucide-react';
 
-interface Page11Props {
+interface Page07Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   answers: Record<string, any>;
 }
 
-export function Page11Diagnosis({ onNext, gainXp, answers }: Page11Props) {
+export function Page07Diagnosis({ onNext, gainXp, answers }: Page07Props) {
   const level = useMemo<"ALTO" | "MÉDIO" | "EXTREMO">(() => {
     const s = typeof answers.scroll === "number" ? answers.scroll : 5;
     const d = String(answers.delay || "");
@@ -23,7 +23,7 @@ export function Page11Diagnosis({ onNext, gainXp, answers }: Page11Props) {
   ];
 
   const handleContinue = () => {
-    gainXp(10, "p11_diag");
+    gainXp(10, "p7_diag");
     onNext();
   };
 

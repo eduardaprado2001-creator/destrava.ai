@@ -1,14 +1,14 @@
 import React from 'react';
 import { ChevronRight, Sparkles } from 'lucide-react';
 
-interface Page13Props {
+interface Page09Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
 }
 
-export function Page13Offer({ onNext, gainXp }: Page13Props) {
+export function Page09Offer({ onNext, gainXp }: Page09Props) {
   const handlePurchase = () => {
-    gainXp(50, "p13_cta");
+    gainXp(50, "p9_cta");
     // Aqui você adicionaria a integração com o sistema de pagamento
     alert("Redirecionando para pagamento...");
   };
