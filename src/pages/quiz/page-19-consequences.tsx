@@ -5,9 +5,10 @@ interface Page19Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page19Consequences({ onNext, gainXp, setAnswer }: Page19Props) {
+export function Page19Consequences({ onNext, gainXp, setAnswer, playSound }: Page19Props) {
   const options = [
     "Minha carreira vai continuar travada",
     "Vou continuar sem dinheiro",
@@ -17,6 +18,7 @@ export function Page19Consequences({ onNext, gainXp, setAnswer }: Page19Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("consequences", value);
     gainXp(8, "p19_consequences");
     onNext();

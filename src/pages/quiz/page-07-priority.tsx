@@ -5,9 +5,10 @@ interface Page07Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page07Priority({ onNext, gainXp, setAnswer }: Page07Props) {
+export function Page07Priority({ onNext, gainXp, setAnswer, playSound }: Page07Props) {
   const options = [
     "Carreira",
     "Dinheiro", 
@@ -18,6 +19,7 @@ export function Page07Priority({ onNext, gainXp, setAnswer }: Page07Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("priority", value);
     gainXp(4, "p7_priority");
     onNext();

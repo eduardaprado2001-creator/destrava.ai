@@ -5,9 +5,10 @@ interface Page03Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page03DelayPattern({ onNext, gainXp, setAnswer }: Page03Props) {
+export function Page03DelayPattern({ onNext, gainXp, setAnswer, playSound }: Page03Props) {
   const options = [
     "Sempre, é um ciclo que não consigo parar",
     "Frequentemente, vivo adiando tudo",
@@ -16,6 +17,7 @@ export function Page03DelayPattern({ onNext, gainXp, setAnswer }: Page03Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("delayPattern", value);
     gainXp(3, "p3_delay_pattern");
     onNext();

@@ -5,9 +5,10 @@ interface Page06Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page06Mirror({ onNext, gainXp, setAnswer }: Page06Props) {
+export function Page06Mirror({ onNext, gainXp, setAnswer, playSound }: Page06Props) {
   const options = [
     "Sempre, sinto que tô enterrando minha própria chance de vencer",
     "Muitas vezes, me sinto cada vez mais distante da vida que eu queria", 
@@ -16,6 +17,7 @@ export function Page06Mirror({ onNext, gainXp, setAnswer }: Page06Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("mirror", value);
     gainXp(4, "p6_mirror");
     onNext();

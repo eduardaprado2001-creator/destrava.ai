@@ -5,9 +5,10 @@ interface Page05Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page05Damage({ onNext, gainXp, setAnswer }: Page05Props) {
+export function Page05Damage({ onNext, gainXp, setAnswer, playSound }: Page05Props) {
   const [selected, setSelected] = useState<string[]>([]);
 
   const options = [
@@ -19,6 +20,7 @@ export function Page05Damage({ onNext, gainXp, setAnswer }: Page05Props) {
   ];
 
   const toggle = (value: string) => {
+    playSound();
     setSelected(prev => {
       if (prev.includes(value)) {
         return prev.filter(item => item !== value);
@@ -30,6 +32,7 @@ export function Page05Damage({ onNext, gainXp, setAnswer }: Page05Props) {
   };
 
   const handleContinue = () => {
+    playSound();
     setAnswer("damages", selected);
     gainXp(10, "p5_damage");
     onNext();

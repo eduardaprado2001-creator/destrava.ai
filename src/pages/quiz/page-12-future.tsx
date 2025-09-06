@@ -5,9 +5,10 @@ interface Page12Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page12Future({ onNext, gainXp, setAnswer }: Page12Props) {
+export function Page12Future({ onNext, gainXp, setAnswer, playSound }: Page12Props) {
   const options = [
     "Muitas vezes, é um padrão na minha vida",
     "Algumas vezes, mas me destrói",
@@ -16,6 +17,7 @@ export function Page12Future({ onNext, gainXp, setAnswer }: Page12Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("quitPattern", value);
     gainXp(5, "p12_future");
     onNext();

@@ -5,9 +5,10 @@ interface Page08Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page08Vision({ onNext, gainXp, setAnswer }: Page08Props) {
+export function Page08Vision({ onNext, gainXp, setAnswer, playSound }: Page08Props) {
   const options = [
     "Resultados reais, projetos do papel.",
     "Disciplina, confiança e orgulho.",
@@ -15,6 +16,7 @@ export function Page08Vision({ onNext, gainXp, setAnswer }: Page08Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("vision12", value);
     gainXp(6, "p8_vision");
     onNext();

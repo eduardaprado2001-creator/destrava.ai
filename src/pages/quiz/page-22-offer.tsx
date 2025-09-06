@@ -4,10 +4,12 @@ import { ChevronRight, Sparkles } from 'lucide-react';
 interface Page22Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
+  playSound: () => void;
 }
 
-export function Page22Offer({ onNext, gainXp }: Page22Props) {
+export function Page22Offer({ onNext, gainXp, playSound }: Page22Props) {
   const handlePurchase = () => {
+    playSound();
     gainXp(50, "p22_offer");
     // Aqui você adicionaria a integração com o sistema de pagamento
     alert("Redirecionando para pagamento...");

@@ -5,9 +5,10 @@ interface Page21Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page21SocialProof({ onNext, gainXp, setAnswer }: Page21Props) {
+export function Page21SocialProof({ onNext, gainXp, setAnswer, playSound }: Page21Props) {
   const testimonials = [
     {
       name: "João, 32 anos",
@@ -32,6 +33,7 @@ export function Page21SocialProof({ onNext, gainXp, setAnswer }: Page21Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("socialProofConfidence", value);
     gainXp(12, "p21_social_proof");
     onNext();

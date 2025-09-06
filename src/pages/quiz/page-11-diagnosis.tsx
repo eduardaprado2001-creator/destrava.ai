@@ -5,9 +5,10 @@ interface Page11Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   answers: Record<string, any>;
+  playSound: () => void;
 }
 
-export function Page11Diagnosis({ onNext, gainXp, answers }: Page11Props) {
+export function Page11Diagnosis({ onNext, gainXp, answers, playSound }: Page11Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -29,6 +30,7 @@ export function Page11Diagnosis({ onNext, gainXp, answers }: Page11Props) {
   }, []);
 
   const handleSubmit = () => {
+    playSound();
     gainXp(10, "p11_diagnosis");
     onNext();
   };

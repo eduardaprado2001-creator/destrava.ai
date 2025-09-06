@@ -4,10 +4,12 @@ import { ChevronRight } from 'lucide-react';
 interface Page15Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
+  playSound: () => void;
 }
 
-export function Page15DiagnosisTransition({ onNext, gainXp }: Page15Props) {
+export function Page15DiagnosisTransition({ onNext, gainXp, playSound }: Page15Props) {
   const handleContinue = () => {
+    playSound();
     gainXp(10, "p15_diagnosis_transition");
     onNext();
   };

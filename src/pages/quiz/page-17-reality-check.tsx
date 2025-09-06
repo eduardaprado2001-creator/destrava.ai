@@ -5,9 +5,10 @@ interface Page17Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page17RealityCheck({ onNext, gainXp, setAnswer }: Page17Props) {
+export function Page17RealityCheck({ onNext, gainXp, setAnswer, playSound }: Page17Props) {
   // Função para calcular a data 7 dias a partir de hoje
   const getDateIn7Days = () => {
     const today = new Date();
@@ -30,6 +31,7 @@ export function Page17RealityCheck({ onNext, gainXp, setAnswer }: Page17Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("commitment", value);
     gainXp(10, "p17_reality_check");
     onNext();

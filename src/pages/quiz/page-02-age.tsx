@@ -5,9 +5,10 @@ interface Page02Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page02Age({ onNext, gainXp, setAnswer }: Page02Props) {
+export function Page02Age({ onNext, gainXp, setAnswer, playSound }: Page02Props) {
   const options = [
     "Menos de 20 — Ainda dá tempo de virar tudo.",
     "21 a 29 — Agora ou perde os melhores anos.",
@@ -17,6 +18,7 @@ export function Page02Age({ onNext, gainXp, setAnswer }: Page02Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("age", value);
     gainXp(2, "p2_age");
     onNext();

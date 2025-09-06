@@ -5,9 +5,10 @@ interface Page13Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page13MentalShift({ onNext, gainXp, setAnswer }: Page13Props) {
+export function Page13MentalShift({ onNext, gainXp, setAnswer, playSound }: Page13Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -43,9 +44,11 @@ export function Page13MentalShift({ onNext, gainXp, setAnswer }: Page13Props) {
         return [...prev, value];
       }
     });
+    playSound();
   };
 
   const handleContinue = () => {
+    playSound();
     setAnswer("mentalShiftTopics", selected);
     gainXp(5, "p13_mental_shift");
     onNext();

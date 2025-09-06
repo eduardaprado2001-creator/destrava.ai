@@ -5,9 +5,10 @@ interface Page18Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page18TimeCommitment({ onNext, gainXp, setAnswer }: Page18Props) {
+export function Page18TimeCommitment({ onNext, gainXp, setAnswer, playSound }: Page18Props) {
   const options = [
     { v: "5", t: "5 min/dia – quero começar agora" },
     { v: "10", t: "10 min/dia – tô pronto pra mudar" },
@@ -16,6 +17,7 @@ export function Page18TimeCommitment({ onNext, gainXp, setAnswer }: Page18Props)
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("timeCommitment", value);
     gainXp(12, "p18_time_commitment");
     onNext();

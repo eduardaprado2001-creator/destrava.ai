@@ -5,9 +5,10 @@ interface Page14Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page14Behaviors({ onNext, gainXp, setAnswer }: Page14Props) {
+export function Page14Behaviors({ onNext, gainXp, setAnswer, playSound }: Page14Props) {
   const [selected, setSelected] = useState<string[]>([]);
 
   const options = [
@@ -29,9 +30,11 @@ export function Page14Behaviors({ onNext, gainXp, setAnswer }: Page14Props) {
         return [...prev, value];
       }
     });
+    playSound();
   };
 
   const handleContinue = () => {
+    playSound();
     setAnswer("procrastinationBehaviors", selected);
     gainXp(8, "p14_behaviors");
     onNext();

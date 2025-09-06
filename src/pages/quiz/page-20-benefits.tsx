@@ -5,9 +5,10 @@ interface Page20Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page20Benefits({ onNext, gainXp, setAnswer }: Page20Props) {
+export function Page20Benefits({ onNext, gainXp, setAnswer, playSound }: Page20Props) {
   const options = [
     "Minha carreira vai decolar",
     "Vou ganhar mais dinheiro",
@@ -17,6 +18,7 @@ export function Page20Benefits({ onNext, gainXp, setAnswer }: Page20Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("benefits", value);
     gainXp(10, "p20_benefits");
     onNext();

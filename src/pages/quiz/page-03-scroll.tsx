@@ -5,9 +5,10 @@ interface Page03Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
+export function Page04Scroll({ onNext, gainXp, setAnswer, playSound }: Page04Props) {
   const [scroll, setScroll] = useState(5);
 
   const getScrollLevel = () => {
@@ -26,6 +27,7 @@ export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
   };
 
   const handleSubmit = () => {
+    playSound();
     setAnswer("scroll", scroll);
     gainXp(6, "p4_scroll");
     onNext();

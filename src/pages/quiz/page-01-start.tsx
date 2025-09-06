@@ -5,10 +5,12 @@ import { ChevronRight } from 'lucide-react';
 interface Page01Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
+  playSound: () => void;
 }
 
-export function Page01Start({ onNext, gainXp }: Page01Props) {
+export function Page01Start({ onNext, gainXp, playSound }: Page01Props) {
   const handleStart = () => {
+    playSound();
     gainXp(1, "p1_start");
     onNext();
   };

@@ -5,9 +5,10 @@ interface Page10Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
+  playSound: () => void;
 }
 
-export function Page10Impact({ onNext, gainXp, setAnswer }: Page10Props) {
+export function Page10Impact({ onNext, gainXp, setAnswer, playSound }: Page10Props) {
   const options = [
     "Seria transformador, mudaria minha vida inteira",
     "Me traria orgulho de verdade",
@@ -16,6 +17,7 @@ export function Page10Impact({ onNext, gainXp, setAnswer }: Page10Props) {
   ];
 
   const handleSelect = (value: string) => {
+    playSound();
     setAnswer("impact", value);
     gainXp(6, "p10_impact");
     onNext();
