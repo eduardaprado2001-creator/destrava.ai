@@ -15,7 +15,8 @@ import { Page11Diagnosis } from "../pages/quiz/page-11-diagnosis"
 import { Page11Commitment } from "../pages/quiz/page-11-commitment"
 import { Page12Future } from "../pages/quiz/page-12-future"
 import { Page13MentalShift } from "../pages/quiz/page-13-mental-shift"
-import { Page14Offer } from "../pages/quiz/page-14-offer"
+import { Page14Behaviors } from "../pages/quiz/page-14-behaviors"
+import { Page15Offer } from "../pages/quiz/page-15-offer"
 
 /**
  * QuizDestravaAiNew – Controlador principal do quiz com 13 páginas
@@ -36,13 +37,14 @@ const AVATAR_STATES = [
   "9/10, olhos em brasa.",
   "Rosto meio luz/meio sombra.",
   "Armadura psíquica ativando (nível 5).",
+  "Reconhecendo padrões destrutivos.",
   "10/10, armadura completa.",
 ]
 
-const PROGRESS_MAP = [7, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 100]
+const PROGRESS_MAP = [7, 13, 20, 27, 33, 40, 47, 53, 60, 67, 73, 80, 87, 93, 100]
 
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
@@ -65,7 +67,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 13) {
+    if (currentPage >= 15) {
       // Fim do quiz
       return
     } else {
@@ -168,7 +170,11 @@ export default function QuizDestravaAiNew() {
             )}
             
            {currentPage === 14 && (
-              <Page14Offer onNext={onNext} gainXp={gainXp} />
+              <Page14Behaviors onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+            )}
+            
+            {currentPage === 15 && (
+              <Page15Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
         </motion.div>
