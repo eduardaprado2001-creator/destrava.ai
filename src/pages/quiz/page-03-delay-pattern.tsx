@@ -23,12 +23,9 @@ export function Page03DelayPattern({ onNext, gainXp, setAnswer }: Page03Props) {
 
   return (
     <div className="rounded-3xl p-6 md:p-8 ring-1 ring-white/10 shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-[#FCEEE3]">
-      <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">
-        Padrão de Adiamento
-      </h3>
-      <p className="text-sm text-[#C39BD3] mb-6">
+      <h3 className="text-2xl md:text-3xl font-black tracking-tight text-white mb-6 leading-tight">
         Com que frequência você deixa tarefas importantes pra depois, mesmo sabendo que isso só acumula e te afunda ainda mais?
-      </p>
+      </h3>
       
       <div className="grid gap-3">
         {options.map((label) => (
