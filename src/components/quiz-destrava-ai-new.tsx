@@ -66,13 +66,52 @@ export default function QuizDestravaAiNew() {
   const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
+  const [audioEnabled, setAudioEnabled] = useState(false)
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
 
+  // Inicializar áudio no primeiro toque/clique (necessário para mobile)
+  const initializeAudio = () => {
+    if (!audioEnabled) {
+      try {
+        const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+        setAudioContext(ctx)
+        setAudioEnabled(true)
+        
+        // Unlock audio context no iOS
+        if (ctx.state === 'suspended') {
+          ctx.resume()
+        }
+      } catch (error) {
+        console.log('Audio não suportado:', error)
+      }
+    }
+  }
   const playSound = (src?: string) => {
     if (!src) return
+    
+    // Inicializar áudio se ainda não foi inicializado
+    if (!audioEnabled) {
+      initializeAudio()
+    }
+    
     try {
       const audio = new Audio(src)
       audio.volume = 0.3
-      audio.play().catch(() => {})
+      audio.crossOrigin = "anonymous"
+      
+      // Para mobile: criar promise e tentar reproduzir
+      const playPromise = audio.play()
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            // Áudio reproduzido com sucesso
+          })
+          .catch((error) => {
+            // Falha silenciosa - comum em mobile
+            console.log('Audio playback failed:', error)
+          })
+      }
     } catch {}
   }
 
@@ -95,6 +134,9 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
+    // Inicializar áudio no primeiro clique
+    initializeAudio()
+    
     if (currentPage >= 21) {
       // Fim do quiz
       return
@@ -138,6 +180,15 @@ export default function QuizDestravaAiNew() {
 
   return (
     <section id="quiz" className="relative mx-auto max-w-6xl px-4 py-12">
+      {/* Botão invisível para inicializar áudio no primeiro toque */}
+      {!audioEnabled && (
+        <button
+          onClick={initializeAudio}
+          className="fixed top-0 left-0 w-full h-full z-0 opacity-0 pointer-events-auto"
+          aria-label="Inicializar áudio"
+        />
+      )}
+      
       <AnimatePresence mode="wait">
         <motion.div
           key={currentPage}
@@ -158,59 +209,59 @@ export default function QuizDestravaAiNew() {
             </div>
             
             {currentPage === 1 && (
-              <Page01Start onNext={onNext} gainXp={gainXp} playSound={() => playSound(SFX.ping)} />
+              <Page01Start onNext={onNext} gainXp={gainXp} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 2 && (
-              <Page02Age onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page02Age onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 3 && (
-              <Page03DelayPattern onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page03DelayPattern onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 4 && (
-              <Page04Scroll onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page04Scroll onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 5 && (
-              <Page05Damage onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page05Damage onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 6 && (
-              <Page06Mirror onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page06Mirror onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 7 && (
-              <Page07Priority onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page07Priority onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 8 && (
-              <Page08Vision onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page08Vision onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 9 && (
-              <Page10Impact onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page10Impact onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
            )}
            
            {currentPage === 10 && (
-              <Page11Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} playSound={() => playSound(SFX.ping)} />
+              <Page11Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
            {currentPage === 11 && (
-              <Page12Future onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page12Future onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
            {currentPage === 12 && (
-              <Page13MentalShift onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page13MentalShift onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
            {currentPage === 13 && (
-              <Page14Behaviors onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page14Behaviors onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 14 && (
-              <Page15DiagnosisTransition onNext={onNext} gainXp={gainXp} playSound={() => playSound(SFX.ping)} />
+              <Page15DiagnosisTransition onNext={onNext} gainXp={gainXp} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 15 && (
@@ -218,27 +269,27 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 16 && (
-              <Page17RealityCheck onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page17RealityCheck onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 17 && (
-              <Page18TimeCommitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page18TimeCommitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 18 && (
-              <Page19Consequences onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page19Consequences onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 19 && (
-              <Page20Benefits onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page20Benefits onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 20 && (
-              <Page21SocialProof onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => playSound(SFX.ping)} />
+              <Page21SocialProof onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} playSound={() => { initializeAudio(); playSound(SFX.ping); }} />
             )}
             
             {currentPage === 21 && (
-              <Page22Offer onNext={onNext} gainXp={gainXp} playSound={() => playSound(SFX.ping)} />
+              <Page22Offer onNext={onNext} gainXp={gainXp} playSound={() => { initializeAudio(); playSound(SFX.victory); }} />
             )}
           </div>
         </motion.div>

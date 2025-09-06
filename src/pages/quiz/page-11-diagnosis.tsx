@@ -16,10 +16,27 @@ export function Page11Diagnosis({ onNext, gainXp, answers, playSound }: Page11Pr
   const [agree2, setAgree2] = useState(false);
 
   useEffect(() => {
-    // Tocar som de carregamento quando a página carrega
-    const loadingAudio = new Audio('/Loading Sound Effect (Royalty free Sound)#shorts.mp3');
-    loadingAudio.volume = 0.3;
-    loadingAudio.play().catch(() => {});
+    // Tocar som de carregamento quando a página carrega (com fallback para mobile)
+    const playLoadingSound = () => {
+      try {
+        const loadingAudio = new Audio('/Loading Sound Effect (Royalty free Sound)#shorts.mp3');
+        loadingAudio.volume = 0.3;
+        loadingAudio.crossOrigin = "anonymous";
+        
+        const playPromise = loadingAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Fallback silencioso para mobile
+            console.log('Loading sound failed - mobile restriction');
+          });
+        }
+      } catch (error) {
+        console.log('Audio not supported:', error);
+      }
+    };
+    
+    // Tentar reproduzir após um pequeno delay
+    const soundTimer = setTimeout(playLoadingSound, 200);
     
     const timer1 = setTimeout(() => setCurrentStep(1), 2000);
     const timer2 = setTimeout(() => setCurrentStep(2), 4000);
@@ -27,6 +44,7 @@ export function Page11Diagnosis({ onNext, gainXp, answers, playSound }: Page11Pr
     const timer4 = setTimeout(() => setCurrentStep(4), 8000);
 
     return () => {
+      clearTimeout(soundTimer);
       clearTimeout(timer1);
       clearTimeout(timer2);
       clearTimeout(timer3);

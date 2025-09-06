@@ -92,7 +92,16 @@ export default function QuizDestravaAi() {
     try {
       const a = new Audio(src)
       a.volume = 0.3
-      a.play().catch(() => {})
+      a.crossOrigin = "anonymous"
+      
+      // Melhor suporte para mobile
+      const playPromise = a.play()
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // Fallback silencioso para mobile
+          console.log('Audio playback failed:', error)
+        })
+      }
     } catch {}
   }
 
