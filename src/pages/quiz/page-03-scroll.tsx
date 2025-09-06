@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, Check } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 interface Page03Props {
   onNext: () => void;
@@ -9,62 +9,64 @@ interface Page03Props {
 
 export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
   const [scroll, setScroll] = useState(5);
-  const [delay, setDelay] = useState<string>("");
-  
-  const legend = [
-    "Nada", "Quase nada", "Pouco", "Moderado", "Considerável", "Frequente",
-    "Muito", "Quase todo dia", "Todo dia", "Destrói meu foco", "Acaba comigo",
-  ];
+
+  const getScrollLevel = () => {
+    if (scroll >= 8) return "EXTREMO";
+    if (scroll >= 5) return "ALTO";
+    if (scroll >= 3) return "MÉDIO";
+    return "BAIXO";
+  };
+
+  const getLevelColor = () => {
+    const level = getScrollLevel();
+    if (level === "EXTREMO") return "text-red-400";
+    if (level === "ALTO") return "text-orange-300";
+    if (level === "MÉDIO") return "text-yellow-300";
+    return "text-green-300";
+  };
 
   const handleSubmit = () => {
     setAnswer("scroll", scroll);
-    setAnswer("delay", delay);
-    gainXp(6, "p4_combo");
+    gainXp(6, "p4_scroll");
     onNext();
   };
 
   return (
     <div className="rounded-3xl p-6 md:p-8 ring-1 ring-white/10 shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-[#FCEEE3]">
       <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">
-        Prisão Digital + Adiamento
+        Prisão Digital
       </h3>
       <p className="text-sm text-[#C39BD3] mb-6">
-        Quanto o scroll te destrói? Depois, com que frequência você adia o que importa.
+        Quanto o scroll (ato de rolar a tela) te destrói hoje? (0 = nada, 10 = quase todo dia me arregaça)
       </p>
 
-      <div className="rounded-2xl p-5 ring-1 ring-white/10 bg-gradient-to-br from-[#5e348f] to-[#3d225e]">
-        <label className="text-sm opacity-90">Scroll no celular</label>
+      <div className="rounded-2xl p-6 ring-1 ring-white/10 bg-gradient-to-br from-[#5e348f] to-[#3d225e]">
+        <div className="flex justify-between text-sm opacity-90 mb-4">
+          <span>Nada (0)</span>
+          <span>5</span>
+          <span>Extremo (10)</span>
+        </div>
+        
         <input
           type="range"
           min={0}
           max={10}
           value={scroll}
           onChange={(e) => setScroll(Number(e.target.value))}
-          className="w-full mt-3 accent-[#F25C54]"
+          className="w-full h-3 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-lg appearance-none cursor-pointer"
         />
-        <div className="mt-2 text-xs opacity-80">{legend[scroll]}</div>
+        
+        <div className="mt-4 text-center">
+          <div className={`text-2xl font-black ${getLevelColor()}`}>
+            {getScrollLevel()}
+          </div>
+        </div>
       </div>
 
-      <div className="grid gap-3 mt-4">
-        {["Sempre", "Frequentemente", "Às vezes", "Raramente"].map((opt) => (
-          <button
-            key={opt}
-            onClick={() => setDelay(opt)}
-            className={`flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] ${
-              delay === opt ? "bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e] scale-[1.02]" : "bg-gradient-to-br from-[#1f3550] to-[#0f1c2b]"
-            }`}
-          >
-            <span className="text-left text-[15px]">{opt}</span>
-            {delay === opt ? <Check className="size-5 text-[#FFCC48]" /> : <span className="size-5" />}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-5 flex justify-end">
+      <div className="mt-6 flex justify-end">
         <button
           onClick={handleSubmit}
-          disabled={!delay}
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-bold bg-[#F25C54] hover:bg-[#ff6f68] transition shadow-[0_10px_30px_rgba(242,92,84,.35)] disabled:opacity-40"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-bold bg-[#F25C54] hover:bg-[#ff6f68] transition shadow-[0_10px_30px_rgba(242,92,84,.35)]"
         >
           Continuar <ChevronRight className="size-4" />
         </button>
@@ -73,6 +75,29 @@ export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
       <p className="mt-4 text-xs opacity-80 italic text-center">
         Teu polegar é o carrasco dos teus objetivos.
       </p>
+
+      <style jsx>{`
+        input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          height: 24px;
+          width: 24px;
+          border-radius: 50%;
+          background: #F25C54;
+          cursor: pointer;
+          border: 2px solid white;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+          height: 24px;
+          width: 24px;
+          border-radius: 50%;
+          background: #F25C54;
+          cursor: pointer;
+          border: 2px solid white;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+      `}</style>
     </div>
   );
 }

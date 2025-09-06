@@ -1,3 +1,12 @@
+import React from 'react';
+import { ChevronRight } from 'lucide-react';
+
+interface Page05Props {
+  onNext: () => void;
+  gainXp: (amount: number, reason?: string) => void;
+  setAnswer: (key: string, value: any) => void;
+}
+
 export function Page05Mirror({ onNext, gainXp, setAnswer }: Page05Props) {
   const options = [
     "Sempre, sinto que tô enterrando minha própria chance de vencer",
@@ -7,8 +16,8 @@ export function Page05Mirror({ onNext, gainXp, setAnswer }: Page05Props) {
   ];
 
   const handleSelect = (value: string) => {
-    setAnswer(value);
-    gainXp(10);
+    setAnswer("mirror", value);
+    gainXp(4, "p5_mirror");
     onNext();
   };
 
@@ -17,18 +26,23 @@ export function Page05Mirror({ onNext, gainXp, setAnswer }: Page05Props) {
       <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white mb-3">
         Quando olha no espelho, você sente que está desperdiçando seu potencial e deixando sua melhor versão morrer com o tempo?
       </h3>
-
-      <div className="space-y-3">
-        {options.map((option, index) => (
+      
+      <div className="grid gap-3">
+        {options.map((label) => (
           <button
-            key={index}
-            onClick={() => handleSelect(option)}
-            className="w-full p-4 text-left rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-200 border border-white/10 hover:border-white/20"
+            key={label}
+            onClick={() => handleSelect(label)}
+            className="flex items-center justify-between w-full rounded-2xl p-4 ring-1 ring-white/10 transition shadow-[0_20px_60px_rgba(0,0,0,.35)] bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] hover:scale-[1.02]"
           >
-            {option}
+            <span className="text-left text-[15px]">{label}</span>
+            <ChevronRight className="size-5 opacity-80" />
           </button>
         ))}
       </div>
+      
+      <p className="mt-4 text-xs opacity-80 italic text-center">
+        O espelho não mente: ou age, ou apodrece.
+      </p>
     </div>
   );
 }
