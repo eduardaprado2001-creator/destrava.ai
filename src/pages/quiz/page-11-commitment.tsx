@@ -1,13 +1,13 @@
 import React from 'react';
 import { ChevronRight, Timer } from 'lucide-react';
 
-interface Page12Props {
+interface Page11Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   setAnswer: (key: string, value: any) => void;
 }
 
-export function Page12Commitment({ onNext, gainXp, setAnswer }: Page12Props) {
+export function Page11Commitment({ onNext, gainXp, setAnswer }: Page11Props) {
   const options = [
     { v: "5", t: "5 min/dia — Começar agora" },
     { v: "10", t: "10 min/dia — Pronto pra mudar" },
