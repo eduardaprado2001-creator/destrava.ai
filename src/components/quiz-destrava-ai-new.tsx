@@ -20,7 +20,8 @@ import { Page15DiagnosisTransition } from "../pages/quiz/page-15-diagnosis-trans
 import { Page16Diagnosis } from "../pages/quiz/page-16-diagnosis"
 import { Page17RealityCheck } from "../pages/quiz/page-17-reality-check"
 import { Page18TimeCommitment } from "../pages/quiz/page-18-time-commitment"
-import { Page19Offer } from "../pages/quiz/page-19-offer"
+import { Page19Consequences } from "../pages/quiz/page-19-consequences"
+import { Page20Offer } from "../pages/quiz/page-20-offer"
 
 /**
  * QuizDestravaAiNew – Controlador principal do quiz com 13 páginas
@@ -49,13 +50,14 @@ const PROGRESS_MAP = [7, 13, 20, 27, 33, 40, 47, 53, 60, 67, 73, 80, 87, 93, 100
 
 const PROGRESS_MAP_18 = [5, 10, 16, 22, 27, 33, 38, 44, 50, 55, 61, 66, 72, 77, 83, 88, 94, 100]
 const PROGRESS_MAP_19 = [5, 10, 15, 21, 26, 31, 36, 42, 47, 52, 57, 63, 68, 73, 78, 84, 89, 94, 100]
+const PROGRESS_MAP_20 = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
 
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
-  const progress = PROGRESS_MAP_19[currentPage - 1] || 0
+  const progress = PROGRESS_MAP_20[currentPage - 1] || 0
   const avatarState = AVATAR_STATES[currentPage - 1] || "Iniciando..."
 
   const gainXp = (amount: number, reason?: string) => {
@@ -74,7 +76,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 19) {
+    if (currentPage >= 20) {
       // Fim do quiz
       return
     } else {
@@ -197,7 +199,11 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 19 && (
-              <Page19Offer onNext={onNext} gainXp={gainXp} />
+              <Page19Consequences onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+            )}
+            
+            {currentPage === 20 && (
+              <Page20Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
         </motion.div>
