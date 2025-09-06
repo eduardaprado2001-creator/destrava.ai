@@ -9,11 +9,6 @@ interface Page04Props {
 
 export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
   const [scroll, setScroll] = useState(5);
-  
-  const legend = [
-    "Nada", "Quase nada", "Pouco", "Moderado", "Considerável", "Frequente",
-    "Muito", "Quase todo dia", "Todo dia", "Destrói meu foco", "Acaba comigo",
-  ];
 
   const getScrollLevel = () => {
     if (scroll >= 8) return "EXTREMO";
