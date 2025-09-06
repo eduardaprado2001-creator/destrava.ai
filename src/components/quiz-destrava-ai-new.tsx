@@ -50,7 +50,7 @@ const PROGRESS_MAP = [7, 13, 20, 27, 33, 40, 47, 53, 60, 67, 73, 80, 87, 93, 100
 
 const PROGRESS_MAP_18 = [5, 10, 16, 22, 27, 33, 38, 44, 50, 55, 61, 66, 72, 77, 83, 88, 94, 100]
 const PROGRESS_MAP_19 = [5, 10, 15, 21, 26, 31, 36, 42, 47, 52, 57, 63, 68, 73, 78, 84, 89, 94, 100]
-const PROGRESS_MAP_20 = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+const PROGRESS_MAP_21 = [5, 9, 14, 19, 24, 29, 33, 38, 43, 48, 52, 57, 62, 67, 71, 76, 81, 86, 90, 95, 100]
 
 export default function QuizDestravaAiNew() {
   const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
@@ -203,7 +203,11 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 20 && (
-              <Page20Offer onNext={onNext} gainXp={gainXp} />
+              <Page20Benefits onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+            )}
+            
+            {currentPage === 21 && (
+              <Page21Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
         </motion.div>
