@@ -12,7 +12,8 @@ import { Page07Priority } from "../pages/quiz/page-07-priority"
 import { Page08Vision } from "../pages/quiz/page-08-vision"
 import { Page10Impact } from "../pages/quiz/page-10-impact"
 import { Page11Diagnosis } from "../pages/quiz/page-11-diagnosis"
-import { Page12Commitment } from "../pages/quiz/page-12-commitment"
+import { Page11Commitment } from "../pages/quiz/page-11-commitment"
+import { Page12Future } from "../pages/quiz/page-12-future"
 import { Page13Offer } from "../pages/quiz/page-13-offer"
 
 /**
@@ -35,7 +36,7 @@ const AVATAR_STATES = [
   "10/10, armadura completa.",
 ]
 
-const PROGRESS_MAP = [8, 15, 23, 31, 38, 46, 54, 62, 69, 77, 85, 92]
+const PROGRESS_MAP = [8, 15, 23, 31, 38, 46, 54, 62, 69, 77, 85, 92, 100]
 
 export default function QuizDestravaAiNew() {
   const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13
@@ -61,7 +62,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 12) {
+    if (currentPage >= 13) {
       // Fim do quiz
       return
     } else {
@@ -152,10 +153,14 @@ export default function QuizDestravaAiNew() {
             )}
             
            {currentPage === 11 && (
-              <Page12Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+              <Page11Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
            {currentPage === 12 && (
+              <Page12Future onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+            )}
+            
+           {currentPage === 13 && (
               <Page13Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
