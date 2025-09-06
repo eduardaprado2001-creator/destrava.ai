@@ -1,29 +1,29 @@
 import React, { useMemo } from 'react';
 import { ChevronRight } from 'lucide-react';
 
-interface Page07Props {
+interface Page11Props {
   onNext: () => void;
   gainXp: (amount: number, reason?: string) => void;
   answers: Record<string, any>;
 }
 
-export function Page07Diagnosis({ onNext, gainXp, answers }: Page07Props) {
+export function Page11Diagnosis({ onNext, gainXp, answers }: Page11Props) {
   const level = useMemo<"ALTO" | "MÉDIO" | "EXTREMO">(() => {
     const s = typeof answers.scroll === "number" ? answers.scroll : 5;
-    const d = String(answers.delay || "");
-    if (s >= 8 || d === "Sempre") return "EXTREMO";
-    if (s >= 5 || d === "Frequentemente") return "ALTO";
+    const d = String(answers.delayPattern || "");
+    if (s >= 8 || d.includes("Sempre")) return "EXTREMO";
+    if (s >= 5 || d.includes("Frequentemente")) return "ALTO";
     return "MÉDIO";
   }, [answers]);
 
   const bullets = [
-    `Foco principal: desenvolvimento pessoal.`,
+    `Área mais afetada: ${answers.damages?.[0] ?? "carreira"}${answers.damages?.[1] ? ` e ${answers.damages?.[1]}` : ""}.`,
     `Gatilho de fuga: ${answers.scroll >= 7 ? 'celular' : 'adiamento/ansiedade'}.`,
     `Quebra de foco: pico no período atual.`
   ];
 
   const handleContinue = () => {
-    gainXp(10, "p7_diag");
+    gainXp(10, "p11_diagnosis");
     onNext();
   };
 

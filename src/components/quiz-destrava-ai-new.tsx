@@ -11,12 +11,13 @@ import { Page06Mirror } from "../pages/quiz/page-06-mirror"
 import { Page07Priority } from "../pages/quiz/page-07-priority"
 import { Page08Vision } from "../pages/quiz/page-08-vision"
 import { Page09Loading } from "../pages/quiz/page-09-loading"
-import { Page10Diagnosis } from "../pages/quiz/page-10-diagnosis"
-import { Page11Commitment } from "../pages/quiz/page-11-commitment"
-import { Page12Offer } from "../pages/quiz/page-12-offer"
+import { Page10Impact } from "../pages/quiz/page-10-impact"
+import { Page11Diagnosis } from "../pages/quiz/page-11-diagnosis"
+import { Page12Commitment } from "../pages/quiz/page-12-commitment"
+import { Page13Offer } from "../pages/quiz/page-13-offer"
 
 /**
- * QuizDestravaAiNew – Controlador principal do quiz com 12 páginas
+ * QuizDestravaAiNew – Controlador principal do quiz com 13 páginas
  * Usa as páginas separadas do quiz-pages-transformacao.tsx
  */
 
@@ -32,13 +33,15 @@ const AVATAR_STATES = [
   "Olhos fechados, download de consciência.",
   "Armadura 7/10.",
   "9/10, olhos em brasa.",
+  "Vislumbrando o futuro.",
   "10/10, armadura completa.",
+  "Máximo poder.",
 ]
 
-const PROGRESS_MAP = [8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 100]
+const PROGRESS_MAP = [8, 15, 23, 31, 38, 46, 54, 62, 69, 77, 85, 92, 100]
 
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
@@ -61,7 +64,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 12) {
+    if (currentPage >= 13) {
       // Fim do quiz
       return
     } else {
@@ -75,7 +78,7 @@ export default function QuizDestravaAiNew() {
   const Hud = () => (
     <div className="mb-6 flex items-center justify-between text-xs">
       <div className="flex items-center gap-3">
-        <span className="px-2 py-1 rounded-full bg-white/10 text-[#FCEEE3]">XP {xp}/140</span>
+        <span className="px-2 py-1 rounded-full bg-white/10 text-[#FCEEE3]">XP {xp}/150</span>
         <span className="px-2 py-1 rounded-full bg-white/10 text-[#FCEEE3]">
           Avatar: {avatarState}
         </span>
@@ -148,15 +151,19 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 10 && (
-              <Page10Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} />
+              <Page10Impact onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
            )}
            
            {currentPage === 11 && (
-              <Page11Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+              <Page11Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} />
             )}
             
            {currentPage === 12 && (
-              <Page12Offer onNext={onNext} gainXp={gainXp} />
+              <Page12Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+            )}
+            
+           {currentPage === 13 && (
+              <Page13Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
         </motion.div>
