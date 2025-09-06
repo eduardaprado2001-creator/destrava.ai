@@ -9,12 +9,13 @@ import { Page04Scroll } from "../pages/quiz/page-03-scroll"
 import { Page05Damage } from "../pages/quiz/page-05-damage"
 import { Page06Mirror } from "../pages/quiz/page-06-mirror"
 import { Page06Loading } from "../pages/quiz/page-10-loading"
+import { Page08Priority } from "../pages/quiz/page-08-priority"
 import { Page07Diagnosis } from "../pages/quiz/page-11-diagnosis"
 import { Page08Commitment } from "../pages/quiz/page-12-commitment"
 import { Page09Offer } from "../pages/quiz/page-13-offer"
 
 /**
- * QuizDestravaAiNew – Controlador principal do quiz com 9 páginas
+ * QuizDestravaAiNew – Controlador principal do quiz com 11 páginas
  * Usa as páginas separadas do quiz-pages-transformacao.tsx
  */
 
@@ -26,15 +27,16 @@ const AVATAR_STATES = [
   "Fendas de luz no peito.",
   "Reflexo distorcido ao fundo.",
   "Olhos fechados, download de consciência.",
+  "Postura firme.",
   "Armadura 7/10.",
   "9/10, olhos em brasa.",
   "10/10, armadura completa.",
 ]
 
-const PROGRESS_MAP = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+const PROGRESS_MAP = [9, 18, 27, 36, 45, 54, 63, 72, 81, 90, 100]
 
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
@@ -57,7 +59,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 10) {
+    if (currentPage >= 11) {
       // Fim do quiz
       return
     } else {
@@ -136,14 +138,18 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 8 && (
+             <Page08Priority onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+           )}
+           
+           {currentPage === 9 && (
               <Page07Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} />
             )}
             
-            {currentPage === 9 && (
+           {currentPage === 10 && (
               <Page08Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-            {currentPage === 10 && (
+           {currentPage === 11 && (
               <Page09Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
