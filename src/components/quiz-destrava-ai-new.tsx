@@ -153,7 +153,9 @@ export default function QuizDestravaAiNew() {
           </div>
 
           <div className="relative mx-auto max-w-3xl w-full">
-            <Hud />
+            <div className="mt-16 md:mt-0">
+              <Hud />
+            </div>
             
             {currentPage === 1 && (
               <Page01Start onNext={onNext} gainXp={gainXp} playSound={() => playSound(SFX.ping)} />
