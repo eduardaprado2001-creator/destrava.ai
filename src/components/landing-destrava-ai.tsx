@@ -17,6 +17,13 @@ export default function LandingDestravaAi() {
     )
   }, [])
 
+  const startQuiz = () => {
+    setShowQuiz(true)
+    // Scroll para o topo quando iniciar o quiz
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, 100)
+  }
   // Se showQuiz for true, mostra apenas o quiz
   if (showQuiz) {
     return (
@@ -60,18 +67,20 @@ export default function LandingDestravaAi() {
           <a
             className="px-4 py-2 rounded-xl bg-[#F25C54] hover:bg-[#ff6f68] transition shadow-[0_10px_30px_rgba(242,92,84,.35)]"
             href="#quiz"
-            onClick={() => (window as any).__ga?.gainXp(20, "cta_click")}
+            onClick={() => {
+              (window as any).__ga?.gainXp(20, "cta_click")
+              startQuiz()
+            }}
           >
             Começar
           </a>
         </nav>
       </motion.header>
 
-      <HeroSection onStartQuiz={() => setShowQuiz(true)} />
+      <HeroSection onStartQuiz={startQuiz} />
       <NewsSection />
       <TestimonialsSection />
-      <CTASection onStartQuiz={() => setShowQuiz(true)} />
-
+      <CTASection onStartQuiz={startQuiz} />
       <footer className="border-t border-white/10 bg-[#381f66]/60 backdrop-blur">
         <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-[#FCEEE3] flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
