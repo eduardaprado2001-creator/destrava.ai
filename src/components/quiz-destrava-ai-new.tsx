@@ -117,14 +117,14 @@ export default function QuizDestravaAiNew() {
 
   // HUD Component
   const Hud = () => (
-    <div className="mb-6 flex items-center justify-between text-xs">
-      <div className="flex items-center gap-3">
-        <span className="px-2 py-1 rounded-full bg-white/10 text-[#FCEEE3]">XP {xp}/150</span>
-        <span className="px-2 py-1 rounded-full bg-white/10 text-[#FCEEE3]">
+    <div className="mb-4 md:mb-6 flex items-center justify-between text-xs">
+      <div className="flex items-center gap-2 md:gap-3">
+        <span className="px-2 py-1 rounded-full bg-white/10 text-[#FCEEE3] text-xs">XP {xp}/150</span>
+        <span className="px-2 py-1 rounded-full bg-white/10 text-[#FCEEE3] text-xs hidden md:inline-block">
           Avatar: {avatarState}
         </span>
       </div>
-      <div className="flex-1 mx-4 h-2 rounded-full bg-white/10 overflow-hidden">
+      <div className="flex-1 mx-2 md:mx-4 h-1.5 md:h-2 rounded-full bg-white/10 overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
@@ -132,7 +132,7 @@ export default function QuizDestravaAiNew() {
           className="h-full rounded-full bg-gradient-to-r from-[#F25C54] to-[#FF3B3B]"
         />
       </div>
-      <span className="opacity-80 text-[#FCEEE3]">{progress}%</span>
+      <span className="opacity-80 text-[#FCEEE3] text-xs">{progress}%</span>
     </div>
   )
 
