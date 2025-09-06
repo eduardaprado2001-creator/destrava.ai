@@ -58,14 +58,10 @@ export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
           max={10}
           value={scroll}
           onChange={(e) => setScroll(Number(e.target.value))}
-          className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-          style={{
-            background: `linear-gradient(to right, #10b981 0%, #f59e0b 50%, #ef4444 100%)`
-          }}
+          className="w-full h-3 bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 rounded-lg appearance-none cursor-pointer"
         />
         
         <div className="mt-4 text-center">
-          <div className="text-lg opacity-90 mb-1">{legend[scroll]}</div>
           <div className={`text-2xl font-black ${getLevelColor()}`}>
             {getScrollLevel()}
           </div>
@@ -86,7 +82,7 @@ export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
       </p>
 
       <style jsx>{`
-        .slider::-webkit-slider-thumb {
+        input[type="range"]::-webkit-slider-thumb {
           appearance: none;
           height: 24px;
           width: 24px;
@@ -97,7 +93,7 @@ export function Page04Scroll({ onNext, gainXp, setAnswer }: Page04Props) {
           box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         
-        .slider::-moz-range-thumb {
+        input[type="range"]::-moz-range-thumb {
           height: 24px;
           width: 24px;
           border-radius: 50%;
