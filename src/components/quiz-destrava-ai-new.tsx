@@ -10,7 +10,6 @@ import { Page05Damage } from "../pages/quiz/page-05-damage"
 import { Page06Mirror } from "../pages/quiz/page-06-mirror"
 import { Page07Priority } from "../pages/quiz/page-07-priority"
 import { Page08Vision } from "../pages/quiz/page-08-vision"
-import { Page09Loading } from "../pages/quiz/page-09-loading"
 import { Page10Impact } from "../pages/quiz/page-10-impact"
 import { Page11Diagnosis } from "../pages/quiz/page-11-diagnosis"
 import { Page12Commitment } from "../pages/quiz/page-12-commitment"
@@ -30,15 +29,13 @@ const AVATAR_STATES = [
   "Reflexo distorcido ao fundo.",
   "Postura firme.",
   "Luz no olhar.",
-  "Olhos fechados, download de consciência.",
+  "Vislumbrando o futuro.",
   "Armadura 7/10.",
   "9/10, olhos em brasa.",
-  "Vislumbrando o futuro.",
   "10/10, armadura completa.",
-  "Máximo poder.",
 ]
 
-const PROGRESS_MAP = [8, 15, 23, 31, 38, 46, 54, 62, 69, 77, 85, 92, 100]
+const PROGRESS_MAP = [8, 15, 23, 31, 38, 46, 54, 62, 69, 77, 85, 92]
 
 export default function QuizDestravaAiNew() {
   const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13
@@ -64,7 +61,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 13) {
+    if (currentPage >= 12) {
       // Fim do quiz
       return
     } else {
@@ -147,22 +144,18 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 9 && (
-              <Page09Loading onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
-            )}
-            
-            {currentPage === 10 && (
               <Page10Impact onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
            )}
            
-           {currentPage === 11 && (
+           {currentPage === 10 && (
               <Page11Diagnosis onNext={onNext} gainXp={gainXp} answers={answers} />
             )}
             
-           {currentPage === 12 && (
+           {currentPage === 11 && (
               <Page12Commitment onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
             )}
             
-           {currentPage === 13 && (
+           {currentPage === 12 && (
               <Page13Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
