@@ -153,7 +153,7 @@ export default function QuizDestravaAiNew() {
           </div>
 
           <div className="relative mx-auto max-w-3xl w-full">
-            <div className="mt-16 md:mt-0">
+            <div className="mt-12 md:mt-0">
               <Hud />
             </div>
             

@@ -136,47 +136,28 @@ export function GamificationLayer() {
   return (
     <>
       {/* Fixed Gamification UI */}
-      <div className="fixed top-2 right-2 z-50 flex items-center gap-1 md:gap-3 md:flex-row flex-col md:top-4 md:right-4">
+      <div className="fixed top-2 right-2 z-50 flex items-center gap-2 md:gap-3 md:top-4 md:right-4">
         <motion.div
-          className="rounded-full bg-gradient-to-r from-purple-900/80 to-blue-900/80 backdrop-blur-md px-2 py-1 text-xs font-bold text-white ring-1 ring-purple-400/30 shadow-lg md:px-3"
+          className="rounded-full bg-gradient-to-r from-purple-900/80 to-blue-900/80 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white ring-1 ring-purple-400/30 shadow-lg"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Gamepad2 className="size-4 text-yellow-400" />
-            <span className="hidden md:inline">Nível {progress.level}</span>
-            <span className="md:hidden">L{progress.level}</span>
-            <span className="text-yellow-400 hidden md:inline">{progress.xp} XP</span>
-            <span className="text-yellow-400 md:hidden text-xs">{progress.xp}</span>
+            <span>Nível {progress.level}</span>
+            <span className="text-yellow-400">{progress.xp}/{getXpForNextLevel()}</span>
           </div>
         </motion.div>
         
         <motion.button
           onClick={() => setShowDashboard(true)}
-          className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 p-1.5 md:p-3 text-white shadow-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 ring-1 ring-yellow-400/30 md:ring-2"
+          className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 p-2 text-white shadow-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 ring-1 ring-yellow-400/30"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Trophy className="size-3 md:size-5" />
+          <Trophy className="size-4" />
         </motion.button>
-      </div>
-
-      {/* XP Progress Bar */}
-      <div className="fixed top-12 md:top-20 right-2 z-50 w-32 md:w-64 md:right-4">
-        <div className="rounded-full bg-gradient-to-r from-purple-900/60 to-blue-900/60 backdrop-blur-md p-1.5 md:p-3 ring-1 ring-purple-400/30 shadow-lg">
-          <div className="h-1.5 md:h-3 rounded-full bg-black/40 overflow-hidden">
-            <motion.div
-              className="h-full bg-gradient-to-r from-green-400 via-yellow-400 to-orange-500 rounded-full shadow-inner"
-              initial={{ width: 0 }}
-              animate={{ width: `${getXpProgress()}%` }}
-              transition={{ duration: 1, ease: "easeOut" }}
-            />
-          </div>
-          <div className="mt-1 md:mt-2 text-xs text-white font-medium text-center hidden md:block">
-            {progress.xp} / {getXpForNextLevel()} XP
-          </div>
-        </div>
       </div>
 
       {/* Notification System */}
@@ -186,7 +167,7 @@ export function GamificationLayer() {
             initial={{ opacity: 0, y: -100, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -50, scale: 0.8 }}
-            className="fixed top-32 right-4 z-50 max-w-sm"
+            className="fixed top-16 right-4 z-50 max-w-sm"
           >
             <div className={`rounded-xl p-4 backdrop-blur-lg ring-1 shadow-2xl ${
               notification.type === 'xp' ? 'bg-yellow-500/90 text-yellow-900 ring-yellow-400/50' :
