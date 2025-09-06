@@ -59,7 +59,7 @@ export default function QuizDestravaAiNew() {
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
-  const progress = PROGRESS_MAP_20[currentPage - 1] || 0
+  const progress = PROGRESS_MAP_22[currentPage - 1] || 0
   const avatarState = AVATAR_STATES[currentPage - 1] || "Iniciando..."
 
   const gainXp = (amount: number, reason?: string) => {
