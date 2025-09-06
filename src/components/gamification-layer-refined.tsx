@@ -136,27 +136,40 @@ export function GamificationLayer() {
   return (
     <>
       {/* Fixed Gamification UI */}
-      <div className="fixed top-2 right-2 z-50 flex items-center gap-2 md:gap-3 md:top-4 md:right-4">
+      <div className="fixed top-2 right-2 z-50 flex items-center gap-2 md:top-4 md:right-4">
         <motion.div
-          className="rounded-full bg-gradient-to-r from-purple-900/80 to-blue-900/80 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white ring-1 ring-purple-400/30 shadow-lg"
+          className="rounded-full bg-gradient-to-r from-purple-900/80 to-blue-900/80 backdrop-blur-md px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold text-white ring-1 ring-purple-400/30 shadow-lg"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             <Gamepad2 className="size-4 text-yellow-400" />
-            <span>Nível {progress.level}</span>
-            <span className="text-yellow-400">{progress.xp}/{getXpForNextLevel()}</span>
+            <span className="hidden md:inline">Nível</span>
+            <span className="md:hidden">Lv</span>
+            <span>{progress.level}</span>
+          </div>
+        </motion.div>
+        
+        <motion.div
+          className="rounded-full bg-gradient-to-r from-yellow-600/80 to-orange-600/80 backdrop-blur-md px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold text-white ring-1 ring-yellow-400/30 shadow-lg"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="flex items-center gap-1">
+            <span className="text-yellow-200">{progress.xp}</span>
+            <span className="text-yellow-300 hidden md:inline">/{getXpForNextLevel()}</span>
           </div>
         </motion.div>
         
         <motion.button
           onClick={() => setShowDashboard(true)}
-          className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 p-2 text-white shadow-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 ring-1 ring-yellow-400/30"
+          className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 p-1.5 md:p-2 text-white shadow-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 ring-1 ring-yellow-400/30"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Trophy className="size-4" />
+          <Trophy className="size-3 md:size-4" />
         </motion.button>
       </div>
 
