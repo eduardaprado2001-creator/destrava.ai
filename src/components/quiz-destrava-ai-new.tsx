@@ -52,8 +52,10 @@ const PROGRESS_MAP_18 = [5, 10, 16, 22, 27, 33, 38, 44, 50, 55, 61, 66, 72, 77, 
 const PROGRESS_MAP_19 = [5, 10, 15, 21, 26, 31, 36, 42, 47, 52, 57, 63, 68, 73, 78, 84, 89, 94, 100]
 const PROGRESS_MAP_21 = [5, 9, 14, 19, 24, 29, 33, 38, 43, 48, 52, 57, 62, 67, 71, 76, 81, 86, 90, 95, 100]
 
+const PROGRESS_MAP_22 = [4, 9, 13, 18, 22, 27, 31, 36, 40, 45, 50, 54, 59, 63, 68, 72, 77, 81, 86, 90, 95, 100]
+
 export default function QuizDestravaAiNew() {
-  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+  const [currentPage, setCurrentPage] = useState<number>(1) // Páginas: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
   const [xp, setXp] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
 
@@ -76,7 +78,7 @@ export default function QuizDestravaAiNew() {
   }
 
   const onNext = () => {
-    if (currentPage >= 20) {
+    if (currentPage >= 22) {
       // Fim do quiz
       return
     } else {
@@ -207,7 +209,11 @@ export default function QuizDestravaAiNew() {
             )}
             
             {currentPage === 21 && (
-              <Page21Offer onNext={onNext} gainXp={gainXp} />
+              <Page21SocialProof onNext={onNext} gainXp={gainXp} setAnswer={setAnswer} />
+            )}
+            
+            {currentPage === 22 && (
+              <Page22Offer onNext={onNext} gainXp={gainXp} />
             )}
           </div>
         </motion.div>
