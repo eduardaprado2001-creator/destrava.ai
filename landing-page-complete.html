@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destrava Aí - Produtividade sem enrolação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0) rotate(-180deg); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .hover-lift:hover {
+            transform: scale(1.02) translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.02) translateY(-2px);
+        }
+
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .gamification-badge {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .xp-bar {
+            transition: width 0.7s ease;
+        }
+
+        .notification-enter {
+            animation: notificationSlide 0.3s ease-out forwards;
+        }
+
+        @keyframes notificationSlide {
+            from { opacity: 0; transform: translateY(-100px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-white min-h-screen">
+
+    <!-- Gamification Layer -->
+    <div class="fixed top-2 right-2 z-50 flex items-center gap-2 md:top-4 md:right-4 md:gap-3">
+        <div class="gamification-badge rounded-full bg-gradient-to-r from-purple-900/80 to-blue-900/80 backdrop-blur-md px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold text-white ring-1 ring-purple-400/30 shadow-lg" style="animation-delay: 0.5s;">
+            <div class="flex items-center gap-1 md:gap-2">
+                <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M21,6H18V3A1,1 0 0,0 17,2H7A1,1 0 0,0 6,3V6H3A1,1 0 0,0 2,7V21A1,1 0 0,0 3,22H21A1,1 0 0,0 22,21V7A1,1 0 0,0 21,6M8,4H16V6H8V4M20,20H4V8H6V10H8V8H16V10H18V8H20V20Z"/>
+                </svg>
+                <span class="md:hidden">Lv<span id="level-mobile">1</span></span>
+                <span class="hidden md:inline">Nível <span id="level-desktop">1</span></span>
+            </div>
+        </div>
+
+        <div class="gamification-badge rounded-full bg-gradient-to-r from-yellow-600/80 to-orange-600/80 backdrop-blur-md px-2 py-1 md:px-3 md:py-1.5 text-xs font-bold text-white ring-1 ring-yellow-400/30 shadow-lg min-w-[80px] md:min-w-[120px]" style="animation-delay: 0.6s;">
+            <div class="flex flex-col gap-1">
+                <div class="text-center text-yellow-200 text-xs">
+                    <span id="current-xp">0</span>/<span id="next-level-xp">50</span> XP
+                </div>
+                <div class="h-1 rounded-full bg-black/30 overflow-hidden">
+                    <div id="xp-bar" class="xp-bar h-full bg-gradient-to-r from-green-400 via-yellow-400 to-orange-500 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="toggleDashboard()" class="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 p-2 md:p-3 text-white shadow-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 ring-1 ring-yellow-400/30 hover:scale-110">
+            <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M5,9.5L7.5,14H2.5L5,9.5M3,4H7V8H3V4M5,20A2,2 0 0,0 7,18A2,2 0 0,0 5,16A2,2 0 0,0 3,18A2,2 0 0,0 5,20M9,5V7H21V5H9M9,19H21V17H9V19M9,13H21V11H9V13Z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container" class="fixed top-16 right-4 z-50 max-w-sm"></div>
+
+    <!-- Gamification Dashboard Modal -->
+    <div id="dashboard-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm p-4" onclick="closeDashboard(event)">
+        <div class="w-full max-w-2xl rounded-3xl bg-gradient-to-br from-[#1a1a2e] via-[#2d1b69] to-[#16213e] p-8 shadow-2xl ring-2 ring-purple-400/20" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M5,9.5L7.5,14H2.5L5,9.5M3,4H7V8H3V4M5,20A2,2 0 0,0 7,18A2,2 0 0,0 5,16A2,2 0 0,0 3,18A2,2 0 0,0 5,20M9,5V7H21V5H9M9,19H21V17H9V19M9,13H21V11H9V13Z"/>
+                    </svg>
+                    Seu Progresso
+                </h2>
+                <button onclick="toggleDashboard()" class="text-white/60 hover:text-white transition-colors text-2xl">✕</button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="rounded-xl bg-gradient-to-r from-purple-600/30 to-blue-600/30 p-5 ring-1 ring-purple-400/30 shadow-lg">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+                            </svg>
+                            <span class="font-bold">Nível <span id="dashboard-level">1</span></span>
+                        </div>
+                        <div class="text-3xl font-black text-white"><span id="dashboard-xp">0</span> XP</div>
+                        <div class="text-sm text-white/60">
+                            <span id="dashboard-remaining-xp">50</span> XP para o próximo nível
+                        </div>
+
+                        <div class="mt-4 h-4 rounded-full bg-black/30 overflow-hidden">
+                            <div id="dashboard-xp-bar" class="h-full bg-gradient-to-r from-green-400 via-yellow-400 to-orange-500 rounded-full transition-all duration-700 shadow-inner" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl bg-gradient-to-r from-emerald-600/30 to-teal-600/30 p-5 ring-1 ring-emerald-400/30 shadow-lg">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+                            </svg>
+                            <span class="font-bold">Ações Completadas</span>
+                        </div>
+                        <div class="text-3xl font-black text-white">
+                            <span id="dashboard-actions">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5M17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8C16.3,8 17,8.7 17,9.5M12,17.23C10.25,17.23 8.71,16.5 7.81,15.42L9.23,14C9.68,14.72 10.75,15.23 12,15.23C13.25,15.23 14.32,14.72 14.77,14L16.19,15.42C15.29,16.5 13.75,17.23 12,17.23Z"/>
+                        </svg>
+                        Conquistas
+                    </h3>
+                    <div class="space-y-3 max-h-64 overflow-y-auto" id="achievements-list">
+                        <!-- Achievements will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="animate-fade-in mx-auto max-w-6xl px-4 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-[#F25C54] grid place-items-center shadow-[0_0_30px_rgba(242,92,84,.45)] overflow-hidden">
+                <img src="/ChatGPT Image 20 de ago. de 2025, 19_59_46.png" alt="Destrava Aí" class="w-full h-full object-cover" onerror="this.style.display='none'">
+            </div>
+            <div class="leading-tight">
+                <p class="text-lg font-extrabold tracking-tight">Destrava Aí</p>
+                <p class="text-xs text-[#C39BD3]">Produtividade sem enrolação</p>
+            </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-6 text-sm text-[#FCEEE3]">
+            <a class="hover:text-white/90 transition" href="#noticias">Notícias</a>
+            <a class="hover:text-white/90 transition" href="#relatos">Relatos</a>
+            <a class="hover:text-white/90 transition" href="#como-funciona">Como funciona</a>
+            <a class="px-4 py-2 rounded-xl bg-[#F25C54] hover:bg-[#ff6f68] transition shadow-[0_10px_30px_rgba(242,92,84,.35)]" href="#quiz" onclick="handleStartQuiz()">
+                Começar
+            </a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative mx-auto max-w-6xl px-4 pb-12 pt-16 md:pt-20">
+        <div class="text-center">
+            <div class="animate-scale-in mb-8 flex justify-center" style="animation-delay: 0.2s;">
+                <div class="w-16 h-16 rounded-2xl bg-[#F25C54] grid place-items-center shadow-[0_0_30px_rgba(242,92,84,.45)] overflow-hidden">
+                    <img src="/ChatGPT Image 20 de ago. de 2025, 19_59_46.png" alt="Destrava Aí" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                </div>
+            </div>
+
+            <h1 class="animate-slide-up text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[0.9] text-[#FCEEE3] mb-6" style="animation-delay: 0.4s;">
+                ⚡ Daqui a 1 ano, sua vida vai estar <span class="text-red-500">IGUAL</span>
+            </h1>
+
+            <p class="animate-slide-up text-xl md:text-2xl text-red-400 font-bold mb-4 max-w-4xl mx-auto leading-relaxed" style="animation-delay: 0.5s;">
+                Imagine olhar pra trás e ver 12 meses jogados no lixo, sem progresso, sem conquistas e odiando o espelho.
+            </p>
+
+            <p class="animate-slide-up text-lg md:text-xl text-[#C39BD3] mb-8 max-w-3xl mx-auto leading-relaxed" style="animation-delay: 0.6s;">
+                Descubra agora o que tá te sabotando e receba um plano comprovado pra sair desse ciclo antes que seja tarde demais.
+            </p>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="noticias" class="mx-auto max-w-6xl px-4 pb-10">
+        <h2 class="flex items-center justify-center gap-2 text-xl md:text-2xl font-extrabold tracking-tight text-white/95 mb-6">
+            <span>ÚLTIMAS NOTÍCIAS</span>
+        </h2>
+
+        <div class="mt-6 grid gap-5 md:grid-cols-3">
+            <!-- News Card 1 -->
+            <article onclick="handleNewsClick('Como o vício de scroll mata seu foco: 3h40 por dia no celular')" class="card cursor-pointer rounded-2xl bg-gradient-to-br from-[#5e348f] to-[#3d225e] p-6 text-[#FCEEE3] shadow-[0_20px_60px_rgba(0,0,0,.35)] ring-1 ring-white/10 hover:shadow-[0_25px_70px_rgba(0,0,0,.4)]">
+                <div class="flex items-center gap-3 text-[11px] opacity-80">
+                    <span class="rounded-full bg-white/15 px-3 py-1 font-medium">Produtividade</span>
+                    <span>•</span>
+                    <span>2 horas atrás</span>
+                </div>
+                <h4 class="mt-4 text-xl font-bold tracking-tight text-white leading-tight">Como o vício de scroll mata seu foco: 3h40 por dia no celular</h4>
+                <p class="mt-3 text-sm opacity-90 leading-relaxed">Estudo mostra que o brasileiro perde mais de 1.300 horas por ano no celular. Especialistas revelam como reverter hoje.</p>
+                <div class="mt-5 flex items-center justify-between text-xs opacity-80">
+                    <span class="font-medium">Por Equipe Destrava Aí</span>
+                    <span class="flex items-center gap-1">
+                        <span>👁️</span>
+                        <span>2.8k</span>
+                    </span>
+                </div>
+            </article>
+
+            <!-- News Card 2 -->
+            <article onclick="handleNewsClick('80% adiam tarefas importantes mesmo sabendo do prejuízo')" class="card cursor-pointer rounded-2xl bg-gradient-to-br from-[#6a3a38] to-[#3a1f1e] p-6 text-[#FCEEE3] shadow-[0_20px_60px_rgba(0,0,0,.35)] ring-1 ring-white/10 hover:shadow-[0_25px_70px_rgba(0,0,0,.4)]">
+                <div class="flex items-center gap-3 text-[11px] opacity-80">
+                    <span class="rounded-full bg-white/15 px-3 py-1 font-medium">Psicologia</span>
+                    <span>•</span>
+                    <span>6 horas atrás</span>
+                </div>
+                <h4 class="mt-4 text-xl font-bold tracking-tight text-white leading-tight">80% adiam tarefas importantes mesmo sabendo do prejuízo</h4>
+                <p class="mt-3 text-sm opacity-90 leading-relaxed">Investigação com 10 mil pessoas mostra padrões mentais e como quebrar o loop de procrastinação.</p>
+                <div class="mt-5 flex items-center justify-between text-xs opacity-80">
+                    <span class="font-medium">Por Dra. Marina Silva</span>
+                    <span class="flex items-center gap-1">
+                        <span>👁️</span>
+                        <span>4.2k</span>
+                    </span>
+                </div>
+            </article>
+
+            <!-- News Card 3 -->
+            <article onclick="handleNewsClick('IA que treina foco: como destravar em 14 dias com gamificação')" class="card cursor-pointer rounded-2xl bg-gradient-to-br from-[#1f3550] to-[#0f1c2b] p-6 text-[#FCEEE3] shadow-[0_20px_60px_rgba(0,0,0,.35)] ring-1 ring-white/10 hover:shadow-[0_25px_70px_rgba(0,0,0,.4)]">
+                <div class="flex items-center gap-3 text-[11px] opacity-80">
+                    <span class="rounded-full bg-white/15 px-3 py-1 font-medium">Tecnologia</span>
+                    <span>•</span>
+                    <span>8 horas atrás</span>
+                </div>
+                <h4 class="mt-4 text-xl font-bold tracking-tight text-white leading-tight">IA que treina foco: como destravar em 14 dias com gamificação</h4>
+                <p class="mt-3 text-sm opacity-90 leading-relaxed">Ferramentas digitais ajudam a reconstruir disciplina com plano adaptativo e suporte inteligente.</p>
+                <div class="mt-5 flex items-center justify-between text-xs opacity-80">
+                    <span class="font-medium">Por Tech Destrava</span>
+                    <span class="flex items-center gap-1">
+                        <span>👁️</span>
+                        <span>2.9k</span>
+                    </span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="relatos" class="mx-auto max-w-6xl px-4 pb-20">
+        <h3 class="text-2xl font-extrabold tracking-tight mb-6">Relatos Reais de Quem Destravou</h3>
+        <div class="mt-6 grid gap-5 md:grid-cols-3">
+            <!-- Testimonial 1 -->
+            <div class="card rounded-2xl p-6 text-[#FCEEE3] ring-1 ring-white/10 shadow-[0_15px_40px_rgba(0,0,0,.3)] bg-[#4B2E83]">
+                <div class="flex items-center gap-2 text-[#FFCC48] mb-3">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z"/>
+                    </svg>
+                    <span class="text-xs font-semibold uppercase tracking-wider">Depoimento</span>
+                </div>
+                <p class="text-sm leading-relaxed font-medium">"Eu prometia todo domingo que ia mudar. O app me deu choque de realidade e um plano simples. Em 2 semanas entreguei o TCC travado há meses."</p>
+                <div class="mt-5 text-xs opacity-80 font-medium">
+                    <span class="text-white">Bianca Lima, 28 anos</span>
+                    <span class="mx-2">—</span>
+                    <span>São Paulo, SP</span>
+                </div>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="card rounded-2xl p-6 text-[#FCEEE3] ring-1 ring-white/10 shadow-[0_15px_40px_rgba(0,0,0,.3)] bg-[#1d3a2b]">
+                <div class="flex items-center gap-2 text-[#FFCC48] mb-3">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z"/>
+                    </svg>
+                    <span class="text-xs font-semibold uppercase tracking-wider">Depoimento</span>
+                </div>
+                <p class="text-sm leading-relaxed font-medium">"Minha esposa sempre dizia que meu problema era enrolação. Quando comecei o plano e cortei o scroll, nossa vida melhorou 100%."</p>
+                <div class="mt-5 text-xs opacity-80 font-medium">
+                    <span class="text-white">Roberto Silva, 35 anos</span>
+                    <span class="mx-2">—</span>
+                    <span>Rio de Janeiro, RJ</span>
+                </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="card rounded-2xl p-6 text-[#FCEEE3] ring-1 ring-white/10 shadow-[0_15px_40px_rgba(0,0,0,.3)] bg-[#3b173b]">
+                <div class="flex items-center gap-2 text-[#FFCC48] mb-3">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z"/>
+                    </svg>
+                    <span class="text-xs font-semibold uppercase tracking-wider">Depoimento</span>
+                </div>
+                <p class="text-sm leading-relaxed font-medium">"Parei 2 anos na inércia. Com o Destrava Aí, em 14 dias voltei a treinar, estudar e crescer no trabalho — sem ansiedade me travar."</p>
+                <div class="mt-5 text-xs opacity-80 font-medium">
+                    <span class="text-white">Mariana Costa, 31 anos</span>
+                    <span class="mx-2">—</span>
+                    <span>Belo Horizonte, MG</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="como-funciona" class="mx-auto max-w-6xl px-4 pb-16">
+        <div class="relative">
+            <div class="absolute inset-0 pointer-events-none">
+                <div class="absolute -top-20 -left-20 h-96 w-96 rounded-full bg-red-600/40 blur-[120px]"></div>
+                <div class="absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-purple-900/50 blur-[120px]"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-black/30 blur-[100px]"></div>
+            </div>
+
+            <div class="relative text-center">
+                <div class="flex justify-center mb-8">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-600 to-red-800 grid place-items-center shadow-[0_20px_60px_rgba(220,38,38,.8)] ring-2 ring-red-500/30">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <h2 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[0.9] text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)] mb-8">
+                    Você Tá Perdendo Sua Vida <span class="text-red-500">e Nem Percebe…</span>
+                </h2>
+
+                <p class="text-lg md:text-xl text-gray-300 leading-relaxed font-medium max-w-3xl mx-auto mb-12">
+                    Cada minuto enrolando é um passo a mais na mesma vida que você diz odiar. Quer ver o estrago real que a procrastinação tá causando? Responda o quiz e encare a verdade na sua cara.
+                </p>
+
+                <button onclick="handleStartQuiz()" class="btn-primary inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xl rounded-2xl shadow-[0_20px_60px_rgba(220,38,38,.6)] hover:shadow-[0_25px_70px_rgba(220,38,38,.8)] ring-2 ring-red-500/30 hover:ring-red-400/50">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    Quero Encarar a Verdade Agora
+                </button>
+
+                <p class="mt-4 text-sm text-gray-400">
+                    Resultado imediato • 100% anônimo • Choque de realidade garantido
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-[#381f66]/60 backdrop-blur">
+        <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-[#FCEEE3] flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl bg-[#F25C54] grid place-items-center overflow-hidden">
+                    <img src="/ChatGPT Image 20 de ago. de 2025, 19_59_46.png" alt="Destrava Aí" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                </div>
+                <span>© <span id="current-year"></span> Destrava Aí — Todos os direitos reservados</span>
+            </div>
+            <div class="flex items-center gap-5">
+                <a class="hover:text-white transition" href="#politica">Política de Privacidade</a>
+                <a class="hover:text-white transition" href="#termos">Termos</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const XP_LEVELS = [0, 50, 150, 300, 500, 750, 1050, 1400, 1800, 2250];
+
+        const ACHIEVEMENTS = [
+            { id: 'leu_1_noticia', title: 'Primeiro Leitor', description: 'Leu sua primeira notícia', xpReward: 10 },
+            { id: 'leu_3_noticias', title: 'Leitor Ativo', description: 'Leu 3 notícias', xpReward: 40 },
+            { id: 'level_2', title: 'Subiu de Nível', description: 'Alcançou o nível 2', xpReward: 0 }
+        ];
+
+        let currentXp = 0;
+        let currentLevel = 1;
+        let achievements = [];
+
+        function initGamification() {
+            currentXp = parseInt(localStorage.getItem('destravaai_xp') || '0');
+            achievements = JSON.parse(localStorage.getItem('destravaai_achievements') || '[]');
+            currentLevel = calculateLevel(currentXp);
+            updateUI();
+            renderAchievements();
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        }
+
+        function calculateLevel(xp) {
+            for (let i = XP_LEVELS.length - 1; i >= 0; i--) {
+                if (xp >= XP_LEVELS[i]) {
+                    return i + 1;
+                }
+            }
+            return 1;
+        }
+
+        function getXpForNextLevel() {
+            return XP_LEVELS[currentLevel] || XP_LEVELS[XP_LEVELS.length - 1];
+        }
+
+        function getXpProgress() {
+            const currentLevelXp = XP_LEVELS[currentLevel - 1] || 0;
+            const nextLevelXp = getXpForNextLevel();
+            const progressXp = currentXp - currentLevelXp;
+            const totalXpNeeded = nextLevelXp - currentLevelXp;
+            return (progressXp / totalXpNeeded) * 100;
+        }
+
+        function updateUI() {
+            document.getElementById('level-mobile').textContent = currentLevel;
+            document.getElementById('level-desktop').textContent = currentLevel;
+            document.getElementById('current-xp').textContent = currentXp;
+            document.getElementById('next-level-xp').textContent = getXpForNextLevel();
+            document.getElementById('xp-bar').style.width = getXpProgress() + '%';
+
+            document.getElementById('dashboard-level').textContent = currentLevel;
+            document.getElementById('dashboard-xp').textContent = currentXp;
+            document.getElementById('dashboard-remaining-xp').textContent = getXpForNextLevel() - currentXp;
+            document.getElementById('dashboard-xp-bar').style.width = getXpProgress() + '%';
+            document.getElementById('dashboard-actions').textContent = localStorage.getItem('destravaai_newsreads_count') || '0';
+        }
+
+        function showNotification(type, message, xp) {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = 'notification-enter mb-2';
+
+            let bgClass = 'bg-yellow-500/90 text-yellow-900 ring-yellow-400/50';
+            let icon = '⚡';
+
+            if (type === 'level') {
+                bgClass = 'bg-purple-500/90 text-white ring-purple-400/50';
+                icon = '⭐';
+            } else if (type === 'achievement') {
+                bgClass = 'bg-green-500/90 text-white ring-green-400/50';
+                icon = '🏆';
+            }
+
+            notification.innerHTML = `
+                <div class="rounded-xl p-4 backdrop-blur-lg ring-1 shadow-2xl ${bgClass}">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">${icon}</span>
+                        <span class="font-bold">${message}</span>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-50px)';
+                notification.style.transition = 'all 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function gainXp(amount, source) {
+            const oldLevel = currentLevel;
+            currentXp += amount;
+            localStorage.setItem('destravaai_xp', currentXp.toString());
+
+            currentLevel = calculateLevel(currentXp);
+            updateUI();
+
+            showNotification('xp', `+${amount} XP ganho!`, amount);
+
+            if (currentLevel > oldLevel) {
+                setTimeout(() => {
+                    showNotification('level', `Nível ${currentLevel} alcançado!`);
+                }, 1500);
+            }
+
+            if (source && !achievements.includes(source)) {
+                achievements.push(source);
+                localStorage.setItem('destravaai_achievements', JSON.stringify(achievements));
+
+                const achievement = ACHIEVEMENTS.find(a => a.id === source);
+                if (achievement) {
+                    setTimeout(() => {
+                        showNotification('achievement', `🏆 ${achievement.title} desbloqueado!`);
+                        renderAchievements();
+                    }, 2500);
+                }
+            }
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievements-list');
+            container.innerHTML = ACHIEVEMENTS.map(achievement => {
+                const unlocked = achievements.includes(achievement.id);
+                return `
+                    <div class="${unlocked ? 'bg-gradient-to-r from-emerald-500/30 to-green-500/30 ring-emerald-400/50 text-white shadow-lg' : 'bg-white/5 ring-white/10 text-white/40'} rounded-lg p-3 ring-1 transition-all">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span>${unlocked ? '✅' : '🔒'}</span>
+                            <span class="font-bold text-sm">${achievement.title}</span>
+                            ${unlocked ? '<span class="text-sm text-emerald-300">🏆</span>' : ''}
+                        </div>
+                        <div class="text-xs opacity-90">${achievement.description}</div>
+                        ${achievement.xpReward > 0 ? `<div class="text-xs mt-1 text-yellow-300 font-medium">+${achievement.xpReward} XP</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleNewsClick(title) {
+            const id = `news_${title}`;
+            const key = "destravaai_newsreads_set";
+            const set = new Set(JSON.parse(localStorage.getItem(key) || "[]"));
+
+            if (!set.has(id)) {
+                set.add(id);
+                localStorage.setItem(key, JSON.stringify([...set]));
+                const aggKey = "destravaai_newsreads_count";
+                const n = parseInt(localStorage.getItem(aggKey) || '0') + 1;
+                localStorage.setItem(aggKey, n.toString());
+
+                if (n === 1) gainXp(10, "leu_1_noticia");
+                if (n === 3) gainXp(40, "leu_3_noticias");
+            }
+        }
+
+        function handleStartQuiz() {
+            gainXp(50, 'cta_click');
+            alert('Quiz será iniciado! (Conecte à sua página de quiz ou adicione sua lógica aqui)');
+        }
+
+        function toggleDashboard() {
+            const modal = document.getElementById('dashboard-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                updateUI();
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function closeDashboard(event) {
+            if (event.target.id === 'dashboard-modal') {
+                toggleDashboard();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initGamification);
+    </script>
+</body>
+</html>
