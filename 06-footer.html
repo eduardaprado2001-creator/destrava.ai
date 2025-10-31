@@ -1,0 +1,19 @@
+<!-- PARTE 6: FOOTER -->
+<footer class="border-t border-white/10 bg-[#381f66]/60 backdrop-blur">
+    <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-[#FCEEE3] flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-[#F25C54] grid place-items-center overflow-hidden">
+                <img src="/ChatGPT Image 20 de ago. de 2025, 19_59_46.png" alt="Destrava Aí" class="w-full h-full object-cover" onerror="this.style.display='none'">
+            </div>
+            <span>© <span id="current-year"></span> Destrava Aí — Todos os direitos reservados</span>
+        </div>
+        <div class="flex items-center gap-5">
+            <a class="hover:text-white transition" href="#politica">Política de Privacidade</a>
+            <a class="hover:text-white transition" href="#termos">Termos</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>

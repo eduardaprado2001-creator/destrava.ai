@@ -1,0 +1,121 @@
+<!-- PARTE 0: STYLES E HEAD (Cole isso no HEAD da sua página WordPress) -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destrava Aí - Produtividade sem enrolação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0) rotate(-180deg); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .hover-lift:hover {
+            transform: scale(1.02) translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.02) translateY(-2px);
+        }
+
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .gamification-badge {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .xp-bar {
+            transition: width 0.7s ease;
+        }
+
+        .notification-enter {
+            animation: notificationSlide 0.3s ease-out forwards;
+        }
+
+        @keyframes notificationSlide {
+            from { opacity: 0; transform: translateY(-100px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-[#2b1a4e] via-[#3c2569] to-[#4B2E83] text-white min-h-screen">
+
+<!-- INSTRUÇÕES DE USO:
+1. Cole TODO o conteúdo deste arquivo (HEAD) na seção <head> do seu WordPress
+2. Cole cada uma das 7 partes (01 a 07) no seu WordPress na ordem abaixo:
+   - 01-header-navbar.html
+   - 02-hero-section.html
+   - 03-news-section.html
+   - 04-testimonials-section.html
+   - 05-cta-section.html
+   - 06-footer.html
+   - 07-gamification-dashboard.html (Cole no footer, para ter acesso em todas as páginas)
+
+ESTRUTURA NO WORDPRESS:
+- Se estiver usando blocos customizados, use "Custom HTML" block para cada seção
+- Se estiver usando tema com builder, insira o HTML direto nos blocos
+- A gamificação (parte 7) precisa estar em TODAS as páginas onde você colocar as outras partes
+
+REFERÊNCIAS DE CORES:
+- Fundo: #2b1a4e / #3c2569 / #4B2E83
+- Vermelho destaque: #F25C54
+- Roxo secundário: #C39BD3
+- Branco principal: #FCEEE3
+-->
+
+</body>
+</html>
